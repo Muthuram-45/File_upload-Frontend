@@ -1,0 +1,76 @@
+.files-container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.files-container h2 {
+  color: #0099cc;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 3px rgba(0, 153, 204, 0.3);
+}
+
+/* Table styling */
+.files-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.files-table th,
+.files-table td {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.files-table th {
+  background: #0099cc;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.files-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.files-table tr:hover {
+  background: #e3f8ff;
+  transition: background 0.3s ease;
+}
+
+.files-table a {
+  color: #0099cc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.files-table a:hover {
+  text-decoration: underline;
+}
+
+/* Empty state */
+.files-container p {
+  color: #555;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,98 @@
+/* 🌈 Page Background */
+.change-mobile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd, #f5f7fa);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 🧾 Form Box */
+.change-mobile-form {
+  background: #fff;
+  padding: 40px 45px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 360px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.change-mobile-form:hover {
+  transform: translateY(-3px);
+}
+
+/* 🏷️ Heading */
+.change-mobile-form h2 {
+  color: #1976d2;
+  font-size: 24px;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* ✏️ Input Fields */
+.change-mobile-form input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border: 1px solid #cfd8dc;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.change-mobile-form input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+}
+
+/* 🔘 Button */
+.change-mobile-form button {
+  width: 100%;
+  padding: 12px;
+  background: #1976d2;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s ease;
+}
+
+.change-mobile-form button:hover {
+  background: #125aa3;
+}
+
+/* 🔙 Back Link */
+.back-link {
+  margin-top: 15px;
+  color: #1976d2;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.back-link:hover {
+  color: #0d47a1;
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 480px) {
+  .change-mobile-form {
+    width: 90%;
+    padding: 30px 25px;
+  }
+
+  .change-mobile-form h2 {
+    font-size: 20px;
+  }
+
+  .change-mobile-form button {
+    font-size: 15px;
+  }
+}
