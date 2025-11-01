@@ -24,73 +24,94 @@ function Register() {
 
   // ✅ Handle normal registration using Gmail OTP
   const handleRegister = async () => {
-    if (!firstName || !lastName || !email || !mobile || !password || !confirmPassword) {
-      alert('Please fill in all fields.');
-      return;
+  if (!firstName || !lastName || !email || !mobile || !password || !confirmPassword) {
+    alert('Please fill in all fields.');
+    return;
+  }
+  if (password !== confirmPassword) {
+    alert('Passwords do not match.');
+    return;
+  }
+  if (!agreeTerms) {
+    alert('You must accept Terms & Conditions.');
+    return;
+  }
+
+  try {
+    const trimmedEmail = email.trim().toLowerCase();
+
+    const res = await axios.post(
+      'http://localhost:5000/send-otp',
+      { email: trimmedEmail },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    if (res.data.success) {
+      alert('✅ OTP sent to your Gmail. Please check your inbox.');
+      setOtpSent(true);
+      setMessage('');
+    } else {
+      alert(res.data.error || '❌ Failed to send OTP. Try again.');
     }
-    if (password !== confirmPassword) {
-      alert('Passwords do not match.');
-      return;
+  } catch (err) {
+    console.error('Error sending OTP:', err);
+    if (err.response) {
+      // Backend responded with an error message
+      alert(`⚠️ ${err.response.data?.error || 'Failed to send OTP. Please check your email.'}`);
+    } else if (err.request) {
+      // Request made but no response received
+      alert('❌ No response from server. Please check your internet or backend.');
+    } else {
+      // Other client-side errors
+      alert('⚠️ Unexpected error while sending OTP.');
     }
-    if (!agreeTerms) {
-      alert('You must accept Terms & Conditions.');
-      return;
-    }
+  }
+};
 
-    try {
-      const res = await axios.post('https://file-upload-backend-8.onrender.com/send-otp', { email });
-      if (res.data.success) {
-        alert('OTP sent to your Gmail. Please check your inbox.');
-        setOtpSent(true);
-        setMessage('');
-      } else {
-        alert('Failed to send OTP. Try again.');
-      }
-    } catch (err) {
-      console.error('Error sending OTP:', err);
-      alert('Server error while sending OTP.');
-    }
-  };
+// ✅ Verify Gmail OTP
+const handleVerifyOtp = async () => {
+  if (!otp) {
+    alert('Enter the OTP you received.');
+    return;
+  }
 
-  // ✅ Verify Gmail OTP
-  const handleVerifyOtp = async () => {
-    if (!otp) {
-      alert('Enter the OTP you received.');
-      return;
-    }
+  try {
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedOtp = otp.trim();
 
-    try {
-      const trimmedEmail = email.trim().toLowerCase();
-      const trimmedOtp = otp.trim();
+    const verifyRes = await axios.post(
+      'http://localhost:5000/verify-otp',
+      { email: trimmedEmail, otp: trimmedOtp },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
 
-      const res = await axios.post('https://file-upload-backend-8.onrender.com/verify-otp', {
-        email: trimmedEmail,
-        otp: trimmedOtp,
-      });
+    if (verifyRes.data.success) {
+      const registerRes = await axios.post(
+        'http://localhost:5000/register',
+        { firstName, lastName, email: trimmedEmail, mobile, password },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
 
-      if (res.data.success) {
-        await axios.post('https://file-upload-backend-8.onrender.com/register', {
-          firstName,
-          lastName,
-          email: trimmedEmail,
-          mobile,
-          password,
-        });
-
+      if (registerRes.data.success) {
         alert('✅ Registration successful!');
         window.location.href = '/dashboard';
       } else {
-        alert('❌ Invalid or expired OTP. Please try again.');
+        alert(registerRes.data.error || '❌ Registration failed. Try again.');
       }
-    } catch (err) {
-      console.error('OTP verification failed:', err);
-      if (err.response && err.response.status === 400) {
-        alert(`⚠️ ${err.response.data.error || 'Invalid OTP'}`);
-      } else {
-        alert('❌ Server error during OTP verification.');
-      }
+    } else {
+      alert('❌ Invalid or expired OTP. Please try again.');
     }
-  };
+  } catch (err) {
+    console.error('OTP verification failed:', err);
+    if (err.response) {
+      alert(`⚠️ ${err.response.data?.error || 'Invalid OTP or server error'}`);
+    } else if (err.request) {
+      alert('❌ No response from server during OTP verification.');
+    } else {
+      alert('⚠️ Unexpected error during OTP verification.');
+    }
+  }
+};
 
 const handleGoogleSignIn = async () => {
   try {
