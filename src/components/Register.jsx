@@ -38,7 +38,7 @@ function Register() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/send-otp', { email });
+      const res = await axios.post('https://file-upload-backend-8.onrender.com/send-otp', { email });
       if (res.data.success) {
         alert('OTP sent to your Gmail. Please check your inbox.');
         setOtpSent(true);
@@ -63,13 +63,13 @@ function Register() {
       const trimmedEmail = email.trim().toLowerCase();
       const trimmedOtp = otp.trim();
 
-      const res = await axios.post('http://localhost:5000/verify-otp', {
+      const res = await axios.post('https://file-upload-backend-8.onrender.com/verify-otp', {
         email: trimmedEmail,
         otp: trimmedOtp,
       });
 
       if (res.data.success) {
-        await axios.post('http://localhost:5000/register', {
+        await axios.post('https://file-upload-backend-8.onrender.com/register', {
           firstName,
           lastName,
           email: trimmedEmail,
@@ -93,40 +93,47 @@ function Register() {
   };
 
 const handleGoogleSignIn = async () => {
-    try {
-      googleProvider.setCustomParameters({
-        prompt: 'select_account', // ✅ Always ask which Gmail to use
-      });
+  try {
+    googleProvider.setCustomParameters({
+      prompt: 'select_account',
+    });
 
-      // Step 1: Open Google Sign-In popup
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      const firebaseToken = await user.getIdToken();
+    // Step 1: Google popup
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    const firebaseToken = await user.getIdToken();
 
+    console.log('Google ID Token:', firebaseToken);
 
-      // ✅ Step 3: Proceed only if user confirmed
-      const res = await axios.post('http://localhost:5000/google-login', { firebaseToken });
+    // ✅ Step 2: Send to backend (match key name)
+    const res = await axios.post('https://file-upload-backend-8.onrender.com/google-login', {
+      token: firebaseToken, // 🔹 now matches backend
+    });
 
-      // Store details locally
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+    // ✅ Step 3: Store locally
+    localStorage.setItem('token', res.data.token);
+    localStorage.setItem('user', JSON.stringify(res.data.user));
 
-      // Step 4: Redirect to dashboard
-      Swal.fire({
-        title: 'Login Successful!',
-        text: 'Redirecting to your dashboard...',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      });
+    // ✅ Step 4: Redirect
+    Swal.fire({
+      title: 'Login Successful!',
+      text: 'Redirecting to your dashboard...',
+      icon: 'success',
+      timer: 5000,
+      showConfirmButton: false,
+    });
 
+    // Optionally redirect after delay
+    // setTimeout(() => {
+    //   window.location.href = '/dashboard';
+    // }, 2000);
 
+  } catch (err) {
+    console.error('Google sign-in error:', err);
+    Swal.fire('Error', 'Google sign-in failed. Please try again.', 'error');
+  }
+};
 
-    } catch (err) {
-      console.error('Google sign-in error:', err);
-      Swal.fire('Error', 'Google sign-in failed. Please try again.', 'error');
-    }
-  };
   return (
     <div className="register-container">
       <div className="register-image-section">
