@@ -41,7 +41,7 @@ function Upload() {
     formData.append('name', fileName);
 
     try {
-      await axios.post('http://localhost:5000/upload', formData, {
+      await axios.post('https://file-upload-backend-9.onrender.com/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`, // ✅ Include JWT for company detection

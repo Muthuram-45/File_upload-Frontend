@@ -31,7 +31,7 @@ function Dashboard() {
 
         try {
           // 🔹 Always fetch latest info from backend
-          const res = await fetch(`http://localhost:5000/user/${email}`);
+          const res = await fetch(`https://file-upload-backend-9.onrender.com/user/${email}`);
           const data = await res.json();
 
           if (data.success && data.user) {

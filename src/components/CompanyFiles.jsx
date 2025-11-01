@@ -11,7 +11,7 @@ function CompanyFiles() {
       if (!token) return;
 
       try {
-        const res = await axios.get('http://localhost:5000/files', {
+        const res = await axios.get('https://file-upload-backend-9.onrender.com/files', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFiles(res.data);
@@ -43,7 +43,7 @@ function CompanyFiles() {
                 <td>{file.name}</td>
                 <td>
                   <a
-                    href={`http://localhost:5000${file.path}`}
+                    href={`https://file-upload-backend-9.onrender.com${file.path}`}
                     target="_blank"
                     rel="noreferrer"
                   >

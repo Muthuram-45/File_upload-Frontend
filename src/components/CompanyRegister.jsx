@@ -36,7 +36,7 @@ function CompanyRegister() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/send-otp', { email });
+      const res = await axios.post('https://file-upload-backend-9.onrender.com/send-otp', { email });
       if (res.data.success) {
         setMessage('OTP has been sent to your registered email.');
         Swal.fire('OTP Sent', 'Please check your Gmail inbox.', 'success');

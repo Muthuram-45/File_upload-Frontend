@@ -41,7 +41,7 @@ function Register() {
     const trimmedEmail = email.trim().toLowerCase();
 
     const res = await axios.post(
-      'http://localhost:5000/send-otp',
+      'https://file-upload-backend-9.onrender.com/send-otp',
       { email: trimmedEmail },
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -80,14 +80,14 @@ const handleVerifyOtp = async () => {
     const trimmedOtp = otp.trim();
 
     const verifyRes = await axios.post(
-      'http://localhost:5000/verify-otp',
+      'https://file-upload-backend-9.onrender.com/verify-otp',
       { email: trimmedEmail, otp: trimmedOtp },
       { headers: { 'Content-Type': 'application/json' } }
     );
 
     if (verifyRes.data.success) {
       const registerRes = await axios.post(
-        'http://localhost:5000/register',
+        'https://file-upload-backend-9.onrender.com/register',
         { firstName, lastName, email: trimmedEmail, mobile, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -127,7 +127,7 @@ const handleGoogleSignIn = async () => {
     console.log('Google ID Token:', firebaseToken);
 
     // ✅ Step 2: Send to backend (match key name)
-    const res = await axios.post('https://file-upload-backend-8.onrender.com/google-login', {
+    const res = await axios.post('https://file-upload-backend-9.onrender.com/google-login', {
       token: firebaseToken, // 🔹 now matches backend
     });
 

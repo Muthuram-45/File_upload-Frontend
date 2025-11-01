@@ -17,7 +17,7 @@ function CompanyLogin() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/company-login', {
+      const res = await axios.post('https://file-upload-backend-9.onrender.com/company-login', {
         email: email.trim().toLowerCase(),
         password: password.trim(),
         company_name: companyName.trim(),

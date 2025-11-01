@@ -12,7 +12,7 @@ function ChangeMobile() {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:5000/change-mobile', {
+      const res = await fetch('https://file-upload-backend-9.onrender.com/change-mobile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, mobile }),
