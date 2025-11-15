@@ -150,7 +150,7 @@ function ProcessedView() {
       {errorMsg && <p className="error-message">{errorMsg}</p>}
 
       {/* 🧠 NLP Box */}
-      <div className="nlp-box">
+      {/* <div className="nlp-box">
         <input
           type="text"
           placeholder="Ask something about this folder..."
@@ -160,7 +160,7 @@ function ProcessedView() {
         <button onClick={handleNLPQuery} disabled={processing}>
           {processing ? "Processing..." : "Run"}
         </button>
-      </div>
+      </div> */}
 
       {/* 🗂️ File Tabs */}
       <div className="file-tabs-container">
