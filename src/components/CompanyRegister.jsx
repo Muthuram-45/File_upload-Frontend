@@ -61,13 +61,13 @@ function CompanyRegister() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/verify-otp', {
+      const res = await axios.post('https://file-upload-backend-9.onrender.com/verify-otp', {
         email: email.trim().toLowerCase(),
         otp: otp.trim(),
       });
 
       if (res.data.success) {
-        await axios.post('http://localhost:5000/company-register', {
+        await axios.post('https://file-upload-backend-9.onrender.com/company-register', {
           firstName,
           lastName,
           company_name: companyName,
