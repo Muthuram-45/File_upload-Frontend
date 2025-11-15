@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { auth } from './components/firebase'; // ✅ Import Firebase auth
+import { auth } from './components/firebase';
+
 import Register from './components/Register';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -13,111 +14,134 @@ import ChangeMobile from './components/ChangeMobile';
 import CompanyRegister from './components/CompanyRegister';
 import CompanyLogin from './components/CompanyLogin';
 import CompanyFiles from './components/CompanyFiles';
+import ProcessedView from './components/ProcessedView';
+import Navbar from './components/Navbar';
+import SettingsPage from './components/SettingsPage';
+
 import './app.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isCompany, setIsCompany] = useState(false);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Check login for both Firebase & backend users
   useEffect(() => {
-    const checkLogin = () => {
+    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+      const localUser = JSON.parse(localStorage.getItem('user'));
+      const companyUser = JSON.parse(localStorage.getItem('company'));
       const token = localStorage.getItem('token');
-      const companyUser = localStorage.getItem('company');
-      setIsLoggedIn(!!token);
-      setIsCompany(!!companyUser);
-    };
-    checkLogin();
 
-    // ✅ Listen for login/logout changes
-    window.addEventListener('storage', checkLogin);
-
-    // ✅ Firebase Auth Listener
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        localStorage.setItem('token', user.accessToken || 'firebase-user');
-        localStorage.setItem('user', JSON.stringify({ email: user.email }));
-        setIsLoggedIn(true);
-        setIsCompany(false);
-      } else {
-        const token = localStorage.getItem('token');
-        if (!token) setIsLoggedIn(false);
+      // Company login
+      if (companyUser && token) {
+        setUser({ ...companyUser, isCompany: true });
+        setLoading(false);
+        return;
       }
+
+      // Google login
+      if (firebaseUser) {
+        const email = firebaseUser.email;
+        try {
+          const res = await fetch(`http://localhost:5000/user/${email}`);
+          const data = await res.json();
+          const latestUser =
+            data.success && data.user
+              ? { ...data.user, isGoogleUser: true }
+              : {
+                  firstName: firebaseUser.displayName?.split(' ')[0] || 'User',
+                  lastName: firebaseUser.displayName?.split(' ')[1] || '',
+                  email,
+                  mobile: '',
+                  isGoogleUser: true,
+                };
+          setUser(latestUser);
+          localStorage.setItem('googleUserInfo', JSON.stringify(latestUser));
+        } catch (err) {
+          console.error('Error fetching user:', err);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Local user
+      if (localUser && token) {
+        setUser(localUser);
+        setLoading(false);
+        return;
+      }
+
+      // No user
+      setUser(null);
       setLoading(false);
     });
 
-    return () => {
-      window.removeEventListener('storage', checkLogin);
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
-  // ✅ Prevent flicker while checking login
-  if (loading) return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>;
+  if (loading)
+    return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>;
 
-  // ✅ Protected Route
+  // ✅ Protected route
   const ProtectedRoute = ({ children }) => {
-    return isLoggedIn ? children : <Navigate to={isCompany ? '/company-login' : '/login'} replace />;
+    return user ? children : <Navigate to="/l-gy5n8r4v2t" replace />;
   };
 
-  // ✅ Public Route
-  const PublicRoute = ({ children }) => {
-    if (isLoggedIn) {
-      return <Navigate to="/dashboard" replace />;
-    }
+  // ✅ Public route
+  const PublicRoute = ({ children, forCompany }) => {
+    if (forCompany && user?.isCompany) return <Navigate to="/cf-2g7h9k3l5m" replace />;
+    if (!forCompany && user && !user.isCompany) return <Navigate to="/d-oxwilh9dy1" replace />;
     return children;
   };
 
   return (
     <Router>
-      <div className="App" style={{ textAlign: 'center' }}>
+      {/* ✅ Navbar visible on all pages */}
+      <Navbar user={user} setUser={setUser} />
+
+      <div className="App" style={{ textAlign: 'center', marginTop: '80px' }}>
         <Routes>
-          {/* Root Redirect */}
+          {/* Default redirect */}
           <Route
             path="/"
-            element={<Navigate to={isLoggedIn ? '/dashboard' : '/login'} replace />}
+            element={<Navigate to={user ? '/d-oxwilh9dy1' : '/l-gy5n8r4v2t'} replace />}
           />
 
-          {/* Public Routes */}
+          {/* ===== Public Routes ===== */}
           <Route
-            path="/login"
+            path="/l-gy5n8r4v2t"
             element={
-              <PublicRoute>
-                <Login setIsLoggedIn={setIsLoggedIn} />
+              <PublicRoute forCompany={false}>
+                <Login setIsLoggedIn={() => {}} setUser={setUser} />
               </PublicRoute>
             }
           />
           <Route
-            path="/register"
+            path="/r-ya7w1p9s35"
             element={
-              <PublicRoute>
+              <PublicRoute forCompany={false}>
                 <Register />
               </PublicRoute>
             }
           />
-
-          {/* Company Auth Routes */}
           <Route
-            path="/company-login"
+            path="/cl-zv9ng4q6b8"
             element={
-              <PublicRoute>
-                <CompanyLogin setIsLoggedIn={setIsLoggedIn} />
+              <PublicRoute forCompany={true}>
+                <CompanyLogin setUser={setUser} />
               </PublicRoute>
             }
           />
           <Route
-            path="/company-register"
+            path="/cr-h2k8j5d1f5"
             element={
-              <PublicRoute>
+              <PublicRoute forCompany={true}>
                 <CompanyRegister />
               </PublicRoute>
             }
           />
 
-          {/* Protected Routes */}
+          {/* ===== Protected Routes ===== */}
           <Route
-            path="/dashboard"
+            path="/d-oxwilh9dy1"
             element={
               <ProtectedRoute>
                 <Dashboard />
@@ -125,7 +149,7 @@ function App() {
             }
           />
           <Route
-            path="/files"
+            path="/f-vxt2x3s7a1"
             element={
               <ProtectedRoute>
                 <FileList />
@@ -133,23 +157,50 @@ function App() {
             }
           />
           <Route
-            path="/upload"
+            path="/u-p2q8k4r9jw"
             element={
               <ProtectedRoute>
                 <Upload />
               </ProtectedRoute>
             }
           />
-          <Route path="/company-files" element={<CompanyFiles />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/change-password" element={<ChangePassword />} />
-          <Route path="/change-name" element={<ChangeName />} />
-          <Route path="/change-mobile" element={<ChangeMobile />} />
+          <Route
+            path="/cf-2g7h9k3l5m"
+            element={
+              <ProtectedRoute>
+                <CompanyFiles />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/p-h7t4k9m3zq"
+            element={
+              <ProtectedRoute>
+                <ProcessedView token={localStorage.getItem('token')} />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Catch-all */}
+          {/* ✅ Settings Page - Protected */}
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Other single pages (still accessible separately if needed) */}
+          <Route path="/fp-m3r7pdf0a9" element={<ForgotPassword />} />
+          <Route path="/cp-sq4z6x8c27" element={<ChangePassword />} />
+          <Route path="/cn-b5t1vs3l7g" element={<ChangeName />} />
+          <Route path="/cm-x0j9w2a4bf" element={<ChangeMobile />} />
+
+          {/* Catch-all redirect */}
           <Route
             path="*"
-            element={<Navigate to={isLoggedIn ? '/dashboard' : '/login'} replace />}
+            element={<Navigate to={user ? '/d-oxwilh9dy1' : '/l-gy5n8r4v2t'} replace />}
           />
         </Routes>
       </div>

@@ -1,232 +1,24 @@
-/* 🌐 Universal Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+body {
+  /* background: linear-gradient(135deg, #e3f2fd, #f5f7fa); */
+   background: #daebfa; 
+  /* font-family: "Poppins", sans-serif; */
+
 }
 
-/* 🌈 Dashboard Layout */
+/* ================================
+   🌈 Dashboard Layout
+================================ */
 .dashboard-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e3f2fd, #f5f7fa);
+  height: 480px;
   font-family: 'Poppins', sans-serif;
   animation: fadeIn 0.6s ease-in-out;
   overflow-x: hidden;
 }
 
-/* .dashboard-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  background: url('../assets/dashboard-bg.png') no-repeat center center fixed;
-  background-size: 80%; 
-  background-repeat: no-repeat;
-  background-position: center ;
-  background-color: #f5f7fa; 
-  font-family: 'Poppins', sans-serif;
-  animation: fadeIn 0.6s ease-in-out;
-  overflow-x: hidden;
-} */
-
-
-/* 🌐 Navbar */
-.navbar {
-  width: 100%;
-  padding: 15px 40px;
-  background: #ffffff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.app-heading {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #007bff;
-  letter-spacing: 0.5px;
-}
-.app-heading span {
-  font-size: 32px;
-  font-weight: 700;
-  color: #0099cc;
-  text-shadow: 2px 2px 6px rgba(0, 153, 204, 0.3);
-  /* font-family: 'Orbitron', sans-serif; */
-  font-family: 'Poppins';
-  letter-spacing: 2px;
-  /* text-transform: uppercase; */
-  transition: transform 0.3s ease, text-shadow 0.3s ease;
-}
-
-.app-heading span:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 12px rgba(0, 153, 204, 0.6);
-}
-
-
-/* 👤 Profile Area */
-.profile-area {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 6px 10px;
-  border-radius: 30px;
-}
-
-.profile-area:hover {
-  background: rgba(0, 123, 255, 0.06);
-}
-
-.avatar-ring {
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  padding: 2px;
-  border-radius: 50%;
-}
-
-.profile-avatar {
-  width: 40px;
-  height: 40px;
-  background: white;
-  color: #007bff;
-  border-radius: 50%;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.3s;
-  font-size: 1.1rem;
-}
-
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.2;
-}
-
-.profile-name {
-  font-weight: 500;
-  color: #333;
-}
-
-.profile-role {
-  font-size: 0.8rem;
-  color: #777;
-}
-
-/* 🌈 Dropdown Menu */
-.dropdown-menu.modern {
-  position: absolute;
-  top: 60px;
-  right: 0;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  width: 280px;
-  padding: 18px;
-  opacity: 0;
-  transform: translateY(-15px) scale(0.97);
-  visibility: hidden;
-  transition: all 0.35s ease;
-}
-
-.dropdown-menu.modern.show {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  visibility: visible;
-}
-
-/* Profile header inside dropdown */
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
-}
-
-.profile-avatar.large {
-  width: 50px;
-  height: 50px;
-  font-size: 1.2rem;
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-text h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.profile-text p {
-  margin: 0;
-  color: #555;
-  font-size: 0.85rem;
-}
-
-.profile-details {
-  margin-top: 10px;
-  color: #333;
-  font-size: 0.9rem;
-}
-
-/* Divider */
-.dropdown-divider {
-  height: 1px;
-  background: #eee;
-  margin: 12px 0;
-}
-
-/* Buttons inside dropdown */
-.dropdown-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.change-mobile-btn,
-.change-password-btn,
-.logout-btn {
-  background: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.change-mobile-btn:hover,
-.change-password-btn:hover {
-  background: #0056b3;
-}
-
-.logout-btn {
-  background: #ef4444;
-}
-
-.logout-btn:hover {
-  background: #c81e1e;
-}
-
-/* ==========================
-   📦 Dashboard Content
-========================== */
+/* Dashboard content box */
 .dashboard-content {
   flex: 1;
   display: flex;
@@ -236,37 +28,40 @@
 }
 
 .content-box {
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 18px;
+  background: #daebfa; 
+  border-radius: 25px;
   padding: 50px;
-  width: 520px;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+  width: 560px;
+  /* box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.15); */
   text-align: center;
   transition: all 0.3s ease-in-out;
   animation: slideIn 0.7s ease;
-  backdrop-filter: blur(15px);
+  /* backdrop-filter: blur(15px); */
 }
 
 .content-box:hover {
-  transform: translateY(-6px);
+  background: #f6fafd;
+  transform: translateY(-2px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
 }
 
 .content-box h2 {
-  font-size: 28px;
-  color: #007bff;
-  font-weight: 700;
+ /* font-family: "Roboto Slab", serif; */
+ font-family: 'segoe ui';
+ font-weight: bold;
+  font-size: 33px;
+  color: #1a2b49;
   margin-bottom: 12px;
 }
 
 .content-box p {
-  color: #555;
+  color: #3c4a65;
   margin-bottom: 25px;
   font-size: 15px;
   line-height: 1.6;
 }
 
-/* 🎛️ Button Row */
+/* Buttons */
 .dashboard-actions {
   display: flex;
   justify-content: center;
@@ -279,30 +74,22 @@
   padding: 14px 24px;
   font-size: 15px;
   font-weight: 600;
-  color:black;
+  color: black;
+  border: 2px solid #3d82d1;
   background-color: white;
-  /*background: linear-gradient(135deg, #6366f1, #3b82f6);  Indigo → Blue */
-  border: 2px solid black;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
-  letter-spacing: 0.5px;
 }
 
 .dashboard-btn:hover {
-  background: linear-gradient(135deg, #4f46e5, #2563eb); /* Darker Indigo → Blue */
-  transform: translateY(-2px);
+  background: #3b82d1;
+  color: #fefeff;
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
 }
 
-.dashboard-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-}
-
-
-/* ⏳ Loading */
 .dashboard-loading {
   display: flex;
   justify-content: center;
@@ -318,14 +105,55 @@
   animation: pulse 1.5s infinite ease-in-out;
 }
 
-/* 📜 Footer */
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+/* ================================
+   📜 Footer Styles
+================================ */
 .dashboard-footer {
   width: 100%;
-  background: rgba(255, 255, 255, 0.85);
-  color: #333;
+  background: white;
+  color: black;
   text-align: center;
   padding: 15px 0;
-  border-top: 1px solid #ddd;
+  /* border-top: 1px solid #ddd; */
   position: fixed;
   bottom: 0;
   left: 0;
@@ -356,251 +184,4 @@
 
 .footer-links span {
   color: #999;
-}
-
-/* ✨ Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-25px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.05); }
-}
-
-/* 📱 Responsive */
-@media (max-width: 600px) {
-  .navbar {
-    padding: 12px 20px;
-  }
-
-  .content-box {
-    width: 92%;
-    padding: 35px 20px;
-  }
-
-  .app-heading {
-    font-size: 18px;
-  }
-
-  .dashboard-btn {
-    font-size: 14px;
-  }
-}
-/* ===========================
-   🌈 PROFILE DROPDOWN STYLING
-=========================== */
-
-/* 🔹 Dropdown Container */
-.dropdown-menu.modern {
-  position: absolute;
-  top: 70px;
-  right: 0;
-  width: 320px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  padding: 18px;
-  transform: translateY(-10px);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease-in-out;
-  z-index: 100;
-}
-
-/* 🔹 When Open */
-.dropdown-menu.show {
-  transform: translateY(0);
-  opacity: 1;
-  visibility: visible;
-}
-
-/* 🔹 Profile Header (Top Section) */
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e8e8e8;
-}
-
-.profile-avatar.large {
-  background: linear-gradient(135deg, #42a5f5, #1e88e5);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  font-weight: bold;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
-  transition: 0.3s;
-}
-
-.profile-avatar.large:hover {
-  transform: scale(1.05);
-}
-
-/* 🔹 Profile Text Info */
-.profile-text h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #222;
-}
-
-.profile-text p {
-  margin: 4px 0 0 0;
-  font-size: 14px;
-  color: #555;
-}
-
-/* ===========================
-   🌟 Profile Details
-=========================== */
-.profile-details-updated {
-  margin-top: 16px;
-}
-
-.profile-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8f9fa;
-  padding: 10px 14px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  transition: 0.25s ease;
-}
-
-.profile-row:hover {
-  background: #e3f2fd;
-  transform: scale(1.01);
-}
-
-/* 🔹 Labels */
-.profile-row strong {
-  color: #1976d2;
-  font-size: 14px;
-  margin-right: 6px;
-}
-
-/* 🔹 Edit Icon Animation */
-.edit-icon {
-  cursor: pointer;
-  font-size: 18px;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.edit-icon:hover {
-  color: #1565c0;
-  transform: rotate(12deg) scale(1.2);
-}
-
-/* ===========================
-   🌈 Forgot Password Button
-=========================== */
-.forgot-password-btn {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border: none;
-  background: linear-gradient(135deg, #00b4d8, #0077b6);
-  color: #fff;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-  box-shadow: 0 3px 10px rgba(0, 119, 182, 0.3);
-}
-
-.forgot-password-btn:hover {
-  background: linear-gradient(135deg, #0096c7, #005f73);
-  transform: translateY(-2px);
-}
-
-/* ===========================
-   🔘 Logout Button
-=========================== */
-.logout-btn {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background: #f44336;
-  border: none;
-  color: white;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.logout-btn:hover {
-  background: #d32f2f;
-  transform: translateY(-2px);
-}
-
-/* ===========================
-   ✨ Smooth Dropdown Animation
-=========================== */
-.profile-area {
-  position: relative;
-}
-
-.profile-area.open .dropdown-menu {
-  animation: dropdownFadeIn 0.35s ease forwards;
-}
-
-@keyframes dropdownFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-.app-heading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 24px;
-  font-weight: 600;
-  color: #222;
-  letter-spacing: 0.5px;
-}
-
-/* ✅ Logo Styling + Subtle Animation */
-.logo {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0, 140, 255, 0.3);
-  transition: transform 0.6s ease, box-shadow 0.4s ease;
-  animation: floatLogo 3s ease-in-out infinite;
-}
-
-/* Hover Effect - Spin + Glow */
-.logo:hover {
-  transform: rotate(360deg) scale(1.1);
-  box-shadow: 0 0 15px rgba(0, 140, 255, 0.6);
-}
-
-/* Gentle floating animation */
-@keyframes floatLogo {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
 }

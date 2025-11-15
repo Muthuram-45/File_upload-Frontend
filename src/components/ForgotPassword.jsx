@@ -30,7 +30,7 @@ function ForgotPassword() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://file-upload-backend-9.onrender.com/forgot-password', {
+      const response = await fetch('http://localhost:5000/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, newPassword }),
@@ -62,7 +62,7 @@ function ForgotPassword() {
   return (
     <div className="forgot-password-container">
       <form className="forgot-password-form" onSubmit={handleReset}>
-        <h2>Forgot Password 🔒</h2>
+        <h2>Forgot Password </h2>
 
         <input
           type="email"
@@ -92,9 +92,7 @@ function ForgotPassword() {
           {loading ? 'Processing...' : 'Reset Password'}
         </button>
 
-        <p className="back-login" onClick={() => navigate('/login')}>
-          🔙 Back 
-        </p>
+       
       </form>
     </div>
   );

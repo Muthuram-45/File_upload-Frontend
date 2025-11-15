@@ -1,0 +1,279 @@
+.processed-container {
+  /* padding: 20px 40px; */
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  width: 100vw;
+  margin-top: -60px;
+}
+
+/* Header */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+ color: #233d57;
+  font-family: 'segoe ui';
+}
+
+/* Back Button */
+/* .back-btn {
+  /* margin-bottom: 20px; 
+  padding: 8px 14px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+} */
+
+/* NLP Input */
+.nlp-box {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.nlp-box input {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 300px;
+}
+
+.nlp-box button {
+  padding: 8px 14px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* File Tabs */
+.file-tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+  padding: 0px 40px;
+ 
+}
+
+.file-tabs button.active {
+  background: #007bff;
+  color: #fff;
+}
+
+/* CSV Table */
+.csv-table-section {
+  margin-top: 10px;
+  padding: 20px 100px;
+}
+
+.table-wrapper {
+  max-height: 600px;
+  overflow: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-wrapper th{
+ background:#007bff;
+  color: #fcfdff;
+  font-weight: 600;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+td {
+  padding: 8px;
+  border-bottom: 1px solid #e5e9f0;
+  background-color: #fff;
+  text-align: left;
+  white-space: nowrap;
+}
+.table-wrapper tbody tr:nth-child(even) td {
+  background-color: #f8faff;
+}
+
+.table-wrapper tbody tr:hover td {
+  background-color: #ebf2ff;
+  transition: all 0.2s ease-in-out;
+}
+
+
+/* NLP Results */
+.nlp-results {
+  margin-top: 30px;
+  background: #f8faff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.summary-text {
+  font-weight: 600;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.processed-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+}
+
+.processed-table th,
+.processed-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+/* Charts */
+.multi-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.chart-card h4 {
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ================================
+   📜 Footer Styles
+================================ */
+.dashboard-foote {
+  margin-top: 50px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #333;
+  text-align: center;
+  padding: 15px 0;
+  border-top: 1px solid #ddd;
+  margin-bottom: -30px;
+}
+
+.dashboard-foote p {
+  margin: 5px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.footer-link {
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.footer-link a {
+  color: #007bff;
+  text-decoration: none;
+  margin: 0 8px;
+  transition: color 0.2s ease;
+}
+
+.footer-link a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.footer-link span {
+  color: #999;
+}
+/* Container for file tabs and back button */
+.file-tabs-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-bottom: 15px; */
+  /* flex-wrap: wrap; */
+  margin-left: 55px;
+  margin-right: 90px;
+}
+
+/* Left side tabs container */
+.file-tabs-left {
+  display: flex;
+}
+
+/* File tab button style */
+.file-tab-btn {
+   background: #3b82d1;
+   color: #fefeff;
+  padding: 5px 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 450;
+  text-decoration: none;
+  display:flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  border: 2px solid #007bff;
+  font-family: 'Poppins', sans-serif;
+   margin-left: 50px;
+}
+
+.file-tab-btn:hover {
+ 
+  background: #daebfa; 
+   color: black;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
+}
+
+/* Active tab */
+.file-tab-btn.active {
+  background: #daebfa; 
+  color: black;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
+}
+
+/* Right side Back button */
+.back-btn {
+  margin-right: 15px;
+  color: black;
+  border: 2px solid #3d82d1;
+  background-color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #3b82d1;
+  color: #fefeff;
+  transform: translateY(-1px);
+}
+
+.back-btn:active {
+  transform: translateY(0);
+}

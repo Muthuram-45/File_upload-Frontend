@@ -4,6 +4,7 @@ import './Register.css';
 import registerImage from '../assets/art3.png';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import Footer from './Footer';
 
 function CompanyRegister() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ function CompanyRegister() {
     }
 
     try {
-      const res = await axios.post('https://file-upload-backend-9.onrender.com/send-otp', { email });
+      const res = await axios.post('http://localhost:5000/send-otp', { email });
       if (res.data.success) {
         setMessage('OTP has been sent to your registered email.');
         Swal.fire('OTP Sent', 'Please check your Gmail inbox.', 'success');
@@ -85,7 +86,7 @@ function CompanyRegister() {
 
         // ✅ Redirect to company login page
         setTimeout(() => {
-          navigate('/company-login');
+          navigate('/cl-zv9ng4q6b8');
         }, 2000);
       } else {
         setMessage('Invalid or expired OTP.');
@@ -184,7 +185,7 @@ function CompanyRegister() {
               <p className="already-account">
                 Already have an account?{' '}
                 <span
-                  onClick={() => navigate('/company-login')}
+                  onClick={() => navigate('/cl-zv9ng4q6b8')}
                   style={{ color: '#007bff', cursor: 'pointer', fontWeight: '600' }}
                 >
                   Login here
@@ -210,6 +211,7 @@ function CompanyRegister() {
           )}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

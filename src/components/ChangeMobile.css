@@ -1,11 +1,16 @@
 /* 🌈 Page Background */
+/* 🌈 Container inside settings page */
 .change-mobile-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e3f2fd, #f5f7fa);
+  align-items: flex-start;
+  min-height: auto;              /* ✅ remove full height */
+  padding: 0px 0;               /* ✅ adds some top-bottom spacing */
+  background: transparent;       /* ✅ inherits from SettingsPage */
   font-family: 'Poppins', sans-serif;
+  width: 100%;
+  margin-top: -30px;
+ 
 }
 
 /* 🧾 Form Box */
@@ -28,7 +33,8 @@
   color: #1976d2;
   font-size: 24px;
   margin-bottom: 25px;
-  font-weight: 600;
+  font-family: 'segoe ui';
+ font-weight: bold;
 }
 
 /* ✏️ Input Fields */

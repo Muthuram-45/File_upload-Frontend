@@ -8,12 +8,14 @@
 
 /* 🔹 Full Page Layout */
 .register-container {
-  height: 100vh;
+  height: 700px;
   width: 100vw;
   display: flex;
   font-family: 'Poppins', sans-serif; 
-  background: linear-gradient(135deg, #e3f2fd, #f5f7fa);
   overflow-y: hidden;
+  margin-top: -150px;
+
+  
 }
 
 /* 🔹 Left Image Section */
@@ -26,8 +28,8 @@
 }
 
 .register-image-section img {
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   object-fit: cover;
   border-radius: 0;
 }
@@ -45,24 +47,20 @@
 .register-box {
   background: #ffffff;
   border-radius: 16px;
-  padding: 40px 50px;
+  padding: 20px 40px;
   width: 420px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   text-align: center;
   transition: all 0.3s ease-in-out;
   animation: slideIn 0.7s ease;
-}
 
-.register-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
-
 /* 🔹 Title */
 .register-box h2 {
   font-size: 26px;
   color: #007bff;
-  font-weight: 700;
+  font-family: 'segoe ui';
+ font-weight: bold;
   margin-bottom: 25px;
   letter-spacing: 0.5px;
 }
@@ -142,8 +140,11 @@ input:focus {
   cursor: pointer;
   font-size: 15px;
   transition: all 0.3s ease;
+  /* margin-bottom: 10px; */
 }
-
+.already-account{
+    margin-top: 30px;
+}
 .register-btn:hover,
 .verify-btn:hover {
   background: linear-gradient(135deg, #0056b3, #007bff);

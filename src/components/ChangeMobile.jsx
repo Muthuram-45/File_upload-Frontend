@@ -12,7 +12,7 @@ function ChangeMobile() {
     e.preventDefault();
 
     try {
-      const res = await fetch('https://file-upload-backend-9.onrender.com/change-mobile', {
+      const res = await fetch('http://localhost:5000/change-mobile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, mobile }),
@@ -72,9 +72,6 @@ function ChangeMobile() {
         />
 
         <button type="submit">Update Mobile</button>
-        <p className="back-link" onClick={() => navigate('/dashboard')}>
-          🔙 Back 
-        </p>
       </form>
     </div>
   );

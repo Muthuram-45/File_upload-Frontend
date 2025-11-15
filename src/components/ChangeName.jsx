@@ -2,23 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ChangeName.css';
 
-
 function ChangeName() {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [loginType, setLoginType] = useState('');
   const navigate = useNavigate();
 
-  // ✅ Auto-fill user's email and current name from localStorage
+  // ✅ Auto-fill user's info from localStorage
   useEffect(() => {
-    const storedUser =
-      JSON.parse(localStorage.getItem('user')) ||
-      JSON.parse(localStorage.getItem('googleUserInfo'));
+    const user = JSON.parse(localStorage.getItem('user'));
+    const googleUser = JSON.parse(localStorage.getItem('googleUserInfo'));
+    const companyUser = JSON.parse(localStorage.getItem('company'));
 
-    if (storedUser) {
-      setEmail(storedUser.email || '');
-      setFirstName(storedUser.firstName || '');
-      setLastName(storedUser.lastName || '');
+    let activeUser = null;
+    let type = '';
+
+    if (companyUser) {
+      activeUser = companyUser;
+      type = 'company';
+    } else if (user) {
+      activeUser = user;
+      type = 'user';
+    } else if (googleUser) {
+      activeUser = googleUser;
+      type = 'google';
+    }
+
+    if (activeUser) {
+      setEmail(activeUser.email || '');
+      setFirstName(activeUser.firstName || '');
+      setLastName(activeUser.lastName || '');
+      setLoginType(type);
     }
   }, []);
 
@@ -26,7 +41,7 @@ function ChangeName() {
     e.preventDefault();
 
     try {
-      const res = await fetch('https://file-upload-backend-9.onrender.com/change-name', {
+      const res = await fetch('http://localhost:5000/change-name', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, firstName, lastName }),
@@ -34,34 +49,33 @@ function ChangeName() {
 
       const data = await res.json();
       if (data.success) {
-        alert('✅ Name updated successfully');
+        alert('✅ Name updated successfully!');
 
-        // ✅ Update localStorage so Dashboard reflects changes instantly
-        const storedUser =
-          JSON.parse(localStorage.getItem('user')) ||
-          JSON.parse(localStorage.getItem('googleUserInfo'));
+        // ✅ Update correct localStorage based on login type
+        let storageKey = '';
+        if (loginType === 'google') storageKey = 'googleUserInfo';
+        else if (loginType === 'company') storageKey = 'company';
+        else storageKey = 'user';
 
-        if (storedUser && storedUser.email === email) {
-          storedUser.firstName = firstName;
-          storedUser.lastName = lastName;
+        const updatedUser = {
+          ...(JSON.parse(localStorage.getItem(storageKey)) || {}),
+          firstName,
+          lastName,
+        };
 
-          if (storedUser.isGoogleUser) {
-            localStorage.setItem('googleUserInfo', JSON.stringify(storedUser));
-          } else {
-            localStorage.setItem('user', JSON.stringify(storedUser));
-          }
+        localStorage.setItem(storageKey, JSON.stringify(updatedUser));
 
-          // ✅ Notify Dashboard of update
-          window.dispatchEvent(new Event('storage'));
-        }
+        // Notify other pages that localStorage was updated
+        window.dispatchEvent(new Event('storage'));
 
-        navigate('/dashboard');
+        // Redirect back to settings or dashboard
+        navigate('/d-oxwilh9dy1'); // ✅ same dashboard route as in SettingsPage
       } else {
-        alert('❌ ' + data.error);
+        alert('❌ ' + (data.error || 'Update failed'));
       }
     } catch (err) {
-      console.error('Error:', err);
-      alert('❌ Something went wrong');
+      console.error('❌ Error:', err);
+      alert('❌ Something went wrong. Please try again.');
     }
   };
 
@@ -72,11 +86,10 @@ function ChangeName() {
 
         <input
           type="email"
-          placeholder="Enter Your Email"
+          placeholder="Your Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
           readOnly
+          required
         />
 
         <input
@@ -95,9 +108,6 @@ function ChangeName() {
         />
 
         <button type="submit">Update Name</button>
-        <p className="back-link" onClick={() => navigate('/dashboard')}>
-          🔙 Back 
-        </p>
       </form>
     </div>
   );

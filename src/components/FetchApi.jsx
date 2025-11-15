@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './FetchApi.css';
+import Footer from './Footer';
+import { useNavigate } from "react-router-dom";
 
 function ApiFetcher() {
   const [apiUrl, setApiUrl] = useState('https://jsonplaceholder.typicode.com/posts/1');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleFetch = async () => {
     if (!apiUrl.trim()) {
@@ -28,6 +31,11 @@ function ApiFetcher() {
 
   return (
     <div className="api-fetcher">
+      {/* ✅ Fixed Back Button (top-left corner) */}
+      <button className="backk-btn" onClick={() => navigate('/d-oxwilh9dy1')}>
+         Back
+      </button>
+
       <h2>Simple API Fetcher</h2>
 
       <input
@@ -45,6 +53,7 @@ function ApiFetcher() {
       <div className="response-box">
         <pre>{response}</pre>
       </div>
+      <Footer />
     </div>
   );
 }

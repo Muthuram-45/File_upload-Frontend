@@ -18,7 +18,7 @@ function ChangePassword() {
     }
 
     try {
-      const res = await fetch('https://file-upload-backend-9.onrender.com/change-password', {
+      const res = await fetch('http://localhost:5000/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, oldPassword, newPassword }),
@@ -74,9 +74,7 @@ function ChangePassword() {
 
         <button type="submit">Update Password</button>
 
-        <p className="back-link" onClick={() => navigate('/dashboard')}>
-          🔙 Back 
-        </p>
+       
       </form>
     </div>
   );

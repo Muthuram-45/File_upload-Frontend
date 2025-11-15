@@ -8,6 +8,7 @@ import {
 import './Register.css';
 import registerImage from '../assets/art3.png';
 import Swal from 'sweetalert2';
+import Footer from './Footer';
 
 function Register() {
   const [firstName, setFirstName] = useState('');
@@ -41,7 +42,7 @@ function Register() {
     const trimmedEmail = email.trim().toLowerCase();
 
     const res = await axios.post(
-      'https://file-upload-backend-9.onrender.com/send-otp',
+      'http://localhost:5000/send-otp',
       { email: trimmedEmail },
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -80,21 +81,21 @@ const handleVerifyOtp = async () => {
     const trimmedOtp = otp.trim();
 
     const verifyRes = await axios.post(
-      'https://file-upload-backend-9.onrender.com/verify-otp',
+      'http://localhost:5000/verify-otp',
       { email: trimmedEmail, otp: trimmedOtp },
       { headers: { 'Content-Type': 'application/json' } }
     );
 
     if (verifyRes.data.success) {
       const registerRes = await axios.post(
-        'https://file-upload-backend-9.onrender.com/register',
+        'http://localhost:5000/register',
         { firstName, lastName, email: trimmedEmail, mobile, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
 
       if (registerRes.data.success) {
         alert('✅ Registration successful!');
-        window.location.href = '/dashboard';
+        window.location.href = '/d-oxwilh9dy1';
       } else {
         alert(registerRes.data.error || '❌ Registration failed. Try again.');
       }
@@ -127,7 +128,7 @@ const handleGoogleSignIn = async () => {
     console.log('Google ID Token:', firebaseToken);
 
     // ✅ Step 2: Send to backend (match key name)
-    const res = await axios.post('https://file-upload-backend-9.onrender.com/google-login', {
+    const res = await axios.post('http://localhost:5000/google-login', {
       token: firebaseToken, // 🔹 now matches backend
     });
 
@@ -151,7 +152,7 @@ const handleGoogleSignIn = async () => {
 
   } catch (err) {
     console.error('Google sign-in error:', err);
-    Swal.fire('Error', 'Google sign-in failed. Please try again.', 'error');
+    // Swal.fire('Error', 'Google sign-in failed. Please try again.', 'error');
   }
 };
 
@@ -242,7 +243,6 @@ const handleGoogleSignIn = async () => {
               <p>{message}</p>
             </div>
           )}
-
           <div className="divider">OR</div>
 
           <button className="google-btn" onClick={handleGoogleSignIn}>
@@ -256,12 +256,15 @@ const handleGoogleSignIn = async () => {
           {/* 🔹 New Company Register Button */}
           <button
             className="company-register-btn"
-            onClick={() => (window.location.href = '/company-register')}
+            onClick={() => (window.location.href = '/cr-h2k8j5d1f5')}
           >
             Register as Company
           </button>
         </div>
       </div>
+
+      <Footer/>
+
     </div>
 
   );

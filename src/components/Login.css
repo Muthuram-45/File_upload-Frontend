@@ -8,9 +8,8 @@
 /* 🔹 Two-Column Layout */
 .login-container {
   display: flex;
-  height: 100vh;
+  height: 60vh;
   width: 100vw;
-  background: linear-gradient(135deg, #e3f2fd, #f5f7fa);
   font-family: 'Poppins', sans-serif;
 }
 
@@ -36,15 +35,13 @@
   transition: all 0.3s ease-in-out;
 }
 
-.login-box:hover {
-  transform: translateY(-5px);
-}
 
 /* 🔹 Titles */
 .login-title {
   font-size: 26px;
   color: #007bff;
-  font-weight: 700;
+  font-family: 'segoe ui';
+ font-weight: bold;
   margin-bottom: 10px;
 }
 
@@ -150,4 +147,20 @@
     width: 90%;
     padding: 30px 20px;
   }
+}
+.company-login-btn {
+  background-color: #2e86c1;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  width: 100%;
+  margin-top: 12px;
+  transition: 0.3s;
+}
+
+.company-login-btn:hover {
+  background-color: #1b4f72;
 }
