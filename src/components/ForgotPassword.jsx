@@ -61,6 +61,22 @@ function ForgotPassword() {
 
   return (
     <div className="forgot-password-container">
+
+       <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          marginLeft: '35px',
+        }}
+      >
+        <button
+          className="backk-btns"
+          onClick={() => navigate('/d-oxwilh9dy1')}
+        >
+          Back
+        </button>
+        </div>
+
       <form className="forgot-password-form" onSubmit={handleReset}>
         <h2>Forgot Password </h2>
 

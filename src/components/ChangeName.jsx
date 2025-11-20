@@ -83,14 +83,14 @@ function ChangeName() {
     <div className="change-name-container">
       <form className="change-name-form" onSubmit={handleChangeName}>
         <h2>Change Name</h2>
-
+{/* 
         <input
           type="email"
           placeholder="Your Email"
           value={email}
           readOnly
           required
-        />
+        /> */}
 
         <input
           type="text"

@@ -3,13 +3,12 @@
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   width: 100vw;
-  margin-top: -60px;
+  margin-top: -70px;
 }
 
 /* Header */
 h2 {
   text-align: center;
-  margin-bottom: 20px;
  color: #233d57;
   font-family: 'segoe ui';
 }
@@ -207,12 +206,7 @@ td {
 /* Container for file tabs and back button */
 .file-tabs-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* margin-bottom: 15px; */
-  /* flex-wrap: wrap; */
   margin-left: 55px;
-  margin-right: 90px;
 }
 
 /* Left side tabs container */
@@ -235,6 +229,7 @@ td {
   border-radius: 10px;
   border: 2px solid #007bff;
   font-family: 'Poppins', sans-serif;
+  margin-top: 20px;
    margin-left: 50px;
 }
 
@@ -256,7 +251,6 @@ td {
 
 /* Right side Back button */
 .back-btn {
-  margin-right: 15px;
   color: black;
   border: 2px solid #3d82d1;
   background-color: white;
@@ -265,6 +259,8 @@ td {
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
+  margin-top: -30px;
+  margin-right:88%;
   transition: all 0.3s ease;
 }
 

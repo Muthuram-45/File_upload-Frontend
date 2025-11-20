@@ -75,11 +75,19 @@ function Login({ setUser }) {
           </button>
 
           <p className="footer-text">
-            New user?{' '}
+            New user ?{' '}
             <span onClick={() => navigate('/r-ya7w1p9s35')} className="register-link">
               Register here
             </span>
           </p>
+
+           <p className="footer-text2">
+            Remember ?{' '}
+            <span onClick={() => navigate('/fp-m3r7pdf0a9')} className="register-link">
+             Forget Password
+            </span>
+          </p>
+
         </div>
       </div>
 

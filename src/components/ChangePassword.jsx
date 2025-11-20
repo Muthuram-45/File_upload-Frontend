@@ -3,14 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import './ChangePassword.css';
 
 function ChangePassword() {
-  const [email, setEmail] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
+  // ✅ Get logged-in user data from localStorage
+  const storedUser =
+    JSON.parse(localStorage.getItem('user')) ||
+    JSON.parse(localStorage.getItem('googleUserInfo'));
+
+  const email = storedUser?.email;  // 👉 Auto-filled email (no input needed)
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
+
+    if (!email) {
+      alert("❌ No logged-in user detected");
+      return;
+    }
 
     if (newPassword !== confirmPassword) {
       alert('❌ New passwords do not match');
@@ -43,13 +54,8 @@ function ChangePassword() {
       <form className="change-password-form" onSubmit={handleChangePassword}>
         <h2>Change Password</h2>
 
-        <input
-          type="email"
-          placeholder="Enter Your Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        {/* ❌ Email field removed */}
+
         <input
           type="password"
           placeholder="Old Password"
@@ -73,8 +79,6 @@ function ChangePassword() {
         />
 
         <button type="submit">Update Password</button>
-
-       
       </form>
     </div>
   );

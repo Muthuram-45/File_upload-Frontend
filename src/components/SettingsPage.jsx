@@ -157,8 +157,6 @@ function SettingsPage() {
         return <ChangeMobile />;
       case "password":
         return <ChangePassword />;
-      case "forgot":
-        return <ForgotPassword />;
       default:
         return <div className="settings-content">Select a section</div>;
     }
@@ -201,12 +199,7 @@ function SettingsPage() {
           <FaLock className="icon" /> &nbsp;&nbsp; Change Password
         </button>
 
-        <button
-          className={activeSection === "forgot" ? "active" : ""}
-          onClick={() => setActiveSection("forgot")}
-        >
-          <FaKey className="icon" /> &nbsp;&nbsp; Forgot Password
-        </button>
+       
 
         <hr />
 

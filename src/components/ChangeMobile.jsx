@@ -2,14 +2,24 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ChangeMobile.css';
 
-
 function ChangeMobile() {
-  const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const navigate = useNavigate();
 
+  // ✅ Get logged-in user info (Normal user or Google user)
+  const storedUser =
+    JSON.parse(localStorage.getItem('user')) ||
+    JSON.parse(localStorage.getItem('googleUserInfo'));
+
+  const email = storedUser?.email;  // 👉 Auto-filled email (no need input)
+
   const handleChangeMobile = async (e) => {
     e.preventDefault();
+
+    if (!email) {
+      alert("❌ No user logged in");
+      return;
+    }
 
     try {
       const res = await fetch('http://localhost:5000/change-mobile', {
@@ -19,26 +29,21 @@ function ChangeMobile() {
       });
 
       const data = await res.json();
+
       if (data.success) {
         alert('✅ Mobile number updated successfully');
 
-        // ✅ Update localStorage so Dashboard shows new number
-        const storedUser =
-          JSON.parse(localStorage.getItem('user')) ||
-          JSON.parse(localStorage.getItem('googleUserInfo'));
+        // ✅ Update localStorage
+        storedUser.mobile = mobile;
 
-        if (storedUser && storedUser.email === email) {
-          storedUser.mobile = mobile;
-
-          if (storedUser.isGoogleUser) {
-            localStorage.setItem('googleUserInfo', JSON.stringify(storedUser));
-          } else {
-            localStorage.setItem('user', JSON.stringify(storedUser));
-          }
-
-          // ✅ Notify other tabs/pages (Dashboard listens to this)
-          window.dispatchEvent(new Event('storage'));
+        if (storedUser.isGoogleUser) {
+          localStorage.setItem('googleUserInfo', JSON.stringify(storedUser));
+        } else {
+          localStorage.setItem('user', JSON.stringify(storedUser));
         }
+
+        // Notify dashboard
+        window.dispatchEvent(new Event('storage'));
 
         navigate('/dashboard');
       } else {
@@ -55,13 +60,7 @@ function ChangeMobile() {
       <form className="change-mobile-form" onSubmit={handleChangeMobile}>
         <h2>Change Mobile</h2>
 
-        <input
-          type="email"
-          placeholder="Enter Your Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        {/* ❌ Email input removed */}
 
         <input
           type="text"

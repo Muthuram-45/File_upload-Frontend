@@ -88,11 +88,15 @@
 
 /* 🔹 Footer */
 .footer-text {
-  margin-top: 20px;
+  margin-top: 15px;
   font-size: 14px;
   color: #666;
 }
-
+.footer-text2 {
+  margin-top: 5px;
+  font-size: 14px;
+  color: red;
+}
 .register-link {
   color: #007bff;
   font-weight: 600;
