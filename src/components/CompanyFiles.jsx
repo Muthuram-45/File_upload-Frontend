@@ -101,7 +101,7 @@ function CompanyFiles() {
                         rel="noreferrer"
                         className="view-link"
                       >
-                         View
+                        <FaDownload  color="black"/>
                       </a>
                     </td>
                     {/* <td> <FaDownload color="red" /></td> */}
@@ -137,7 +137,7 @@ function CompanyFiles() {
                         className="view-btn"
                         onClick={() => handleViewFolder(folder)}
                       >
-                        View  <FaEye fontSize={20} /> 
+                       <FaEye fontSize={20} color="black" /> 
                       </button>
                     </td>
                     {/* <td></td> */}
