@@ -298,6 +298,8 @@ function ProcessedView() {
     });
   };
 
+  
+
   return (
     <div className="processed-container">
       <h2>{folder?.folderName}</h2>
@@ -342,7 +344,19 @@ function ProcessedView() {
 
     {/* 📋 Show Table Only If Table Tab Selected */}
     {!showCharts && (
-      <div className="table-wrapper">
+      <div
+      className={`table-wrapper ${
+        activeFile?.name.toLowerCase().endsWith("_processed_data.csv")
+          ? "tbl-full"
+          : activeFile?.name.toLowerCase() === "entity_table.csv"
+          ? "tbl-entity"
+          : activeFile?.name.toLowerCase() === "dimension_table.csv"
+          ? "tbl-dimension"
+          : activeFile?.name.toLowerCase() === "metrics_table.csv"
+          ? "tbl-metrics"
+          : ""
+      }`}
+    >
         <table>
           <thead>
             <tr>

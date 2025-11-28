@@ -7,7 +7,7 @@
   background: #daebfa; 
   min-height: 100vh;
   padding: 30px 0px;
-  margin-top: -80px;
+  
 
 }
 
@@ -280,4 +280,100 @@
   color: #233d57;
   font-family: 'segoe ui';
   font-weight: 600;
+}/* ===============================
+   ✅ FULL RESPONSIVE SUPPORT
+================================ */
+@media (max-width: 1024px) {
+  .split-container {
+    flex-direction: row;
+  }
+
+}
+/* Tablets & small laptops */
+@media (max-width: 768px) {
+  .split-container {
+    flex-direction: column;
+    margin-left: 0;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .file-sec {
+    min-width: 100%;
+    padding: 15px 10px;
+  }
+
+  .backk-btns {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 10px 0 20px 20px;
+  }
+  .files-page {
+  margin-top: -30px;
+}
+
+.split-container {
+margin-bottom: 50px;
+}
+}
+
+
+/* Mobile devices */
+@media (max-width: 600px) {
+.files-page {
+  margin-top: -50px;
+}
+
+  .dashboard-head h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .uploaded-section h2,
+  .processed-section h2 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .files-table {
+    font-size: 13px;
+  }
+
+  .files-table th,
+  .files-table td {
+    padding: 8px 6px;
+  }
+
+  .split-container {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .view-link,
+  .view-btn {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
+
+  .dashboard-foot {
+    margin-top: 40px;
+    padding: 10px;
+  }
+
+  .foot-link {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .foot-link span {
+    display: none;
+  }
+
+  .backk-btns {
+    left: -40px;
+    font-size: 13px;
+    padding: 8px 14px;
+  }
 }

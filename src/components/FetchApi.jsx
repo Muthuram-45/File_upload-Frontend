@@ -30,6 +30,7 @@ function ApiFetcher() {
   };
 
   return (
+    <>
     <div className="api-fetcher">
       {/* ✅ Fixed Back Button (top-left corner) */}
       <button className="backk-btn" onClick={() => navigate('/d-oxwilh9dy1')}>
@@ -53,8 +54,10 @@ function ApiFetcher() {
       <div className="response-box">
         <pre>{response}</pre>
       </div>
-      <Footer />
+     
     </div>
+     <Footer />
+     </>
   );
 }
 

@@ -1,32 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
 import { FiSettings, FiLogOut } from "react-icons/fi";
 import logo from "../assets/logo.png";
+import axios from "axios";
 import "./Navbar.css";
 
 function Navbar({ user, setUser }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
+  const [lastLoginTime, setLastLoginTime] = useState("");
+  const [userTimeZone, setUserTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [userCountry, setUserCountry] = useState("Your Country");
+
   const menuRef = useRef(null);
   const navigate = useNavigate();
-
-  const [currentTime, setCurrentTime] = useState("");
-  const [lastLogin, setLastLogin] = useState("");
-
-  // NEW: Immediately update lastLogin when user logs in
-  useEffect(() => {
-    if (user) {
-      const now = new Date().toISOString();
-      localStorage.setItem("lastLogin", now);
-
-      const formatted = new Date(now).toLocaleString("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      });
-
-      setLastLogin(formatted);
-    }
-  }, [user]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -35,100 +22,98 @@ function Navbar({ user, setUser }) {
         setDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Live current time (updates every second)
+  // Auto-detect timezone and country from IP
+  useEffect(() => {
+    const fetchUserLocation = async () => {
+      try {
+        const res = await axios.get("https://ipapi.co/json/");
+        if (res.data) {
+          setUserTimeZone(res.data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone);
+          setUserCountry(res.data.country_name || "Your Country");
+        }
+      } catch (err) {
+        console.error("Failed to get location from IP, using system timezone", err);
+      }
+    };
+
+    fetchUserLocation();
+  }, []);
+
+  // Live current time
   useEffect(() => {
     const interval = setInterval(() => {
-      const now = new Date();
-      const formatted = now.toLocaleString("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "medium",
-      });
-      setCurrentTime(formatted);
+      setCurrentTime(
+        new Date().toLocaleString("en-US", {
+          timeZone: userTimeZone,
+          dateStyle: "medium",
+          timeStyle: "medium",
+        })
+      );
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [userTimeZone]);
 
-  // Load last login time from localStorage on first load
+  // Fetch last login
   useEffect(() => {
-    const storedLogin = localStorage.getItem("lastLogin");
+    const fetchLastLogin = async () => {
+      if (!user?.email) return;
 
-    if (storedLogin) {
-      const date = new Date(storedLogin);
-      const formatted = date.toLocaleString("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      });
-      setLastLogin(formatted);
-    } else {
-      setLastLogin("Not Available");
-    }
-  }, []);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`http://localhost:5000/user/${user.email}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  // Logout function
-  const handleLogout = async () => {
-    try {
-      const companyUser = user?.isCompany;
+        if (res.data.success && res.data.user?.lastLogin) {
+          const lastLogin = new Date(res.data.user.lastLogin);
+          setLastLoginTime(
+            lastLogin.toLocaleString("en-US", {
+              timeZone: userTimeZone,
+              dateStyle: "medium",
+              timeStyle: "short",
+            })
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching last login:", err);
+      }
+    };
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      localStorage.removeItem("googleUserInfo");
-      localStorage.removeItem("company");
-      sessionStorage.clear();
+    fetchLastLogin();
+  }, [user, userTimeZone]);
 
-      setUser(null);
-
-      if (user?.isGoogleUser) await auth.signOut();
-
-      navigate(companyUser ? "/cf-2g7h9k3l5m" : "/l-gy5n8r4v2t");
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    setUser(null);
+    navigate("/l-gy5n8r4v2t");
   };
 
   return (
     <nav className="navbar">
-      {/* Left: Logo */}
-      <div
-        className="app-heading"
-        onClick={() => navigate("/d-oxwilh9dy1")}
-        style={{ cursor: "pointer" }}
-      >
+      <div className="app-heading" onClick={() => navigate("/d-oxwilh9dy1")} style={{ cursor: "pointer" }}>
         <img src={logo} alt="Logo" className="logo" />
       </div>
 
-      {/* Right Section */}
       <div className="navbar-right">
-        {user ? (
+        {user && (
           <div className="profile-area" ref={menuRef}>
-            <div
-              className="profile-trigger"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
+            <div className="profile-trigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
               <div className="avatar-ring">
-                <div className="profile-avatar">
-                  {user?.firstName?.charAt(0).toUpperCase() || "U"}
-                </div>
+                <div className="profile-avatar">{user?.firstName?.charAt(0).toUpperCase() || "U"}</div>
               </div>
               <span className="profile-name">{user?.firstName || "User"}</span>
             </div>
 
-            {/* Dropdown */}
             {dropdownOpen && (
-              <div
-                className="dropdown-menu modern show"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className="dropdown-menu modern show" onClick={(e) => e.stopPropagation()}>
                 <div className="profile-header">
-                  <div className="profile-avatar large">
-                    {user?.firstName?.charAt(0).toUpperCase() || "U"}
-                  </div>
-
+                  <div className="profile-avatar large">{user?.firstName?.charAt(0).toUpperCase() || "U"}</div>
                   <div className="profile-text">
                     <h3>{user?.firstName || "User"}</h3>
                     <p>{user?.email}</p>
@@ -136,27 +121,19 @@ function Navbar({ user, setUser }) {
                 </div>
 
                 <hr />
-
-                {/* Current Time */}
-                <div>
-                  <p className="time-display">Current : {currentTime}</p>
-                </div>
-
-                {/* Last Login */}
-                <div>
-                  <p className="last-login">Last Login: {lastLogin}</p>
-                </div>
+                <p className="time-display">
+                  Current Time (<span className="country">{userCountry}</span>) : <br />
+                  <span className="time-text">{currentTime}</span>
+                </p>
+                <p className="last-login">
+                  Last Login (<span className="country">{userCountry}</span>) : <br />
+                  <span className="time-text">{lastLoginTime}</span>
+                </p>
 
                 <hr />
 
                 <div className="dropdown-actions">
-                  <button
-                    className="settings-btn"
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      navigate("/settings");
-                    }}
-                  >
+                  <button className="settings-btn" onClick={() => { setDropdownOpen(false); navigate("/settings"); }}>
                     <FiSettings className="icon" /> Settings
                   </button>
 
@@ -167,8 +144,6 @@ function Navbar({ user, setUser }) {
               </div>
             )}
           </div>
-        ) : (
-          <div className="auth-buttons"></div>
         )}
       </div>
     </nav>

@@ -168,3 +168,64 @@
     min-width: 100%;
   }
 }
+/* ================= RESPONSIVE LOGIN FIX ================= */
+
+/* ---------- Tablets (max-width: 992px) ---------- */
+@media (max-width: 992px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .login-image-section {
+    display: none; /* Hide image on tablet & mobile */
+  }
+
+  .login-form-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 25px;
+    border-radius: 16px;
+  }
+}
+
+
+/* ---------- Mobile (max-width: 600px) ---------- */
+@media (max-width: 600px) {
+  .login-container {
+    padding: 0;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 100%;
+    padding: 25px 15px;
+    border-radius: 12px;
+    box-shadow: none;
+  }
+
+  .login-title {
+    font-size: 22px;
+  }
+
+  .login-subtitle {
+    font-size: 14px;
+  }
+
+  .login-input {
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  .login-btn {
+    font-size: 15px;
+    padding: 12px;
+  }
+}

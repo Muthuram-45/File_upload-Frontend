@@ -24,6 +24,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
       const localUser = JSON.parse(localStorage.getItem('user'));

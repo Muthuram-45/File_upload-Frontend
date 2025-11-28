@@ -8,9 +8,12 @@
 /* 🔹 Two-Column Layout */
 .login-container {
   display: flex;
-  height: 60vh;
+  height: 85vh;
   width: 100vw;
   font-family: 'Poppins', sans-serif;
+  background: #f5f7fa;
+  overflow-x: hidden;
+  margin-top: -25px;
 }
 
 /* 🔹 Left Side (Form) */
@@ -19,7 +22,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
   padding: 20px;
 }
 
@@ -29,19 +31,19 @@
   border-radius: 16px;
   padding: 40px 50px;
   width: 400px;
+  max-width: 95%;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   text-align: center;
   animation: slideIn 0.7s ease;
   transition: all 0.3s ease-in-out;
 }
 
-
 /* 🔹 Titles */
 .login-title {
   font-size: 26px;
   color: #007bff;
-  font-family: 'segoe ui';
- font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
@@ -86,17 +88,36 @@
   background: linear-gradient(135deg, #0056b3, #007bff);
 }
 
-/* 🔹 Footer */
-.footer-text {
-  margin-top: 15px;
+/* 🔹 Company Login Button */
+.company-login-btn {
+  background-color: #2e86c1;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  width: 100%;
+  margin-top: 12px;
+  transition: 0.3s;
+}
+
+.company-login-btn:hover {
+  background-color: #1b4f72;
+}
+
+/* 🔹 Footer Text */
+.footer-text,
+.footer-text2 {
+  margin-top: 12px;
   font-size: 14px;
   color: #666;
 }
+
 .footer-text2 {
-  margin-top: 5px;
-  font-size: 14px;
   color: red;
 }
+
 .register-link {
   color: #007bff;
   font-weight: 600;
@@ -107,7 +128,6 @@
 /* 🔹 Right Side (Image) */
 .login-image-section {
   flex: 1;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -134,9 +154,12 @@
 }
 
 /* 🔹 Responsive */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .login-container {
     flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
   }
 
   .login-image-section {
@@ -148,23 +171,42 @@
   }
 
   .login-box {
-    width: 90%;
+    width: 50%;
     padding: 30px 20px;
   }
-}
-.company-login-btn {
-  background-color: #2e86c1;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 15px;
-  width: 100%;
-  margin-top: 12px;
-  transition: 0.3s;
+
+  .login-title {
+    font-size: 22px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
+  }
+
+  .login-input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .login-btn,
+  .company-login-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .footer-text,
+  .footer-text2 {
+    font-size: 13px;
+  }
 }
 
-.company-login-btn:hover {
-  background-color: #1b4f72;
+/* Small mobile screens */
+@media (max-width: 480px) {
+.login-container{
+  height: 90vh;
+  margin-bottom: -20px;
+}
+.login-box {
+ width: 100%;
+}
 }

@@ -157,6 +157,7 @@ const handleGoogleSignIn = async () => {
 };
 
   return (
+    <>
     <div className="register-container">
       <div className="register-image-section">
         <img src={registerImage} alt="Register illustration" />
@@ -263,10 +264,10 @@ const handleGoogleSignIn = async () => {
         </div>
       </div>
 
-      <Footer/>
-
     </div>
-
+    <Footer/>
+  </>
+  
   );
 }
 

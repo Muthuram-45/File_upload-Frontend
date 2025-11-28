@@ -87,6 +87,8 @@ function Upload() {
   };
 
   return (
+
+    <>
     <div className="upload-page">
       <div className="upload-box">
         {/* 🔹 Close Button (X on top-right) */}
@@ -159,8 +161,11 @@ function Upload() {
         </div>
       )}
 
-      <Footer />
+  
     </div>
+
+        <Footer />
+        </>
   );
 }
 

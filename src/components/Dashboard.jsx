@@ -73,6 +73,7 @@ function Dashboard() {
   }
 
   return (
+    <>
     <div className="dashboard-container">
       <div className="dashboard-content">
         <div className="content-box">
@@ -110,8 +111,11 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <Footer/>
     </div>
+
+<Footer/>
+
+    </>
   );
 }
 

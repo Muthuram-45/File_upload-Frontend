@@ -100,6 +100,7 @@ function CompanyRegister() {
   };
 
   return (
+    <>
     <div className="register-container">
       <div className="register-image-section">
         <img src={registerImage} alt="Company Register illustration" />
@@ -211,8 +212,9 @@ function CompanyRegister() {
           )}
         </div>
       </div>
-      <Footer/>
     </div>
+      <Footer/>
+    </>
   );
 }
 

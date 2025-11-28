@@ -7,38 +7,39 @@
 
 /* 🔹 Main Container */
 .api-fetcher {
-  height: 85vh;
-  width: 100vw;
+  min-height: 85vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
- background: #daebfa; 
+  background: #daebfa;
   font-family: 'Poppins', sans-serif;
-  margin-top: -100px;
+  padding: 80px 20px 40px;
+  text-align: center;
+  margin-top: -70px;
 }
 
 /* 🔹 Title */
 .api-fetcher h2 {
-  font-size: 25px;
-  /* color: #007bff; */
+  font-size: 26px;
   color: #233d57;
-  font-family: 'segoe ui';
- font-weight: bold;
-  margin-bottom: 20px;
+  font-family: 'Segoe UI';
+  font-weight: bold;
+  margin-bottom: 25px;
 }
 
 /* 🔹 Input Field */
 .api-input {
-  width: 70%;
-  max-width: 500px;
+  width: 100%;
+  max-width: 550px;
   padding: 12px 16px;
-  border: 1px solid #ccc;
+  border: 2px solid #4a90e2;
   border-radius: 10px;
   font-size: 16px;
   outline: none;
-  transition: all 0.3s ease;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  transition: 0.3s ease;
 }
 
 .api-input:focus {
@@ -47,7 +48,27 @@
 }
 
 /* 🔹 Fetch Button */
+.fetch-btn {
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  border: 2px solid #3d82d1;
+  padding: 12px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: black;
+  background-color: white;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
 
+.fetch-btn:hover {
+  background: #3b82d1;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
+}
 
 .fetch-btn:disabled {
   opacity: 0.6;
@@ -56,17 +77,16 @@
 
 /* 🔹 Response Box */
 .response-box {
-  background: white;
-  width: 70%;
-  max-width: 700px;
-  height: 300px;
+  background: #ffffff;
+  width: 100%;
+  max-width: 800px;
+  height: 320px;
   margin-top: 25px;
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
   overflow-y: auto;
   text-align: left;
-  animation: fadeIn 0.6s ease;
 }
 
 .response-box pre {
@@ -76,100 +96,69 @@
   word-break: break-word;
 }
 
-/* 🔹 Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* 🔹 Back Button */
+.backk-btn {
+  position: absolute;
+  top: 110px;
+  left: 40px;
+  color: black;
+  border: 2px solid #3d82d1;
+  background-color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s ease;
+  z-index: 10;
 }
 
-/* 🔹 Responsive */
+.backk-btn:hover {
+  background: #3b82d1;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+}
+
+
+
+/* ✅ Mobile View */
 @media (max-width: 600px) {
-  .api-input,
-  .response-box {
-    width: 90%;
+  .api-fetcher {
+    padding: 100px 15px 30px;
+  }
+  .api-fetcher h2 {
+    font-size: 20px;
   }
 
+  .api-input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .fetch-btn {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .response-box {
+    height: 250px;
+    padding: 15px;
+  }
+
+  .backk-btn {
+    top: 85px;
+    left: 10px;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+/* ✅ Tablet View */
+@media (max-width: 900px) {
   .api-fetcher h2 {
     font-size: 22px;
   }
 
-  .fetch-btn {
-    width: 90%;
+  .response-box {
+    height: 250px;
   }
-}
-/* 🔹 Fixed Back Button */
-.backk-btn {
-  position: fixed;
-  top: 130px;
-  left: 50px;
-  color: black;
-  border: 2px solid #3d82d1;
-  background-color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
-
-.backk-btn:hover {
- background: #3b82d1;
-  color: #fefeff;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
-}
-
-/* 🔹 Page Styling */
-.api-fetcher {
-  text-align: center;
-  padding: 80px 30px 40px; /* top padding increased for back button space */
-  font-family: "Poppins", sans-serif;
-}
-
-.api-input {
-  width: 60%;
-  padding: 10px;
-  border: 2px solid #4a90e2;
-  border-radius: 8px;
-  font-size: 15px;
-  outline: none;
-  margin-bottom: 20px;
-}
-
-.fetch-btn {
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: black;
-  border: 2px solid #3d82d1;
-  background-color: white;
-  transition: all 0.3s ease;
-  font-size: 18px;
-  letter-spacing: 1px;
-}
-
-.fetch-btn:hover {
-  background: #3b82d1;
-  color: #fefeff;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
-}
-
-.response-box {
-  margin-top: 20px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  padding: 20px;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
-  overflow-x: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }

@@ -8,7 +8,7 @@
   /* background: #daebfa;  */
   background: white;
   font-family: "Poppins", sans-serif;
-  margin-top: -80px;
+  margin-top: -20px;
 }
 
 /* ===== Sidebar ===== */
@@ -190,4 +190,65 @@
 }
 .back-button{
   color: black;
+}
+
+/* ---------- MOBILE VIEW ---------- */
+@media (max-width: 480px) {
+
+  .settings-sidebar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .settings-sidebar button {
+    width: 100%;
+    font-size: 13px;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: left;
+  }
+
+  .settings-content {
+    width: 100%;
+    padding: 20px 15px;
+  }
+
+  .settings-content h2 {
+    font-size: 18px;
+  }
+
+  .settings-content input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .settings-content button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .profile-icon {
+    font-size: 55px;
+  }
+
+  .profile-section h2 {
+    font-size: 18px;
+  }
+
+  .profile-tagline {
+    font-size: 13px;
+  }
+
+  .detail-item {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .profile-details {
+    gap: 12px;
+  }
+
+  .back-button {
+    font-size: 13px;
+  }
 }

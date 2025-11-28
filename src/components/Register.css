@@ -8,14 +8,12 @@
 
 /* 🔹 Full Page Layout */
 .register-container {
-  height: 700px;
+  height: 85vh;
   width: 100vw;
   display: flex;
   font-family: 'Poppins', sans-serif; 
   overflow-y: hidden;
-  margin-top: -150px;
-
-  
+  /* margin-top: -150px; */
 }
 
 /* 🔹 Left Image Section */
@@ -24,12 +22,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  margin-top: -50px;
 }
 
 .register-image-section img {
   width: 80%;
-  height: 80%;
+  height: 90%;
   object-fit: cover;
   border-radius: 0;
 }
@@ -48,11 +46,14 @@
   background: #ffffff;
   border-radius: 16px;
   padding: 20px 40px;
+  /* height: 80%; */
   width: 420px;
+  /* height: 90%; */
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   text-align: center;
   transition: all 0.3s ease-in-out;
   animation: slideIn 0.7s ease;
+  margin-top: -85px;
 
 }
 /* 🔹 Title */
@@ -410,4 +411,117 @@ input:focus {
 
 .company-register-btn:hover {
   background-color: #357ab8;
+}
+/* ================= RESPONSIVE FIXED DESIGN ================= */
+
+/* ✅ Tablet View */
+/* ================= TABLET FIX (Perfect View) ================= */
+@media (min-width: 601px) and (max-width: 992px) {
+
+  .register-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+   padding-bottom: 50px;
+  }
+
+  .register-image-section {
+    display: none !important;
+  }
+
+  .register-page {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  
+  }
+
+  .register-box {
+    width: 70%;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 16px;
+    margin: 0 auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .register-box h2 {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .register-btn,
+  .google-btn {
+    width: 100%;
+  }
+}
+
+/* ✅ Mobile View */
+@media (max-width: 600px) {
+  .register-container {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+  }
+
+  .register-image-section {
+    display: none;
+  }
+
+  .register-page {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .register-box {
+    width: 100%;
+    padding: 20px;
+    margin-top: 0;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .register-box h2 {
+    font-size: 22px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  .terms {
+    font-size: 13px;
+  }
+
+  .register-btn,
+  .verify-btn,
+  .google-btn,
+  .company-register-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .otp-input {
+    width: 100%;
+    font-size: 18px;
+    letter-spacing: 6px;
+  }
+
+  .mobile-otp-section input {
+    width: 100%;
+  }
 }

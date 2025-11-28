@@ -1,16 +1,15 @@
 /* ================================
-   📜 Footer Styles
+   📜 Footer Styles (Responsive)
 ================================ */
 .dashboard-footer {
   width: 100%;
   background: rgba(255, 255, 255, 0.85);
   color: #333;
   text-align: center;
-  padding: 15px 0;
+  padding: 15px 10px;
   border-top: 1px solid #ddd;
- 
-  bottom: 0;
-  left: 0;
+  box-sizing: border-box;
+  z-index: 10;
 }
 
 .dashboard-footer p {
@@ -22,13 +21,19 @@
 .footer-links {
   margin-top: 5px;
   font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .footer-links a {
   color: #007bff;
   text-decoration: none;
-  margin: 0 8px;
+  margin: 0 5px;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .footer-links a:hover {
@@ -38,4 +43,39 @@
 
 .footer-links span {
   color: #999;
+}
+
+/* ================================
+   📱 Mobile Devices
+================================ */
+@media (max-width: 600px) {
+  .dashboard-footer {
+    padding: 12px 8px;
+  }
+
+  .dashboard-footer p {
+    font-size: 13px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .footer-links span {
+    display: none;
+  }
+}
+
+/* ================================
+   📲 Tablets
+================================ */
+@media (min-width: 601px) and (max-width: 900px) {
+  .dashboard-footer p {
+    font-size: 13.5px;
+  }
+
+  .footer-links {
+    font-size: 13px;
+  }
 }

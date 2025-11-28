@@ -11,11 +11,13 @@ body {
 .dashboard-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   height: 480px;
   font-family: 'Poppins', sans-serif;
   animation: fadeIn 0.6s ease-in-out;
   overflow-x: hidden;
+
 }
 
 /* Dashboard content box */
@@ -184,4 +186,89 @@ body {
 
 .footer-links span {
   color: #999;
+}
+/* ================================
+   📱 MOBILE RESPONSIVE (max 576px)
+================================ */
+@media (max-width: 576px) {
+
+  .dashboard-container {
+    height: auto;
+    padding: 20px 10px;
+  }
+
+  .dashboard-content {
+    padding: 30px 10px;
+    margin-top: -40px;
+  }
+
+  .content-box {
+    width: 100%;
+    padding: 25px 18px;
+    border-radius: 18px;
+  }
+
+  .content-box h2 {
+    font-size: 22px;
+  }
+
+  .content-box p {
+    font-size: 14px;
+  }
+
+  .dashboard-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dashboard-btn {
+    width: 100%;
+    min-width: unset;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .dashboard-footer {
+    position: relative;
+  }
+}
+
+
+/* ================================
+   📱 TABLET RESPONSIVE (max 768px)
+================================ */
+@media (max-width: 768px) {
+
+  .content-box {
+    width: 90%;
+    padding: 35px;
+  }
+
+  .content-box h2 {
+    font-size: 26px;
+  }
+  .dashboard-content {
+    padding: 30px 10px;
+    /* margin-top: -80px; */
+  }
+
+  .dashboard-btn {
+    min-width: 140px;
+    font-size: 14px;
+  }
+}
+
+
+/* ================================
+   💻 SMALL LAPTOP (max 1024px)
+================================ */
+@media (max-width: 1024px) {
+
+  .content-box {
+    width: 80%;
+  }
+
+  .dashboard-actions {
+    gap: 15px;
+  }
 }

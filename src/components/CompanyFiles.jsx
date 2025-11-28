@@ -47,6 +47,7 @@ function CompanyFiles() {
   };
 
   return (
+    <>
     <div className="files-page">
 
       <div
@@ -85,7 +86,7 @@ function CompanyFiles() {
                   <th>#</th>
                   <th>File Name</th>
                   <th>View</th>
-                  <th>Status</th>
+                  {/* <th>Status</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -103,7 +104,7 @@ function CompanyFiles() {
                          View
                       </a>
                     </td>
-                    <td> <FaDownload color="red" /></td>
+                    {/* <td> <FaDownload color="red" /></td> */}
                   </tr>
                 ))}
               </tbody>
@@ -123,7 +124,7 @@ function CompanyFiles() {
                   <th>#</th>
                   <th>File Name</th>
                   <th>View</th>
-                  <th>Status</th>
+                  {/* <th>Status</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -136,10 +137,10 @@ function CompanyFiles() {
                         className="view-btn"
                         onClick={() => handleViewFolder(folder)}
                       >
-                         View
+                        View  <FaEye fontSize={20} /> 
                       </button>
                     </td>
-                    <td><FaEye color="green" fontSize={20} /></td>
+                    {/* <td></td> */}
                   </tr>
                 ))}
               </tbody>
@@ -148,9 +149,9 @@ function CompanyFiles() {
         </div>
       </div>
 
-      <Footer />
-
     </div>
+       <Footer />
+</>
   );
 }
 
