@@ -125,33 +125,23 @@
 /* =============================================
    🔗 BUTTONS & LINKS
    ============================================= */
-.view-link,
-.view-btn {
-  background: #007bff;
-  color: #fff;
+.view-link {
   padding: 5px 15px;
-  border-radius: 5px;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 550;
+  color: black;
   letter-spacing: 1px;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   transition: all 0.2s ease;
-  border-radius: 10px;
-  border: 2px solid #007bff;
   font-family: 'Poppins', sans-serif;
 }
-
-.view-link:hover,
-.view-btn:hover {
-  background: #fefeff;
-  color:#3b82d1;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
-  text-decoration: none;
+.view-btnn{
+  color: black;
+  border: none;
+  background: none;
+  padding: 1px 15px;
 }
 
 /* Add subtle icon sizing */
@@ -159,7 +149,15 @@
 .view-btn svg {
   font-size: 16px;
 }
-
+.b1:hover{
+  color: #007bff;
+}
+.b2:hover{
+  color: #007bff;
+}
+.view-link:hover{
+  color: #007bff;
+}
 /* =============================================
    📊 TABLE CONTAINER (Scroll + Consistency)
    ============================================= */

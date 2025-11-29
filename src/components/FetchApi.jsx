@@ -5,7 +5,7 @@ import Footer from './Footer';
 import { useNavigate } from "react-router-dom";
 
 function ApiFetcher() {
-  const [apiUrl, setApiUrl] = useState('https://jsonplaceholder.typicode.com/posts/1');
+  const [apiUrl, setApiUrl] = useState('https://dummyjson.com/products?limit=50');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

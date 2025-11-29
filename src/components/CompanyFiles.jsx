@@ -5,6 +5,8 @@ import "./CompanyFiles.css";
 import Footer from "./Footer";
 import { FaDownload } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { BsBarChartFill } from "react-icons/bs";
+import { BsFiletypeRaw } from "react-icons/bs";
 
 function CompanyFiles() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -85,7 +87,7 @@ function CompanyFiles() {
                 <tr>
                   <th>#</th>
                   <th>File Name</th>
-                  <th>View</th>
+                  <th>Download</th>
                   {/* <th>Status</th> */}
                 </tr>
               </thead>
@@ -101,7 +103,7 @@ function CompanyFiles() {
                         rel="noreferrer"
                         className="view-link"
                       >
-                        <FaDownload  color="black"/>
+                        <FaDownload  fontSize={20}/>
                       </a>
                     </td>
                     {/* <td> <FaDownload color="red" /></td> */}
@@ -134,10 +136,12 @@ function CompanyFiles() {
                     <td className="filename">{folder.folderName}</td>
                     <td>
                       <button
-                        className="view-btn"
+                        className="view-btnn"
                         onClick={() => handleViewFolder(folder)}
                       >
-                       <FaEye fontSize={20} color="black" /> 
+                        
+                       <FaEye fontSize={20} className="b1"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <BsBarChartFill fontSize={20} className="b2"/> 
                       </button>
                     </td>
                     {/* <td></td> */}
