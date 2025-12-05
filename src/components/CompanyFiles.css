@@ -97,11 +97,12 @@
 }
 
 .files-table td {
-  padding: 12px 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid #e5e9f0;
   background-color: #fff;
   text-align: center;
 }
+
 .files-table .filename {
   text-align: left; 
 }
@@ -374,4 +375,60 @@ margin-bottom: 50px;
     font-size: 13px;
     padding: 8px 14px;
   }
+}
+/* CompanyFiles.css */
+
+/* Tooltip wrapper */
+.status-icon {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Hidden tooltip by default */
+.status-icon .tooltip {
+  visibility: hidden;
+  width: max-content;
+  max-width: 200px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 125%; /* above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-size: 13px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Small arrow */
+.status-icon .tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* arrow at the bottom of tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+/* Show tooltip on hover */
+.status-icon:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+}
+.spin {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

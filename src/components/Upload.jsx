@@ -6,50 +6,72 @@ import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 
 function Upload() {
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const [fileName, setFileName] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [popup, setPopup] = useState({ message: "", type: "", visible: false });
   const [closing, setClosing] = useState(false);
   const navigate = useNavigate();
 
-  // 🔹 Handle file select
+  // ✅ Handle file select ONE BY ONE
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    if (selectedFile && !fileName.trim()) {
-      // Auto-fill file name if empty
-      setFileName(selectedFile.name.split(".").slice(0, -1).join("."));
+    if (!selectedFile) return;
+
+    // Prevent duplicate
+    const alreadyAdded = files.some(
+      (file) =>
+        file.name === selectedFile.name && file.size === selectedFile.size
+    );
+
+    if (alreadyAdded) {
+      showPopup("⚠️ File already added", "error");
+      return;
     }
+
+    const updatedFiles = [...files, selectedFile];
+    setFiles(updatedFiles);
+
+    if (!fileName.trim()) {
+      if (updatedFiles.length === 1) {
+        setFileName(
+          selectedFile.name.split(".").slice(0, -1).join(".")
+        );
+      } else {
+        setFileName(`Merged_${updatedFiles.length}_files`);
+      }
+    }
+
+    // Reset input so same file can be re-selected if needed
+    e.target.value = "";
   };
 
-  // 🔹 Show popup
+  // ✅ Show popup
   const showPopup = (message, type = "success") => {
     setPopup({ message, type, visible: true });
 
-    // Auto close after 3 seconds
     setTimeout(() => {
       setClosing(true);
       setTimeout(() => {
-        setPopup({ ...popup, visible: false });
+        setPopup({ message: "", type: "", visible: false });
         setClosing(false);
       }, 400);
     }, 3000);
   };
 
-  // 🔹 Close popup manually
+  // ✅ Close popup manually
   const closePopup = () => {
     setClosing(true);
     setTimeout(() => {
-      setPopup({ ...popup, visible: false });
+      setPopup({ message: "", type: "", visible: false });
       setClosing(false);
     }, 400);
   };
 
-  // 🔹 Upload logic
+  // ✅ Upload logic
   const handleUpload = async () => {
-    if (!fileName.trim() || !file) {
-      return showPopup("⚠️ Please enter a file name and choose a file.", "error");
+    if (!fileName.trim() || files.length === 0) {
+      return showPopup("⚠️ Please enter a file name and choose file(s).", "error");
     }
 
     const token = localStorage.getItem("token");
@@ -58,7 +80,9 @@ function Upload() {
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
     formData.append("name", fileName);
 
     try {
@@ -66,106 +90,150 @@ function Upload() {
 
       await axios.post("http://localhost:5000/upload", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
         },
         onUploadProgress: (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
           setUploadProgress(progress);
         },
       });
 
       showPopup("✅ File uploaded successfully. Data Engineering process will start soon...", "success");
-      setFile(null);
+      setFiles([]);
       setFileName("");
       setUploadProgress(0);
+
+      document.getElementById("fileInput").value = "";
+
     } catch (err) {
-      console.error("❌ Upload Error:", err);
-      showPopup("❌ Upload failed. Please try again.", "error");
+      console.error("❌ Upload Error:", err.response?.data || err.message);
+      showPopup(err.response?.data?.error || "❌ Upload failed", "error");
       setUploadProgress(0);
     }
   };
 
   return (
-
     <>
-    <div className="upload-page">
-      <div className="upload-box">
-        {/* 🔹 Close Button (X on top-right) */}
+      <div className="upload-page">
         <button className="close-btnn" onClick={() => navigate("/d-oxwilh9dy1")}>
-          ✖
-        </button>
-
-        <h2 className="upload-title">Upload File</h2>
-
-        <div className="upload-form">
-          <input
-            type="text"
-            placeholder="Enter File Name"
-            value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
-          />
-
-          <div
-            className="drag-area"
-            onClick={() => document.getElementById("fileInput").click()}
-          >
-            <FaCloudUploadAlt className="upload-icon" />
-            <p>
-              {file ? (
-                <strong>{file.name}</strong>
-              ) : (
-                <>
-                  Drag & Drop file here or <span>Browse</span>
-                </>
-              )}
-            </p>
-          </div>
-
-          <input
-            id="fileInput"
-            type="file"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-          />
-
-          {/* 🔹 Progress Bar */}
-          {uploadProgress > 0 && (
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${uploadProgress}%` }}
-              >
-                {uploadProgress}%
-              </div>
-            </div>
-          )}
-
-          <button onClick={handleUpload} className="upload-btn">
-            {uploadProgress > 0 && uploadProgress < 100
-              ? "Uploading..."
-              : "DONE"}
+            Back
           </button>
-        </div>
-      </div>
+        <div className="upload-box">
 
-      {/* 🔹 Popup */}
-      {popup.visible && (
-        <div className={`popup-overlay ${closing ? "hide" : ""}`}>
-          <div className={`popup-box ${popup.type}`}>
-            <p>{popup.message}</p>
-            <button className="popup-btn" onClick={closePopup}>
-              OK
+          {/* Close Button */}
+          
+
+          <h2 className="upload-title">Upload File</h2>
+
+          <div className="upload-form">
+
+            {/* File Name */}
+            <input
+              type="text"
+              placeholder="Enter File Name"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+            />
+
+            {/* File Drop Area */}
+            <div
+              className="drag-area"
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              <FaCloudUploadAlt className="upload-icon" />
+
+              {files.length > 0 ? (
+                <ul style={{ textAlign: "left", marginTop: "10px" }}>
+                  {files.map((file, index) => (
+                    <li
+                      key={index}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                      }}
+                    >
+                      📄 {file.name}
+
+                      <button
+                        onClick={() => {
+                          const newFiles = files.filter((_, i) => i !== index);
+                          setFiles(newFiles);
+
+                          if (newFiles.length === 0)
+                            setFileName("");
+                          else
+                            setFileName(
+                              `Merged_${newFiles.length}_files`
+                            );
+                        }}
+                        style={{
+                          border: "none",
+                          background: "transparent",
+                          color: "red",
+                          cursor: "pointer",
+                          fontSize: "16px"
+                        }}
+                      >
+                        ❌
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>
+                  Click to select file <span>Browse</span>
+                </p>
+              )}
+            </div>
+
+            {/* Hidden input - single file select */}
+            <input
+              id="fileInput"
+              type="file"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+
+            {/* Progress Bar */}
+            {uploadProgress > 0 && (
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${uploadProgress}%` }}
+                >
+                  {uploadProgress}%
+                </div>
+              </div>
+            )}
+
+            {/* Upload Button */}
+            <button onClick={handleUpload} className="upload-btn">
+              {uploadProgress > 0 && uploadProgress < 100
+                ? "Uploading..."
+                : "DONE"}
             </button>
           </div>
         </div>
-      )}
 
-  
-    </div>
+        {/* Popup */}
+        {popup.visible && (
+          <div className={`popup-overlay ${closing ? "hide" : ""}`}>
+            <div className={`popup-box ${popup.type}`}>
+              <p>{popup.message}</p>
+              <button className="popup-btn" onClick={closePopup}>
+                OK
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
-        <Footer />
-        </>
+      <Footer />
+    </>
   );
 }
 

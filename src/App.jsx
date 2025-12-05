@@ -19,6 +19,7 @@ import Navbar from './components/Navbar';
 import SettingsPage from './components/SettingsPage';
 
 import './app.css';
+import ChartsView from './components/ChartsView';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -198,6 +199,8 @@ function App() {
           <Route path="/cp-sq4z6x8c27" element={<ChangePassword />} />
           <Route path="/cn-b5t1vs3l7g" element={<ChangeName />} />
           <Route path="/cm-x0j9w2a4bf" element={<ChangeMobile />} />
+          <Route path="/charts-view" element={<ChartsView />} />
+
 
           {/* Catch-all redirect */}
           <Route

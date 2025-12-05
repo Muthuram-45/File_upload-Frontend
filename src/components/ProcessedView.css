@@ -205,7 +205,7 @@ h2 {
 .multi-chart-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  margin-top: -20px;
+  margin-top: 20px;
   gap: 20px;
 }
 
