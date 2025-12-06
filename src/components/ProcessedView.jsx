@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Papa from "papaparse"; // ✅ ADDED
+import Papa from "papaparse";
 import "./ProcessedView.css";
 
 function ProcessedView() {
@@ -15,6 +15,21 @@ function ProcessedView() {
   const [activeFileData, setActiveFileData] = useState([]);
   const [showCharts, setShowCharts] = useState(false);
 
+  /* ==========================================================
+     GET TABLE CLASS BASED ON FILE NAME
+  ========================================================== */
+  const getTableClass = () => {
+    if (!activeFile?.name) return "tbl-full";
+
+    const name = activeFile.name.trim().toLowerCase();
+
+    if (name.endsWith("_processed_data.csv")) return "tbl-full";
+    if (name === "entity_table.csv") return "tbl-entity";
+    if (name === "dimension_table.csv") return "tbl-dimension";
+    if (name === "metrics_table.csv") return "tbl-metrics";
+
+    return "tbl-full";
+  };
 
   /* ==========================================================
      FETCH CSV FILES
@@ -46,13 +61,16 @@ function ProcessedView() {
         });
 
         setFolderCsvFiles(sortedFiles);
-        if (sortedFiles.length > 0) setActiveFile(sortedFiles[0]);
+
+        if (sortedFiles.length > 0) {
+          setActiveFile(sortedFiles[0]);
+        }
       })
       .catch((err) => console.log(err?.response?.data || err.message));
   }, [folder, token]);
 
   /* ==========================================================
-     LOAD ACTIVE CSV FILE (FOR LARGE DATA)
+     LOAD ACTIVE CSV FILE
   ========================================================== */
   useEffect(() => {
     if (!activeFile) return;
@@ -70,7 +88,7 @@ function ProcessedView() {
           },
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.message));
   }, [activeFile]);
 
   return (
@@ -84,15 +102,14 @@ function ProcessedView() {
         Back
       </button>
 
+      {/* ================= FILE TABS ================= */}
       <div className="file-tabs-container">
         {folderCsvFiles.map((file, idx) => {
           const raw = file.name.trim().toLowerCase();
           let tabLabel = file.name;
 
-          if (raw.endsWith("_processed_data.csv"))
-            tabLabel = "Full Table";
-          else if (raw === "entity_table.csv")
-            tabLabel = "Entity Table";
+          if (raw.endsWith("_processed_data.csv")) tabLabel = "Full Table";
+          else if (raw === "entity_table.csv") tabLabel = "Entity Table";
           else if (raw === "dimension_table.csv")
             tabLabel = "Dimension Table";
           else if (raw === "metrics_table.csv")
@@ -115,20 +132,14 @@ function ProcessedView() {
             </button>
           );
         })}
-
-        {/* <button
-          className={`file-tab-btn ${showCharts ? "active" : ""}`}
-          onClick={() => setShowCharts(true)}
-        >
-          Charts
-        </button> */}
       </div>
 
+      {/* ================= TABLE SECTION ================= */}
       {activeFileData.length > 0 && (
         <div className="csv-table-section">
           {!showCharts && (
             <div className="table-wrapper">
-              <table>
+              <table className={getTableClass()}>
                 <thead>
                   <tr>
                     {Object.keys(activeFileData[0]).map((h, i) => (
@@ -136,6 +147,7 @@ function ProcessedView() {
                     ))}
                   </tr>
                 </thead>
+
                 <tbody>
                   {activeFileData.map((row, i) => (
                     <tr key={i}>
