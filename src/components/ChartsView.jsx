@@ -79,22 +79,22 @@ function ChartsView() {
           <XAxis dataKey={catCol} />
           <YAxis allowDecimals={false} />
           {/* ✅ Only hover tooltip now black */}
-        <Tooltip
-          contentStyle={{
-            backgroundColor: "white",
-            border: "1px solid #000",
-            borderRadius: "6px",
-            color: "#000",
-          }}
-          labelStyle={{
-            color: "#000",
-          }}
-          itemStyle={{
-            color: "#000",
-            fontWeight: "500",
-          }}
-          cursor={{ fill: "rgba(0,0,0,0.05)" }}
-        />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "white",
+              border: "1px solid #000",
+              borderRadius: "6px",
+              color: "#000",
+            }}
+            labelStyle={{
+              color: "#000",
+            }}
+            itemStyle={{
+              color: "#000",
+              fontWeight: "500",
+            }}
+            cursor={{ fill: "rgba(0,0,0,0.05)" }}
+          />
           <Legend />
           <Bar dataKey={numCol} fill={color} />
         </BarChart>
@@ -245,12 +245,18 @@ function ChartsView() {
       </button>
 
       {activeFileData.length > 0 ? (
-        <div className="multi-chart-grid">
-          {renderMeaningfulCharts(activeFileData)}
-        </div>
+        (() => {
+          const charts = renderMeaningfulCharts(activeFileData);
+          return charts && charts.length > 0 ? (
+            <div className="multi-chart-grid">{charts}</div>
+          ) : (
+            <p>No meaningful charts available for comparison.</p>
+          );
+        })()
       ) : (
         <p>No data found for charts</p>
       )}
+
     </div>
   );
 }

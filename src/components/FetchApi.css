@@ -4,6 +4,23 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* Flex row for API input + Fetch button */
+.api-row {
+  display: flex;
+  gap: 10px; /* spacing between input and button */
+  width: 100%;
+  max-width: 550px;
+  margin-bottom: 20px;
+}
+
+.api-row .api-input {
+  flex: 1; /* input takes remaining space */
+  margin-bottom: 0; /* remove bottom margin */
+}
+
+.api-row .fetch-btn {
+  flex-shrink: 0; /* button does not shrink */
+}
 
 /* 🔹 Main Container */
 .api-fetcher {
@@ -78,9 +95,9 @@
 /* 🔹 Response Box */
 .response-box {
   background: #ffffff;
-  width: 100%;
+  width: 50%;
   max-width: 800px;
-  height: 320px;
+  height: 280px;
   margin-top: 25px;
   padding: 20px;
   border-radius: 16px;
@@ -161,4 +178,102 @@
   .response-box {
     height: 250px;
   }
+}
+
+
+/* ===================== Popup ===================== */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7); /* start small */
+  width: 300px;
+  /* max-width: 90%; */
+  padding: 15px 25px;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+  opacity: 0;
+  z-index: 9999;
+  text-align: center;
+  animation: zoomInOut 3s forwards;
+}
+
+/* Popup types */
+.popup.success {
+  background-color: #4BB543;
+}
+
+.popup.error {
+  background-color: #FF4C4C;
+}
+
+/* Zoom in + zoom out animation */
+@keyframes zoomInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+}
+
+/* Flex row for input + button */
+.save-row {
+  display: flex;
+  gap: 10px; /* spacing between input and button */
+  margin-top: 10px;
+  align-items: center;
+}
+
+/* Input styling */
+.file-input {
+  flex: 1; /* input takes remaining space */
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.file-input:focus {
+  border-color: #4BB543;
+  box-shadow: 0 0 5px rgba(75, 181, 67, 0.5);
+  outline: none;
+}
+
+/* Save button styling */
+.save-btn {
+  padding: 10px 25px;
+  background-color: #4BB543;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.save-btn:hover {
+  background-color: #3da036;
+  transform: translateY(-2px);
+}
+
+.save-btn:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
 }

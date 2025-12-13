@@ -432,3 +432,16 @@ margin-bottom: 50px;
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+/* CompanyFiles.css */
+.table-cell {
+  font-weight: 600;
+  text-align: center;
+}
+
+.table-cell.api {
+  color: #006064;
+}
+
+.table-cell.uploaded {
+  color: #e65100;
+}

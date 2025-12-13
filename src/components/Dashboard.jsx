@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import "./Dashboard.css";
 import Footer from "./Footer";
+import Chatbot from "./Chatbot";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -112,7 +113,7 @@ function Dashboard() {
         </div>
       </div>
     </div>
-
+    <Chatbot/>
 <Footer/>
 
     </>

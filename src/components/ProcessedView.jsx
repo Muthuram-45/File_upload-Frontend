@@ -80,7 +80,7 @@ function ProcessedView() {
       .then((res) => {
         Papa.parse(res.data, {
           header: true,
-          dynamicTyping: true,
+          dynamicTyping: true, 
           skipEmptyLines: true,
           complete: function (results) {
             console.log("✅ TOTAL ROWS LOADED:", results.data.length);
@@ -91,14 +91,22 @@ function ProcessedView() {
       .catch((err) => console.log(err.message));
   }, [activeFile]);
 
+  /* ==========================================================
+     FORMAT CELL VALUES SAFELY (PREVENT REACT CRASH)
+  ========================================================== */
+  const formatCellValue = (value) => {
+    if (value instanceof Date) {
+      return value.toISOString().slice(0, 10); // convert Date → YYYY-MM-DD
+    }
+    if (value === null || value === undefined) return "";
+    return String(value);
+  };
+
   return (
     <div className="processed-container">
       <h2>{folder?.folderName}</h2>
 
-      <button
-        className="back-btn"
-        onClick={() => navigate("/cf-2g7h9k3l5m")}
-      >
+      <button className="back-btn" onClick={() => navigate("/cf-2g7h9k3l5m")}>
         Back
       </button>
 
@@ -110,18 +118,14 @@ function ProcessedView() {
 
           if (raw.endsWith("_processed_data.csv")) tabLabel = "Full Table";
           else if (raw === "entity_table.csv") tabLabel = "Entity Table";
-          else if (raw === "dimension_table.csv")
-            tabLabel = "Dimension Table";
-          else if (raw === "metrics_table.csv")
-            tabLabel = "Metrics Table";
+          else if (raw === "dimension_table.csv") tabLabel = "Dimension Table";
+          else if (raw === "metrics_table.csv") tabLabel = "Metrics Table";
 
           return (
             <button
               key={idx}
               className={`file-tab-btn ${
-                !showCharts && activeFile?.name === file.name
-                  ? "active"
-                  : ""
+                !showCharts && activeFile?.name === file.name ? "active" : ""
               }`}
               onClick={() => {
                 setShowCharts(false);
@@ -152,7 +156,7 @@ function ProcessedView() {
                   {activeFileData.map((row, i) => (
                     <tr key={i}>
                       {Object.values(row).map((v, j) => (
-                        <td key={j}>{v}</td>
+                        <td key={j}>{formatCellValue(v)}</td>
                       ))}
                     </tr>
                   ))}
