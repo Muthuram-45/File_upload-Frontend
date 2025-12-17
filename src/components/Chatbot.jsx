@@ -56,7 +56,7 @@ export default function Chatbot() {
       {open && (
         <div className="chatbot-container">
           <div className="chat-header">
-            Chatbot
+            Cloud360
             <span className="close-btn" onClick={toggleChat}>
               ✖
             </span>

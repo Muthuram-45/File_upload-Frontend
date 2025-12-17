@@ -120,7 +120,7 @@ function ApiFetcher() {
               <input
                 type="text"
                 className="file-input"
-                placeholder="Enter File Name (without extension)"
+                placeholder="Enter File Name "
                 value={fileName}
                 onChange={(e) => setFileName(e.target.value)}
               />

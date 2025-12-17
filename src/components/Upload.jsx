@@ -13,12 +13,13 @@ function Upload() {
   const [closing, setClosing] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Handle file select ONE BY ONE
+  // ==========================
+  // FILE SELECT (ONE BY ONE)
+  // ==========================
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
-    // Prevent duplicate
     const alreadyAdded = files.some(
       (file) =>
         file.name === selectedFile.name && file.size === selectedFile.size
@@ -33,20 +34,19 @@ function Upload() {
     setFiles(updatedFiles);
 
     if (!fileName.trim()) {
-      if (updatedFiles.length === 1) {
-        setFileName(
-          selectedFile.name.split(".").slice(0, -1).join(".")
-        );
-      } else {
-        setFileName(`Merged_${updatedFiles.length}_files`);
-      }
+      setFileName(
+        updatedFiles.length === 1
+          ? selectedFile.name.split(".").slice(0, -1).join(".")
+          : `Merged_${updatedFiles.length}_files`
+      );
     }
 
-    // Reset input so same file can be re-selected if needed
     e.target.value = "";
   };
 
-  // ✅ Show popup
+  // ==========================
+  // POPUP HANDLERS
+  // ==========================
   const showPopup = (message, type = "success") => {
     setPopup({ message, type, visible: true });
 
@@ -59,7 +59,6 @@ function Upload() {
     }, 3000);
   };
 
-  // ✅ Close popup manually
   const closePopup = () => {
     setClosing(true);
     setTimeout(() => {
@@ -68,69 +67,87 @@ function Upload() {
     }, 400);
   };
 
-  // ✅ Upload logic
+  // ==========================
+  // UPLOAD
+  // ==========================
   const handleUpload = async () => {
-    if (!fileName.trim() || files.length === 0) {
-      return showPopup("⚠️ Please enter a file name and choose file(s).", "error");
+    if (files.length === 0) {
+      return showPopup("⚠️ Select file(s) to upload", "error");
+    }
+
+    if (!fileName.trim()) {
+      return showPopup("⚠️ Enter file name", "error");
     }
 
     const token = localStorage.getItem("token");
     if (!token) {
-      return showPopup("❌ Please login first.", "error");
+      return showPopup("❌ Please login first", "error");
     }
 
     const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
-    formData.append("name", fileName);
+    files.forEach((file) => formData.append("files", file));
+    formData.append("name", fileName); // send input file name to backend
 
     try {
       setUploadProgress(0);
 
-      await axios.post("http://localhost:5000/upload", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
-        },
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(progress);
-        },
-      });
+      const res = await axios.post(
+        "http://localhost:5000/upload",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (e) => {
+            const percent = Math.round((e.loaded * 100) / e.total);
+            setUploadProgress(percent);
+          },
+        }
+      );
 
-      showPopup("✅ File uploaded successfully. Data Engineering process will start soon...", "success");
+      // ==========================
+      // BACKEND RESPONSE
+      // ==========================
+      if (res.data.uploaded && res.data.uploaded.length > 0) {
+        const tablesInfo = res.data.uploaded
+          .map(
+            (f) =>
+              `Table: ${f.tableName}\nInput Name: ${f.fileNameStored}\nFile: ${f.originalFile}`
+          )
+          .join("\n\n");
+        showPopup(`✅ File Upload successfully Data Engineering Process will start soon ...`, "success");
+      } else if (res.data.tableName) {
+        showPopup(`✅ File Upload successfully Data Engineering Process will start soon ...`, "success");
+      }
+
+      // RESET
       setFiles([]);
       setFileName("");
       setUploadProgress(0);
-
       document.getElementById("fileInput").value = "";
 
     } catch (err) {
-      console.error("❌ Upload Error:", err.response?.data || err.message);
+      console.error("❌ Upload Error:", err);
       showPopup(err.response?.data?.error || "❌ Upload failed", "error");
       setUploadProgress(0);
     }
   };
 
+  // ==========================
+  // UI
+  // ==========================
   return (
     <>
       <div className="upload-page">
         <button className="close-btnn" onClick={() => navigate("/d-oxwilh9dy1")}>
-            Back
-          </button>
+          Back
+        </button>
+
         <div className="upload-box">
-
-          {/* Close Button */}
-          
-
           <h2 className="upload-title">Upload File</h2>
 
           <div className="upload-form">
-
-            {/* File Name */}
             <input
               type="text"
               placeholder="Enter File Name"
@@ -138,7 +155,6 @@ function Upload() {
               onChange={(e) => setFileName(e.target.value)}
             />
 
-            {/* File Drop Area */}
             <div
               className="drag-area"
               onClick={() => document.getElementById("fileInput").click()}
@@ -153,29 +169,27 @@ function Upload() {
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center"
+                        alignItems: "center",
                       }}
                     >
                       📄 {file.name}
-
                       <button
                         onClick={() => {
                           const newFiles = files.filter((_, i) => i !== index);
                           setFiles(newFiles);
-
-                          if (newFiles.length === 0)
-                            setFileName("");
-                          else
-                            setFileName(
-                              `Merged_${newFiles.length}_files`
-                            );
+                          setFileName(
+                            newFiles.length > 1
+                              ? `Merged_${newFiles.length}_files`
+                              : newFiles.length === 1
+                              ? newFiles[0].name.split(".").slice(0, -1).join(".")
+                              : ""
+                          );
                         }}
                         style={{
                           border: "none",
                           background: "transparent",
                           color: "red",
                           cursor: "pointer",
-                          fontSize: "16px"
                         }}
                       >
                         ❌
@@ -190,7 +204,6 @@ function Upload() {
               )}
             </div>
 
-            {/* Hidden input - single file select */}
             <input
               id="fileInput"
               type="file"
@@ -198,7 +211,6 @@ function Upload() {
               style={{ display: "none" }}
             />
 
-            {/* Progress Bar */}
             {uploadProgress > 0 && (
               <div className="progress-bar">
                 <div
@@ -210,8 +222,11 @@ function Upload() {
               </div>
             )}
 
-            {/* Upload Button */}
-            <button onClick={handleUpload} className="upload-btn">
+            <button
+              onClick={handleUpload}
+              className="upload-btn"
+              disabled={uploadProgress > 0 && uploadProgress < 100} // disable while uploading
+            >
               {uploadProgress > 0 && uploadProgress < 100
                 ? "Uploading..."
                 : "DONE"}
@@ -219,11 +234,10 @@ function Upload() {
           </div>
         </div>
 
-        {/* Popup */}
         {popup.visible && (
           <div className={`popup-overlay ${closing ? "hide" : ""}`}>
             <div className={`popup-box ${popup.type}`}>
-              <p>{popup.message}</p>
+              <p style={{ whiteSpace: "pre-line" }}>{popup.message}</p>
               <button className="popup-btn" onClick={closePopup}>
                 OK
               </button>

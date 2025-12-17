@@ -19,6 +19,7 @@ function ChartsView() {
   const navigate = useNavigate();
 
   const [activeFileData, setActiveFileData] = useState([]);
+  const [error, setError] = useState("");
 
   const COLORS = [
     "#007bff",
@@ -30,45 +31,29 @@ function ChartsView() {
     "#ff6f91",
   ];
 
-  // ======================== LOAD MAIN PROCESSED CSV ========================
+  // ======================== LOAD PROCESSED TABLE (NOT CSV) ========================
   useEffect(() => {
-    if (!folder?.id || !token) return;
+    if (!folder?.tables || !token) return;
+
+    // Prefer full table for charts
+    const preferredTable =
+      folder.tables.find((t) => t.toLowerCase().endsWith("_fulltable")) ||
+      folder.tables[0];
 
     axios
-      .get(`http://localhost:5000/processed-folder/${folder.id}`, {
+      .get(`http://localhost:5000/processed-table/${preferredTable}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        const files = res.data.folder?.files || [];
-
-        const mainFile = files.find((f) =>
-          f.name.toLowerCase().endsWith("_processed_data.csv")
-        );
-
-        if (!mainFile) return;
-
-        axios.get(`http://localhost:5000${mainFile.path}`).then((res) => {
-          const raw = res.data.trim();
-          const rows = raw.split("\n");
-          const headers = rows[0].split(",");
-
-          const data = rows.slice(1).map((row) => {
-            const values = row.split(",");
-            const obj = {};
-            headers.forEach((h, i) => {
-              const num = Number(values[i]);
-              obj[h] = isNaN(num) ? values[i] : num;
-            });
-            return obj;
-          });
-
-          setActiveFileData(data);
-        });
+        setActiveFileData(Array.isArray(res.data.rows) ? res.data.rows : []);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        setError("Failed to load chart data");
+      });
   }, [folder, token]);
 
-  // ========================= RENDER CHART =========================
+  // ========================= RENDER CHART (UNCHANGED) =========================
   const renderChart = (chartData, catCol, numCol, color) => {
     if (!chartData || chartData.length === 0) return null;
 
@@ -78,23 +63,7 @@ function ChartsView() {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey={catCol} />
           <YAxis allowDecimals={false} />
-          {/* ✅ Only hover tooltip now black */}
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #000",
-              borderRadius: "6px",
-              color: "#000",
-            }}
-            labelStyle={{
-              color: "#000",
-            }}
-            itemStyle={{
-              color: "#000",
-              fontWeight: "500",
-            }}
-            cursor={{ fill: "rgba(0,0,0,0.05)" }}
-          />
+          <Tooltip />
           <Legend />
           <Bar dataKey={numCol} fill={color} />
         </BarChart>
@@ -102,7 +71,7 @@ function ChartsView() {
     );
   };
 
-  // ========================= DETECT COLUMNS =========================
+  // ========================= DETECT COLUMNS (UNCHANGED) =========================
   const detectColumns = (data) => {
     if (!data.length) return { numeric: [], categorical: [] };
 
@@ -113,7 +82,6 @@ function ChartsView() {
     keys.forEach((col) => {
       const lc = col.toLowerCase();
 
-      // skip useless cols
       if (
         lc.includes("id") ||
         lc.includes("date") ||
@@ -135,7 +103,7 @@ function ChartsView() {
     return { numeric, categorical };
   };
 
-  // ========================= DETECT AGGREGATION =========================
+  // ========================= DETECT AGGREGATION (UNCHANGED) =========================
   const detectAggregation = (values) => {
     if (!values || values.length === 0) return "count";
 
@@ -148,7 +116,7 @@ function ChartsView() {
     return "sum";
   };
 
-  // ========================= AUTO MEANINGFUL CHARTS =========================
+  // ========================= AUTO MEANINGFUL CHARTS (UNCHANGED) =========================
   const renderMeaningfulCharts = (data) => {
     if (!data.length) return null;
 
@@ -203,60 +171,30 @@ function ChartsView() {
       });
     });
 
-    // 🔥 fallback if less charts
-    if (charts.length < 5) {
-      categorical.forEach((catCol) => {
-        if (charts.length >= 5) return;
-
-        const freq = {};
-        data.forEach((row) => {
-          const key = row[catCol];
-          if (key) freq[key] = (freq[key] || 0) + 1;
-        });
-
-        const chartData = Object.entries(freq).map(([k, v]) => ({
-          [catCol]: k,
-          count: v,
-        }));
-
-        charts.push(
-          <div key={`count-${catCol}`} className="chart-card">
-            <h4>{catCol} Count</h4>
-            {renderChart(
-              chartData,
-              catCol,
-              "count",
-              COLORS[charts.length % COLORS.length]
-            )}
-          </div>
-        );
-      });
-    }
-
     return charts;
   };
 
   return (
-    <div className="processed-container" >
+    <div className="processed-container">
       <h2>{folder?.folderName} - Charts</h2>
 
       <button className="back-btn" onClick={() => navigate(-1)}>
         Back
       </button>
 
+      {error && <p className="error-box">{error}</p>}
+
       {activeFileData.length > 0 ? (
-        (() => {
-          const charts = renderMeaningfulCharts(activeFileData);
-          return charts && charts.length > 0 ? (
-            <div className="multi-chart-grid">{charts}</div>
-          ) : (
-            <p>No meaningful charts available for comparison.</p>
-          );
-        })()
+        <div className="multi-chart-grid">
+          {renderMeaningfulCharts(activeFileData)}
+        </div>
       ) : (
         <p>No data found for charts</p>
-      )}
-
+            
+          )
+        }
+        <p>No meaningful charts available for comparison.</p>
+      
     </div>
   );
 }
