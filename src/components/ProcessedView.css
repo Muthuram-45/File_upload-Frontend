@@ -353,3 +353,19 @@ h2 {
     font-size: 13px;
   }
 }
+.nlq-search-box {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.nlq-search-box input {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.nlq-search-box button {
+  padding: 8px 14px;
+  cursor: pointer;
+}
