@@ -5,52 +5,62 @@ import Footer from './Footer';
 import { useNavigate } from "react-router-dom";
 
 function ApiFetcher() {
-  const [apiUrl, setApiUrl] = useState('https://random-data-api.com/api/medical/random_medical');
+  const [apiUrl, setApiUrl] = useState('');
+  const [token, setToken] = useState('');
+  const [showToken, setShowToken] = useState(false);
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
   const [saveLoading, setSaveLoading] = useState(false);
   const [popup, setPopup] = useState({ show: false, message: '', type: 'success' });
+
   const navigate = useNavigate();
+  const API_BASE_URL = "http://localhost:5000";
 
-  const API_BASE_URL = "http://localhost:5000"; // Your backend URL
-
-  // Show popup function
   const showPopup = (message, type = 'success', duration = 3000) => {
     setPopup({ show: true, message, type });
     setTimeout(() => setPopup({ show: false, message: '', type }), duration);
   };
 
+  // =========================
+  // FETCH API (AUTO DETECT)
+  // =========================
   const handleFetch = async () => {
-  if (!apiUrl.trim()) {
-    setResponse('');
-    showPopup('⚠️ Please enter a valid API URL.', 'error');
-    return;
-  }
+    if (!apiUrl.trim()) {
+      setResponse('');
+      showPopup('⚠️ Please enter a valid API URL.', 'error');
+      return;
+    }
 
-  try {
-    setLoading(true);
-    setResponse('⏳ Fetching data...');
+    try {
+      setLoading(true);
+      setResponse('⏳ Fetching data...');
 
-    // Call your backend proxy route
-    const res = await axios.get(`${API_BASE_URL}/fetch-api`, {
-      params: { url: apiUrl }
-    });
+      const res = await axios.get(`${API_BASE_URL}/fetch-api`, {
+        params: { url: apiUrl },
+        headers: token ? { Authorization: token } : {}
+      });
 
-    setResponse(JSON.stringify(res.data, null, 2));
-  } catch (error) {
-    console.error(error);
+      setShowToken(false);
+      setResponse(JSON.stringify(res.data.data || res.data, null, 2));
 
-    // This is the exact message you want
-    setResponse('');
-    showPopup('❌ Failed to fetch data. Please check the API URL.', 'error');
-  } finally {
-    setLoading(false);
-  }
-};
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        setShowToken(true);
+        setResponse('');
+        showPopup('🔐 Private API detected. Please enter token.', 'error');
+      } else {
+        setResponse('');
+        showPopup('❌ Failed to fetch data. Please check the API URL.', 'error');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-
-  // Save API data
+  // =========================
+  // SAVE API DATA
+  // =========================
   const handleSave = async () => {
     if (!fileName.trim()) {
       showPopup("⚠️ Please enter a file name!", 'error');
@@ -60,15 +70,16 @@ function ApiFetcher() {
     try {
       setSaveLoading(true);
 
-      // Check duplicate filename
-      const check = await axios.get(`${API_BASE_URL}/check-filename?name=${fileName}`);
+      const check = await axios.get(
+        `${API_BASE_URL}/check-filename?name=${fileName}`
+      );
+
       if (check.data.exists) {
         showPopup("❌ File name already exists. Choose a different name.", 'error');
         setSaveLoading(false);
         return;
       }
 
-      // Save data
       await axios.post(`${API_BASE_URL}/save-api-data`, {
         api_url: apiUrl,
         file_name: fileName,
@@ -96,6 +107,7 @@ function ApiFetcher() {
 
         <h2>Simple API Fetcher</h2>
 
+        {/* API URL */}
         <div className="api-row">
           <input
             type="text"
@@ -109,10 +121,23 @@ function ApiFetcher() {
           </button>
         </div>
 
+        {/* TOKEN INPUT (ONLY IF PRIVATE) */}
+        {showToken && (
+          <input
+            type="text"
+            className="api-input"
+            placeholder="Enter API Token"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+          />
+        )}
+
+        {/* RESPONSE */}
         <div className="response-box">
           <pre>{response}</pre>
         </div>
 
+        {/* SAVE */}
         {response && response.length > 0 && (
           <div className="save-section">
             <h3>Save API Data</h3>
@@ -120,7 +145,7 @@ function ApiFetcher() {
               <input
                 type="text"
                 className="file-input"
-                placeholder="Enter File Name "
+                placeholder="Enter File Name"
                 value={fileName}
                 onChange={(e) => setFileName(e.target.value)}
               />
@@ -135,7 +160,7 @@ function ApiFetcher() {
           </div>
         )}
 
-        {/* Popup */}
+        {/* POPUP */}
         {popup.show && (
           <div className={`popup ${popup.type}`}>
             {popup.message}

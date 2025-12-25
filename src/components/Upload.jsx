@@ -109,17 +109,13 @@ function Upload() {
       // ==========================
       // BACKEND RESPONSE
       // ==========================
-      if (res.data.uploaded && res.data.uploaded.length > 0) {
-        const tablesInfo = res.data.uploaded
-          .map(
-            (f) =>
-              `Table: ${f.tableName}\nInput Name: ${f.fileNameStored}\nFile: ${f.originalFile}`
-          )
-          .join("\n\n");
-        showPopup(`✅ File Upload successfully Data Engineering Process will start soon ...`, "success");
-      } else if (res.data.tableName) {
-        showPopup(`✅ File Upload successfully Data Engineering Process will start soon ...`, "success");
+      if (res.data && res.data.success) {
+        showPopup(
+          "✅ File upload successfully.\nData engineering work will start soon.",
+          "success"
+        );
       }
+
 
       // RESET
       setFiles([]);
@@ -181,8 +177,8 @@ function Upload() {
                             newFiles.length > 1
                               ? `Merged_${newFiles.length}_files`
                               : newFiles.length === 1
-                              ? newFiles[0].name.split(".").slice(0, -1).join(".")
-                              : ""
+                                ? newFiles[0].name.split(".").slice(0, -1).join(".")
+                                : ""
                           );
                         }}
                         style={{

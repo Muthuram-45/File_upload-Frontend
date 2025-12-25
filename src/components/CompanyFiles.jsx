@@ -3,21 +3,40 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./CompanyFiles.css";
 import Footer from "./Footer";
+
 import { FaEye } from "react-icons/fa";
 import { BsBarChartFill } from "react-icons/bs";
 import { RxReload } from "react-icons/rx";
 import { MdOutlineDownloadDone, MdCancel } from "react-icons/md";
+import { AiOutlineClockCircle } from "react-icons/ai";
 
 function CompanyFiles() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [processedFolders, setProcessedFolders] = useState([]);
   const [error, setError] = useState("");
+
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   // ---------------- Status Icon ----------------
   const getStatusIcon = (status) => {
     switch (status) {
+      case "NEW":
+        return (
+          <div className="status-icon">
+            <AiOutlineClockCircle size={22} color="#2196f3" />
+            <span className="tooltip">New File</span>
+          </div>
+        );
+
+      case "PROCESSING":
+        return (
+          <div className="status-icon">
+            <RxReload size={26} color="orange" className="spin" />
+            <span className="tooltip">Processing</span>
+          </div>
+        );
+
       case "DONE":
         return (
           <div className="status-icon">
@@ -25,6 +44,7 @@ function CompanyFiles() {
             <span className="tooltip">Processed</span>
           </div>
         );
+
       case "CANCEL":
         return (
           <div className="status-icon">
@@ -32,11 +52,12 @@ function CompanyFiles() {
             <span className="tooltip">Duplicate</span>
           </div>
         );
+
       default:
         return (
           <div className="status-icon">
-            <RxReload size={26} color="orange" className="spin" />
-            <span className="tooltip">Processing</span>
+            <RxReload size={22} />
+            <span className="tooltip">{status}</span>
           </div>
         );
     }
@@ -82,7 +103,13 @@ function CompanyFiles() {
   return (
     <>
       <div className="files-page">
-        <div style={{ display: "flex", justifyContent: "flex-start", marginLeft: "35px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            marginLeft: "35px",
+          }}
+        >
           <button className="backk-btns" onClick={() => navigate(-1)}>
             Back
           </button>
@@ -116,7 +143,13 @@ function CompanyFiles() {
                     <tr key={file.id}>
                       <td>{idx + 1}</td>
                       <td className="filename">{file.name}</td>
-                      <td className={`table-cell ${file.source === "API Data" ? "api" : "uploaded"}`}>
+                      <td
+                        className={`table-cell ${
+                          file.source === "API Data"
+                            ? "api"
+                            : "uploaded"
+                        }`}
+                      >
                         {file.source}
                       </td>
                       <td style={{ textAlign: "center" }}>
