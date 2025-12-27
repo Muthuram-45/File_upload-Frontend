@@ -9,12 +9,13 @@ function ProcessedView() {
   const { folder, token } = state || {};
   const navigate = useNavigate();
 
-  const [tables, setTables] = useState([]); // { tableName, data: [] }
+  const [tables, setTables] = useState([]);
   const [activeTable, setActiveTable] = useState(null);
   const [error, setError] = useState("");
 
-  // 🔹 NLQ SEARCH STATES
+  // NLQ states
   // const [searchText, setSearchText] = useState("");
+  // const [nlqResult, setNlqResult] = useState("");
   // const [loading, setLoading] = useState(false);
 
   // ================= SAFE CELL VALUE =================
@@ -26,7 +27,7 @@ function ProcessedView() {
 
   // ================= FETCH TABLE DATA =================
   useEffect(() => {
-    if (!folder || !token || !folder.tables || folder.tables.length === 0) return;
+    if (!folder || !token || !folder.tables?.length) return;
 
     const TABLE_PRIORITY = {
       fulltable: 1,
@@ -37,10 +38,10 @@ function ProcessedView() {
 
     const fetchTables = async () => {
       try {
-        const fetchedTables = [];
+        setError("");
 
         const sortedTableNames = [...folder.tables].sort((a, b) => {
-          const getPriority = (name) => {
+          const priority = (name) => {
             const lower = name.toLowerCase();
             if (lower.endsWith("_fulltable")) return TABLE_PRIORITY.fulltable;
             if (lower.endsWith("_entity")) return TABLE_PRIORITY.entity;
@@ -48,14 +49,17 @@ function ProcessedView() {
             if (lower.endsWith("_dimension")) return TABLE_PRIORITY.dimension;
             return 99;
           };
-
-          return getPriority(a) - getPriority(b);
+          return priority(a) - priority(b);
         });
+
+        const fetchedTables = [];
 
         for (const tableName of sortedTableNames) {
           const res = await axios.get(
             `http://localhost:5000/processed-table/${tableName}`,
-            { headers: { Authorization: `Bearer ${token}` } }
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
           );
 
           fetchedTables.push({
@@ -65,9 +69,11 @@ function ProcessedView() {
         }
 
         setTables(fetchedTables);
-        if (fetchedTables.length > 0) setActiveTable(fetchedTables[0]);
+        if (fetchedTables.length > 0) {
+          setActiveTable(fetchedTables[0]);
+        }
       } catch (err) {
-        console.error("❌ Fetch table error:", err.response?.data || err.message);
+        console.error(err);
         setError("Error fetching table data");
       }
     };
@@ -76,66 +82,52 @@ function ProcessedView() {
   }, [folder, token]);
 
   // ================= GET FULL TABLE =================
-  // const getFullTableName = () => {
-  //   if (!tables.length) return null;
-  //   return tables.find((t) =>
+  // const getFullTableName = () =>
+  //   tables.find((t) =>
   //     t.tableName.toLowerCase().endsWith("_fulltable")
   //   )?.tableName;
+
+  // ================= NLQ SEARCH =================
+  // const handleSearch = async () => {
+  //   const fullTable = getFullTableName();
+
+  //   if (!fullTable) {
+  //     setError("Full table not loaded yet.");
+  //     return;
+  //   }
+  //   if (!searchText.trim()) {
+  //     setError("Please enter a query.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setLoading(true);
+  //     setError("");
+  //     setNlqResult("");
+
+  //     const res = await axios.post(
+  //       "http://localhost:5000/nlq-search",
+  //       {
+  //         question: searchText.trim(),
+  //         tableName: fullTable,
+  //       },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+
+  //     setNlqResult(res.data?.[0]?.result || "No answer found");
+  //   } catch (err) {
+  //     console.error("NLQ error:", err.response?.data || err.message);
+  //     setError(
+  //       err.response?.data?.error ||
+  //         err.response?.data?.message ||
+  //         "NLQ search failed"
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
   // };
-
- // ================= NLQ SEARCH =================
-// const handleSearch = async () => {
-//   const fullTable = getFullTableName();
-
-//   // ✅ Frontend validation
-//   if (!fullTable) {
-//     setError("Full table not loaded yet. Please wait for data to load.");
-//     return;
-//   }
-//   if (!searchText.trim()) {
-//     setError("Please enter a search query.");
-//     return;
-//   }
-
-//   try {
-//     setLoading(true);
-//     setError("");
-
-//     const res = await axios.post(
-//       "http://localhost:5000/nlq-search",
-//       {
-//         question: searchText.trim(),
-//         tableName: fullTable,
-//       },
-//       {
-//         headers: { Authorization: `Bearer ${token}` },
-//       }
-//     );
-
-//     if (!res.data || !Array.isArray(res.data)) {
-//       setError("No results returned from NLQ search.");
-//       setActiveTable({ tableName: fullTable, data: [] });
-//       return;
-//     }
-
-//     setActiveTable({
-//       tableName: fullTable,
-//       data: res.data,
-//     });
-//   } catch (err) {
-//     console.error("❌ NLQ search error:", err.response?.data || err.message);
-//     const msg =
-//       err.response?.data?.error ||
-//       err.response?.data?.message ||
-//       "Search failed. Try another query.";
-//     setError(msg);
-//     setActiveTable({ tableName: fullTable, data: [] });
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-
 
   // ================= TAB LABELS =================
   const getTabLabel = (tableName) => {
@@ -145,6 +137,12 @@ function ProcessedView() {
     if (name.endsWith("_metrics")) return "Metrics Table";
     if (name.endsWith("_dimension")) return "Dimension Table";
     return tableName;
+  };
+
+  // ================= TAB CHANGE =================
+  const handleTabChange = (table) => {
+    setActiveTable(table);
+    // setNlqResult(""); // clear old NLQ result
   };
 
   return (
@@ -161,14 +159,24 @@ function ProcessedView() {
       {/* <div className="nlq-search-box">
         <input
           type="text"
-          placeholder="Ask like: last 3 month sales details"
+          placeholder="Ask like: last 3 month sales"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <button onClick={handleSearch} disabled={loading}>
+        <button
+          onClick={handleSearch}
+          disabled={loading || !tables.length}
+        >
           {loading ? "Searching..." : "Search"}
         </button>
-      </div> */}
+      </div>
+
+      {nlqResult && (
+        <div className="nlq-result-box">
+          <strong>NLQ Result:</strong>
+          <p>{nlqResult}</p>
+        </div>
+      )} */}
 
       {/* ================= TABLE TABS ================= */}
       {tables.length > 0 && (
@@ -179,7 +187,7 @@ function ProcessedView() {
               className={`file-tab-btn ${
                 activeTable?.tableName === t.tableName ? "active" : ""
               }`}
-              onClick={() => setActiveTable(t)}
+              onClick={() => handleTabChange(t)}
             >
               {getTabLabel(t.tableName)}
             </button>
@@ -212,7 +220,7 @@ function ProcessedView() {
           </div>
         </div>
       ) : (
-        activeTable && <p className="empty-msg">No data found in this table.</p>
+        activeTable && <p className="empty-msg">No data found.</p>
       )}
     </div>
   );

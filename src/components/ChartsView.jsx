@@ -193,7 +193,7 @@ function ChartsView() {
             
           )
         }
-        <p>No meaningful charts available for comparison.</p>
+        {/* <p>No meaningful charts available for comparison.</p> */}
       
     </div>
   );

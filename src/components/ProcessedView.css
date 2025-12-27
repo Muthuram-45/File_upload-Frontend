@@ -362,10 +362,11 @@ h2 {
 .nlq-search-box input {
   flex: 1;
   padding: 8px;
-  font-size: 14px;
 }
 
-.nlq-search-box button {
-  padding: 8px 14px;
-  cursor: pointer;
+.nlq-result-box {
+  background: #f4f6fa;
+  padding: 12px;
+  border-left: 4px solid #4f46e5;
+  margin-bottom: 15px;
 }
