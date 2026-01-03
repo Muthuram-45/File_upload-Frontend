@@ -209,11 +209,12 @@ function App() {
           <Route
             path="/p-h7t4k9m3zq"
             element={
-              <ProtectedRoute blockViewOnly={false}>
-                <ProcessedView token={localStorage.getItem('token')} />
+              <ProtectedRoute allowViewOnly>
+                <ProcessedView />
               </ProtectedRoute>
             }
           />
+
 
 
           {/* OTHER */}
