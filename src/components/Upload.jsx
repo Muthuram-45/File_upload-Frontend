@@ -9,20 +9,50 @@ function Upload() {
   const [files, setFiles] = useState([]);
   const [fileName, setFileName] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [popup, setPopup] = useState({ message: "", type: "", visible: false });
+  const [popup, setPopup] = useState({
+    visible: false,
+    message: "",
+    type: "success",
+  });
   const [closing, setClosing] = useState(false);
+
   const navigate = useNavigate();
 
-  // ==========================
-  // FILE SELECT (ONE BY ONE)
-  // ==========================
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+
+  /* ==========================
+     POPUP HELPERS
+     ========================== */
+  const showPopup = (message, type = "success") => {
+    setPopup({ visible: true, message, type });
+
+    setTimeout(() => {
+      setClosing(true);
+      setTimeout(() => {
+        setPopup({ visible: false, message: "", type: "" });
+        setClosing(false);
+      }, 300);
+    }, 3000);
+  };
+
+  const closePopup = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setPopup({ visible: false, message: "", type: "" });
+      setClosing(false);
+    }, 300);
+  };
+
+  /* ==========================
+     FILE SELECT
+     ========================== */
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
     const alreadyAdded = files.some(
-      (file) =>
-        file.name === selectedFile.name && file.size === selectedFile.size
+      (f) => f.name === selectedFile.name && f.size === selectedFile.size
     );
 
     if (alreadyAdded) {
@@ -44,33 +74,31 @@ function Upload() {
     e.target.value = "";
   };
 
-  // ==========================
-  // POPUP HANDLERS
-  // ==========================
-  const showPopup = (message, type = "success") => {
-    setPopup({ message, type, visible: true });
-
-    setTimeout(() => {
-      setClosing(true);
-      setTimeout(() => {
-        setPopup({ message: "", type: "", visible: false });
-        setClosing(false);
-      }, 400);
-    }, 3000);
-  };
-
-  const closePopup = () => {
-    setClosing(true);
-    setTimeout(() => {
-      setPopup({ message: "", type: "", visible: false });
-      setClosing(false);
-    }, 400);
-  };
-
-  // ==========================
-  // UPLOAD
-  // ==========================
+  /* ==========================
+     UPLOAD HANDLER
+     ========================== */
   const handleUpload = async () => {
+    /* 🚫 VIEW ACCESS */
+    if (user?.viewOnly) {
+      return showPopup(
+        "🚫 View-only access.\nPlease login to upload files.",
+        "error"
+      );
+    }
+
+    /* 🚫 INVITED LOGIN (NOT REGISTERED) */
+    if (user?.pendingLogin || token === "PENDING_LOGIN") {
+      return showPopup(
+        "🔐 Please complete login to upload files.",
+        "error"
+      );
+    }
+
+    /* 🚫 NOT LOGGED IN */
+    if (!token) {
+      return showPopup("🔐 Please login first.", "error");
+    }
+
     if (files.length === 0) {
       return showPopup("⚠️ Select file(s) to upload", "error");
     }
@@ -79,14 +107,9 @@ function Upload() {
       return showPopup("⚠️ Enter file name", "error");
     }
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return showPopup("❌ Please login first", "error");
-    }
-
     const formData = new FormData();
     files.forEach((file) => formData.append("files", file));
-    formData.append("name", fileName); // send input file name to backend
+    formData.append("name", fileName);
 
     try {
       setUploadProgress(0);
@@ -106,37 +129,36 @@ function Upload() {
         }
       );
 
-      // ==========================
-      // BACKEND RESPONSE
-      // ==========================
-      if (res.data && res.data.success) {
+      if (res.data?.success) {
         showPopup(
-          "✅ File upload successfully.\nData engineering work will start soon.",
+          "✅ File uploaded successfully.\nData processing will start soon.",
           "success"
         );
       }
 
-
-      // RESET
+      /* RESET */
       setFiles([]);
       setFileName("");
       setUploadProgress(0);
       document.getElementById("fileInput").value = "";
 
     } catch (err) {
-      console.error("❌ Upload Error:", err);
+      console.error("Upload Error:", err);
       showPopup(err.response?.data?.error || "❌ Upload failed", "error");
       setUploadProgress(0);
     }
   };
 
-  // ==========================
-  // UI
-  // ==========================
+  /* ==========================
+     UI
+     ========================== */
   return (
     <>
       <div className="upload-page">
-        <button className="close-btnn" onClick={() => navigate("/d-oxwilh9dy1")}>
+        <button
+          className="close-btnn"
+          onClick={() => navigate("/d-oxwilh9dy1")}
+        >
           Back
         </button>
 
@@ -159,38 +181,8 @@ function Upload() {
 
               {files.length > 0 ? (
                 <ul style={{ textAlign: "left", marginTop: "10px" }}>
-                  {files.map((file, index) => (
-                    <li
-                      key={index}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      📄 {file.name}
-                      <button
-                        onClick={() => {
-                          const newFiles = files.filter((_, i) => i !== index);
-                          setFiles(newFiles);
-                          setFileName(
-                            newFiles.length > 1
-                              ? `Merged_${newFiles.length}_files`
-                              : newFiles.length === 1
-                                ? newFiles[0].name.split(".").slice(0, -1).join(".")
-                                : ""
-                          );
-                        }}
-                        style={{
-                          border: "none",
-                          background: "transparent",
-                          color: "red",
-                          cursor: "pointer",
-                        }}
-                      >
-                        ❌
-                      </button>
-                    </li>
+                  {files.map((file, idx) => (
+                    <li key={idx}>📄 {file.name}</li>
                   ))}
                 </ul>
               ) : (
@@ -221,7 +213,7 @@ function Upload() {
             <button
               onClick={handleUpload}
               className="upload-btn"
-              disabled={uploadProgress > 0 && uploadProgress < 100} // disable while uploading
+              disabled={uploadProgress > 0 && uploadProgress < 100}
             >
               {uploadProgress > 0 && uploadProgress < 100
                 ? "Uploading..."
@@ -230,6 +222,7 @@ function Upload() {
           </div>
         </div>
 
+        {/* POPUP */}
         {popup.visible && (
           <div className={`popup-overlay ${closing ? "hide" : ""}`}>
             <div className={`popup-box ${popup.type}`}>

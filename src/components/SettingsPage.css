@@ -3,7 +3,7 @@
    =============================== */
 .settings-page {
   display: flex;
-  height: 80vh; /* Full viewport height */
+  height: 77vh; /* Full viewport height */
   overflow: hidden; /* Prevent scrollbars */
   /* background: #daebfa;  */
   background: white;

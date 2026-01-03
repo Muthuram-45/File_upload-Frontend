@@ -71,6 +71,7 @@ function CompanyLogin({ setUser }) {
   };
 
   return (
+    <>
     <div className="login-container">
       {/* Left Form Section */}
       <div className="login-form-section">
@@ -127,8 +128,9 @@ function CompanyLogin({ setUser }) {
       <div className="login-image-section">
         <img src={loginImage} alt="Login Illustration" />
       </div>
-      <Footer/>
     </div>
+    <Footer/>
+    </>
   );
 }
 

@@ -116,7 +116,7 @@ function CompanyFiles() {
         </div>
 
         <header className="dashboard-head">
-          <h1>File Management Dashboard</h1>
+          <h1 >File Management Dashboard</h1>
         </header>
 
         {error && <div className="error-box">{error}</div>}

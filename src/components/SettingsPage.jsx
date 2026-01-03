@@ -124,6 +124,7 @@ function SettingsPage() {
   };
 
   return (
+    <>
     <div className="settings-page">
       {/* Hamburger Button */}
       <div className="hamburger" onClick={toggleSidebar}>
@@ -134,7 +135,7 @@ function SettingsPage() {
 
       <aside className={`settings-sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <FaUserCircle className="sidebar-icon" />
+         
           <h3>Settings</h3>
         </div>
 
@@ -159,8 +160,10 @@ function SettingsPage() {
 
       <main className="settings-main">{renderSection()}</main>
 
-      <Footer />
+  
     </div>
+    <Footer/>
+    </>
   );
 }
 
