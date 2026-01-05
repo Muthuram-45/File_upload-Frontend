@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Upload.css";
 import { FaCloudUploadAlt } from "react-icons/fa";
@@ -20,6 +20,38 @@ function Upload() {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
+
+  /* ==========================
+     🔥 HARD ACCESS GUARD (TOP)
+     ========================== */
+  useEffect(() => {
+    // ❌ NOT LOGGED IN
+    if (!token || !user) {
+      showPopup("🔐 Please login first.", "error");
+      setTimeout(() => navigate("/l-gy5n8r4v2t"), 1500);
+      return;
+    }
+
+    // 👀 VIEW ONLY ACCESS
+    if (user.viewOnly) {
+      showPopup(
+        "🚫 View-only access.\nPlease login to upload files.",
+        "error"
+      );
+      setTimeout(() => navigate("/l-gy5n8r4v2t"), 2000);
+      return;
+    }
+
+    // 🔐 INVITED BUT NOT REGISTERED
+    if (user.pendingLogin) {
+      showPopup(
+        "🔐 Please complete company registration to upload files.",
+        "error"
+      );
+      setTimeout(() => navigate("/cr-h2k8j5d1f5"), 2000);
+      return;
+    }
+  }, []);
 
   /* ==========================
      POPUP HELPERS
@@ -78,27 +110,6 @@ function Upload() {
      UPLOAD HANDLER
      ========================== */
   const handleUpload = async () => {
-    /* 🚫 VIEW ACCESS */
-    if (user?.viewOnly) {
-      return showPopup(
-        "🚫 View-only access.\nPlease login to upload files.",
-        "error"
-      );
-    }
-
-    /* 🚫 INVITED LOGIN (NOT REGISTERED) */
-    if (user?.pendingLogin || token === "PENDING_LOGIN") {
-      return showPopup(
-        "🔐 Please complete login to upload files.",
-        "error"
-      );
-    }
-
-    /* 🚫 NOT LOGGED IN */
-    if (!token) {
-      return showPopup("🔐 Please login first.", "error");
-    }
-
     if (files.length === 0) {
       return showPopup("⚠️ Select file(s) to upload", "error");
     }
@@ -136,7 +147,6 @@ function Upload() {
         );
       }
 
-      /* RESET */
       setFiles([]);
       setFileName("");
       setUploadProgress(0);

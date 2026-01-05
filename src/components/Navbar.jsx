@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiSettings, FiLogOut } from "react-icons/fi";
-import { CgProfile } from "react-icons/cg";
 import logo from "../assets/logo.png";
 import axios from "axios";
 import InviteEmployee from "./InviteEmployee";
@@ -76,7 +75,7 @@ function Navbar({ user, setUser }) {
             new Date(res.data.user.lastLogin).toLocaleString()
           );
         }
-      } catch { }
+      } catch {}
     };
 
     fetchLastLogin();
@@ -115,10 +114,10 @@ function Navbar({ user, setUser }) {
 
         <div className="navbar-right">
 
-          {/* 🚫 VIEW ONLY USER → SHOW NOTHING */}
+          {/* 🚫 VIEW ONLY USER */}
           {isViewUser && null}
 
-          {/* 🔑 INVITED LOGIN USER (ACCESS TYPE = LOGIN) */}
+          {/* 🔑 INVITED LOGIN USER */}
           {!isViewUser && isPendingLogin && (
             <div className="auth-buttons">
               <button
@@ -179,7 +178,8 @@ function Navbar({ user, setUser }) {
                   <hr />
 
                   <div className="dropdown-actions">
-                    {user.company_name && (
+                    {/* ✅ FIX: MANAGER ONLY */}
+                    {user.role === "manager" && (
                       <button
                         className="settings-btn"
                         onClick={() => {
@@ -208,7 +208,6 @@ function Navbar({ user, setUser }) {
           )}
 
         </div>
-
       </nav>
 
       {/* INVITE MODAL */}

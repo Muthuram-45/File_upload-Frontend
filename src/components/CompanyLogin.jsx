@@ -1,70 +1,76 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import './CompanyLogin.css';
-import { useNavigate } from 'react-router-dom';
-import loginImage from '../assets/art3.png'; // ✅ Same image as normal login
-import Footer from './Footer';
+import React, { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import "./CompanyLogin.css";
+import loginImage from "../assets/art3.png";
+import Footer from "./Footer";
 
 function CompanyLogin({ setUser }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
+  // =========================
+  // HANDLE COMPANY LOGIN
+  // =========================
   const handleLogin = async () => {
     if (!email || !password || !companyName) {
-      Swal.fire('Error', 'Please fill in all fields.', 'error');
+      Swal.fire("Error", "Please fill all fields", "error");
       return;
     }
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:5000/company-login', {
+
+      const res = await axios.post("http://localhost:5000/company-login", {
         email: email.trim().toLowerCase(),
         password: password.trim(),
         company_name: companyName.trim(),
       });
 
-      if (res.data.success) {
-        Swal.fire({
-          title: '✅ Login Successful!',
-          text: `Welcome, ${res.data.user.firstName || res.data.user.company_name}!`,
-          icon: 'success',
-          timer: 2000,
-          showConfirmButton: false,
-        });
-
-        const companyData = {
-          company_name: res.data.user.company_name,
-          email: res.data.user.email,
-          mobile: res.data.user.mobile || '',
-          firstName: res.data.user.firstName || '',
-          lastName: res.data.user.lastName || '',
-          isCompany: true,
-        };
-
-        // Store in localStorage
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('company', JSON.stringify(companyData));
-
-        // Update App state
-        setUser(companyData);
-
-        // Redirect to dashboard
-        setTimeout(() => {
-          navigate('/d-oxwilh9dy1', { replace: true });
-        }, 100);
-      } else {
-        setMessage(res.data.error || 'Invalid credentials');
-        Swal.fire('Error', res.data.error || 'Invalid credentials', 'error');
+      if (!res.data.success) {
+        Swal.fire("Error", res.data.error || "Login failed", "error");
+        return;
       }
+
+      // =========================
+      // ✅ TRUST BACKEND ROLE
+      // =========================
+      const userData = {
+        id: res.data.user.id,
+        email: res.data.user.email,
+        firstName: res.data.user.firstName || "",
+        lastName: res.data.user.lastName || "",
+        mobile: res.data.user.mobile || "",
+        company_name: res.data.user.company_name,
+        role: res.data.user.role,      // 🔥 FIXED
+        isCompany: true,
+        viewOnly: false,
+      };
+
+      // ✅ SINGLE SOURCE OF TRUTH
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      setUser(userData);
+
+      Swal.fire({
+        title: "Login Successful",
+        text: `Welcome ${userData.company_name}`,
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      navigate("/d-oxwilh9dy1", { replace: true });
+
     } catch (err) {
-      console.error('Login error:', err);
-      setMessage('Server error during login');
-      Swal.fire('Error', 'Server error during login', 'error');
+      console.error("Company Login Error:", err);
+      Swal.fire("Error", "Server error during login", "error");
     } finally {
       setLoading(false);
     }
@@ -72,64 +78,74 @@ function CompanyLogin({ setUser }) {
 
   return (
     <>
-    <div className="login-container">
-      {/* Left Form Section */}
-      <div className="login-form-section">
-        <div className="login-box">
-          <h2 className="login-title">Company Login </h2>
-          <p className="login-subtitle">Access your company dashboard</p>
+      <div className="login-container">
+        {/* LEFT FORM */}
+        <div className="login-form-section">
+          <div className="login-box">
+            <h2 className="login-title">Company Login</h2>
+            <p className="login-subtitle">Access your company dashboard</p>
 
-          <input
-            type="text"
-            placeholder="Company Name"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-            className="login-input"
-          />
-          <input
-            type="email"
-            placeholder="Company Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="login-input"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="login-input"
-          />
+            <input
+              type="text"
+              placeholder="Company Name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              className="login-input"
+            />
 
-          <button onClick={handleLogin} className="login-btn" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
+            <input
+              type="email"
+              placeholder="Company Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="login-input"
+            />
 
-          {/* Register Link */}
-          <p className="footer-text">
-            New company ?{' '}
-            <span onClick={() => navigate('/cr-h2k8j5d1f5')} className="register-link">
-              Register here
-            </span>
-          </p>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="login-input"
+            />
 
-           <p className="footer-text">
-            Normal User?{' '}
-            <span onClick={() => navigate('/l-gy5n8r4v2t')} className="register-link">
-              Login here
-            </span>
-          </p>
+            <button
+              onClick={handleLogin}
+              className="login-btn"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
 
-          {message && <p style={{ color: 'gray', marginTop: '10px' }}>{message}</p>}
+            <p className="footer-text">
+              New company?{" "}
+              <span
+                onClick={() => navigate("/cr-h2k8j5d1f5")}
+                className="register-link"
+              >
+                Register here
+              </span>
+            </p>
+
+            <p className="footer-text">
+              Normal User?{" "}
+              <span
+                onClick={() => navigate("/l-gy5n8r4v2t")}
+                className="register-link"
+              >
+                Login here
+              </span>
+            </p>
+          </div>
+        </div>
+
+        {/* RIGHT IMAGE */}
+        <div className="login-image-section">
+          <img src={loginImage} alt="Login Illustration" />
         </div>
       </div>
 
-      {/* Right Side Image Section */}
-      <div className="login-image-section">
-        <img src={loginImage} alt="Login Illustration" />
-      </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
   );
 }

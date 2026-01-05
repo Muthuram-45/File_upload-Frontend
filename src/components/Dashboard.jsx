@@ -1,77 +1,77 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
 import "./Dashboard.css";
 import Footer from "./Footer";
 import Chatbot from "./Chatbot";
 import InviteEmployee from "./InviteEmployee";
-import { FaUsers } from "react-icons/fa";
 
+import { FaUsers } from "react-icons/fa";
 import { IoHome } from "react-icons/io5";
 import { SiFiles } from "react-icons/si";
 import { CgProfile } from "react-icons/cg";
-import { FcInvite } from "react-icons/fc";
 
 function Dashboard() {
   const navigate = useNavigate();
+
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
   const [showInvite, setShowInvite] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // =============================
-  // AUTH HANDLING
-  // =============================
+  // ======================================================
+  // 1️⃣ LOAD USER (ONCE)
+  // ======================================================
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-      const localUser = JSON.parse(localStorage.getItem("user"));
-      const companyUser = JSON.parse(localStorage.getItem("company"));
-      const token = localStorage.getItem("token");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
 
-      if (companyUser && token) {
-        setUser({ ...companyUser, isCompany: true });
-        return;
-      }
+    if (!storedUser || !token) {
+      navigate("/l-gy5n8r4v2t", { replace: true });
+      return;
+    }
 
-      if (firebaseUser) {
-        try {
-          const res = await fetch(
-            `http://localhost:5000/user/${firebaseUser.email}`
-          );
-          const data = await res.json();
-          if (data.success && data.user) {
-            setUser({ ...data.user, isGoogleUser: true });
-          }
-        } catch {}
-        return;
-      }
-
-      if (localUser && token) {
-        setUser(localUser);
-        return;
-      }
-
-      navigate("/login", { replace: true });
-    });
-
-    return () => unsubscribe();
+    setUser(storedUser);
   }, [navigate]);
 
-  // =============================
-  // FETCH DASHBOARD COUNTS
-  // =============================
+  // ======================================================
+  // 2️⃣ LOAD DASHBOARD STATS
+  // ======================================================
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+
+    if (!token) {
+      setStats({
+        me: { uploadedFiles: 0, uploadedApi: 0, processedFiles: 0 },
+        company: null,
+      });
+      return;
+    }
 
     fetch("http://localhost:5000/dashboard-counts", {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => res.json())
-      .then(data => setStats(data))
-      .catch(() => {});
+      .then((res) => res.json())
+      .then((data) => {
+        setStats({
+          me: data?.me ?? {
+            uploadedFiles: 0,
+            uploadedApi: 0,
+            processedFiles: 0,
+          },
+          company: data?.company ?? null,
+        });
+      })
+      .catch(() => {
+        setStats({
+          me: { uploadedFiles: 0, uploadedApi: 0, processedFiles: 0 },
+          company: null,
+        });
+      });
   }, []);
 
+  // ======================================================
+  // 3️⃣ LOADING STATE
+  // ======================================================
   if (!user || !stats) {
     return (
       <div className="dashboard-loading">
@@ -80,11 +80,19 @@ function Dashboard() {
     );
   }
 
+  // ======================================================
+  // 4️⃣ ROLE CHECKS
+  // ======================================================
+  const isManager = user.role === "manager";
+  const isViewOnly = user.viewOnly === true;
+
+  // ======================================================
+  // 5️⃣ UI
+  // ======================================================
   return (
     <>
       <div className="professional-dashboard">
-
-        {/* ☰ MOBILE MENU BUTTON */}
+        {/* MOBILE MENU */}
         <button
           className="mobile-menu-btn"
           onClick={() => setIsSidebarOpen(true)}
@@ -92,148 +100,97 @@ function Dashboard() {
           ☰
         </button>
 
-        {/* =============================
-            SIDEBAR (OVERLAY)
-        ============================== */}
+        {/* SIDEBAR */}
         <aside className={`dashboard-sidebar ${isSidebarOpen ? "open" : ""}`}>
           <nav className="sidebar-nav">
-
             <div className="nav-section">
               <button
                 className="nav-item"
-                onClick={() => {
-                  navigate("/d-oxwilh9dy1");
-                  setIsSidebarOpen(false);
-                }}
+                onClick={() => navigate("/d-oxwilh9dy1")}
               >
-                <span className="nav-icon" id="ho"><IoHome /></span>
-                <span className="nav-label">Home</span>
+                <IoHome /> Home
               </button>
 
               <button
                 className="nav-item"
-                onClick={() => {
-                  navigate("/cf-2g7h9k3l5m");
-                  setIsSidebarOpen(false);
-                }}
+                onClick={() => navigate("/cf-2g7h9k3l5m")}
               >
-                <span className="nav-icon" id="fi"><SiFiles /></span>
-                <span className="nav-label">All Files</span>
+                <SiFiles /> All Files
               </button>
             </div>
 
-            {/* MY WORKS */}
             <div className="nav-section">
               <div className="nav-section-title">My Works</div>
-
               <button className="nav-item">
-                <span className="nav-label">
-                  My Uploaded Files <b>{stats.me.uploadedFiles}</b>
-                </span>
+                Uploaded <b>{stats.me.uploadedFiles}</b>
               </button>
-
               <button className="nav-item">
-                <span className="nav-label">
-                  My API Files <b>{stats.me.uploadedApi}</b>
-                </span>
+                API <b>{stats.me.uploadedApi}</b>
               </button>
-
               <button className="nav-item">
-                <span className="nav-label">
-                  My Processed Files <b>{stats.me.processedFiles}</b>
-                </span>
+                Processed <b>{stats.me.processedFiles}</b>
               </button>
             </div>
 
-            {/* COMPANY WORKS */}
-            {stats.company && (
+            {isManager && stats.company && (
               <div className="nav-section">
                 <div className="nav-section-title">Company Works</div>
-
                 <button className="nav-item">
-                  <span className="nav-label">
-                    Uploaded Files <b>{stats.company.uploadedFiles}</b>
-                  </span>
+                  Uploaded <b>{stats.company.uploadedFiles}</b>
                 </button>
-
                 <button className="nav-item">
-                  <span className="nav-label">
-                    API Files <b>{stats.company.uploadedApi}</b>
-                  </span>
+                  API <b>{stats.company.uploadedApi}</b>
                 </button>
-
                 <button className="nav-item">
-                  <span className="nav-label">
-                    Processed Files <b>{stats.me.processedFiles}</b>
-                  </span>
+                  Processed <b>{stats.company.processedFiles}</b>
                 </button>
               </div>
             )}
 
-            {/* SETTINGS */}
             <div className="nav-section">
               <div className="nav-section-title">Settings</div>
 
               <button
                 className="nav-item"
-                onClick={() => {
-                  navigate("/settings");
-                  setIsSidebarOpen(false);
-                }}
+                onClick={() => navigate("/settings")}
               >
-                <span className="nav-icon" id="ho"><CgProfile /></span>
-                <span className="nav-label">Profile</span>
+                <CgProfile /> Profile
               </button>
 
-              {user.company_name && (
+              {isManager && (
                 <button
                   className="nav-item"
-                  onClick={() => {
-                    setShowInvite(true);
-                    setIsSidebarOpen(false);
-                  }}
+                  onClick={() => setShowInvite(true)}
                 >
-                  <span className="nav-icon" ><FaUsers /></span>
-                  <span className="nav-label">Invite to Join</span>
+                  <FaUsers /> Invite to Join
                 </button>
               )}
             </div>
-
           </nav>
         </aside>
 
-        {/* DARK BACKDROP */}
-        {isSidebarOpen && (
-          <div
-            className="sidebar-backdrop"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-
-      {/* Main Content Area */}
+        {/* MAIN CONTENT */}
         <main className="dashboard-main">
           <div className="main-content">
-            {/* Welcome Section */}
+
             <div className="welcome">
-            <section className="welcome-section">
-              <h1 className="welcome-title">
-               Hi {user.firstName}, Welcome to Cloud360
-              </h1>
-              <p className="welcome-subtitle">
-                {user.isCompany
-                  ? "Manage your company's data, files, and workflows in one powerful platform."
-                  : "Your centralized platform for data management and file processing."}
-              </p>
-            </section>
+              <section className="welcome-section">
+                <h1 className="welcome-title">
+                  Hi {user.firstName}, Welcome to Cloud360
+                </h1>
+                <p className="welcome-subtitle">
+                  {user.isCompany
+                    ? "Manage your company's data, files, and workflows in one powerful platform."
+                    : "Your centralized platform for data management and file processing."}
+                </p>
+              </section>
             </div>
- 
-            {/* Intro Card (like Databricks) */}
+
             <section className="intro-card">
               <div className="intro-content">
                 <h2 className="intro-title">Getting Started with Cloud360</h2>
                 <p className="intro-description">
                   Explore our powerful features to upload, process, and manage your data seamlessly.
-                  Connect to various data sources and build your first data pipeline in minutes.
                 </p>
               </div>
               <div className="intro-visual">
@@ -242,11 +199,13 @@ function Dashboard() {
                 </div>
               </div>
             </section>
- 
-            {/* Connect Your Data Section */}
+
+            {/* CONNECT DATA */}
             <section className="data-section">
               <h2 className="section-title">Connect your data</h2>
               <div className="action-cards">
+
+                {/* ✅ UPLOAD – ALWAYS NAVIGATE */}
                 <div
                   className="action-card"
                   onClick={() => navigate("/u-p2q8k4r9jw")}
@@ -254,10 +213,13 @@ function Dashboard() {
                   <div className="card-icon">⬆️</div>
                   <h3 className="card-title">Upload data</h3>
                   <p className="card-description">
-                    Upload files from your local system and process them instantly.
+                    {isViewOnly
+                      ? "Login required to upload"
+                      : "Upload files from your local system"}
                   </p>
                 </div>
- 
+
+                {/* FILES */}
                 <div
                   className="action-card"
                   onClick={() => navigate("/cf-2g7h9k3l5m")}
@@ -265,41 +227,35 @@ function Dashboard() {
                   <div className="card-icon">📁</div>
                   <h3 className="card-title">Browse datasets</h3>
                   <p className="card-description">
-                    View and manage all your uploaded files and datasets.
+                    View and manage all your uploaded files
                   </p>
                 </div>
- 
+
+                {/* ✅ API – ALWAYS NAVIGATE */}
                 <div
                   className="action-card"
                   onClick={() => navigate("/f-vxt2x3s7a1")}
                 >
                   <div className="card-icon">🔗</div>
-                  <h3 className="card-title">Connect to API data sources</h3>
+                  <h3 className="card-title">Connect API</h3>
                   <p className="card-description">
-                    Integrate with external APIs and data sources seamlessly.
+                    {isViewOnly
+                      ? "Login required to fetch API"
+                      : "Connect to API data sources"}
                   </p>
                 </div>
+
               </div>
             </section>
           </div>
         </main>
       </div>
+
       <Chatbot />
       <Footer />
 
-      {/* INVITE MODAL */}
-      {showInvite && (
-        <div className="modal-overlay" onClick={() => setShowInvite(false)}>
-          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="modal-close"
-              onClick={() => setShowInvite(false)}
-            >
-              ✕
-            </button>
-            <InviteEmployee onClose={() => setShowInvite(false)} />
-          </div>
-        </div>
+      {showInvite && isManager && (
+        <InviteEmployee onClose={() => setShowInvite(false)} />
       )}
     </>
   );

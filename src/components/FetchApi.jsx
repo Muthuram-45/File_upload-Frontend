@@ -12,12 +12,49 @@ function ApiFetcher() {
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
   const [saveLoading, setSaveLoading] = useState(false);
-  const [popup, setPopup] = useState({ show: false, message: "", type: "success" });
+  const [popup, setPopup] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
   const navigate = useNavigate();
   const API_BASE_URL = "http://localhost:5000";
+
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
+
+  // ======================================================
+  // 🔥 HARD ACCESS GUARD (VERY IMPORTANT)
+  // ======================================================
+  useEffect(() => {
+    // ❌ NOT LOGGED IN
+    if (!token || !user) {
+      showPopup("🔐 Please login to use Fetch API.", "error");
+      setTimeout(() => navigate("/l-gy5n8r4v2t"), 1500);
+      return;
+    }
+
+    // 👀 VIEW ONLY
+    if (user.viewOnly) {
+      showPopup(
+        "🚫 View-only access.\nPlease login to fetch API data.",
+        "error"
+      );
+      setTimeout(() => navigate("/l-gy5n8r4v2t"), 2000);
+      return;
+    }
+
+    // 🔐 INVITED BUT NOT REGISTERED
+    if (user.pendingLogin || token === "PENDING_LOGIN") {
+      showPopup(
+        "🔐 Please complete company registration to use Fetch API.",
+        "error"
+      );
+      setTimeout(() => navigate("/cr-h2k8j5d1f5"), 2000);
+      return;
+    }
+  }, []);
 
   // =========================
   // POPUP
@@ -31,11 +68,6 @@ function ApiFetcher() {
   // FETCH API
   // =========================
   const handleFetch = async () => {
-    // 🚫 VIEW / INVITED LOGIN BLOCK
-    if (user?.viewOnly || user?.pendingLogin || token === "PENDING_LOGIN") {
-      return showPopup("🔐 Please login to use Fetch API.", "error");
-    }
-
     if (!apiUrl.trim()) {
       return showPopup("⚠️ Please enter API URL", "error");
     }
@@ -69,10 +101,6 @@ function ApiFetcher() {
   // SAVE API DATA
   // =========================
   const handleSave = async () => {
-    if (user?.viewOnly || user?.pendingLogin) {
-      return showPopup("🔐 Please login to save API data.", "error");
-    }
-
     if (!fileName.trim()) {
       return showPopup("⚠️ Enter file name", "error");
     }
@@ -80,27 +108,46 @@ function ApiFetcher() {
     try {
       setSaveLoading(true);
 
-      const check = await axios.get(`${API_BASE_URL}/check-filename?name=${fileName}`);
+      const check = await axios.get(
+        `${API_BASE_URL}/check-filename?name=${fileName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (check.data.exists) {
         return showPopup("❌ File name already exists", "error");
       }
 
-      await axios.post(`${API_BASE_URL}/save-api-data`, {
-        api_url: apiUrl,
-        file_name: fileName,
-        response,
-        company_name: user?.company_name || null,
-      });
+      await axios.post(
+        `${API_BASE_URL}/save-api-data`,
+        {
+          api_url: apiUrl,
+          file_name: fileName,
+          response,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       showPopup("✅ API Data saved successfully");
       setFileName("");
-    } catch {
+    } catch (err) {
+      console.error("SAVE ERROR:", err.response?.data || err);
       showPopup("❌ Save failed", "error");
     } finally {
       setSaveLoading(false);
     }
   };
 
+  // =========================
+  // UI
+  // =========================
   return (
     <>
       <div className="api-fetcher">
@@ -146,13 +193,19 @@ function ApiFetcher() {
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
             />
-            <button onClick={handleSave} className="save-btn" disabled={saveLoading}>
+            <button
+              onClick={handleSave}
+              className="save-btn"
+              disabled={saveLoading}
+            >
               {saveLoading ? "Saving..." : "Save"}
             </button>
           </div>
         )}
 
-        {popup.show && <div className={`popup ${popup.type}`}>{popup.message}</div>}
+        {popup.show && (
+          <div className={`popup ${popup.type}`}>{popup.message}</div>
+        )}
       </div>
 
       <Footer />

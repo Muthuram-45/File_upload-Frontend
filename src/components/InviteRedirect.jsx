@@ -1,85 +1,56 @@
 import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function InviteRedirect() {
-  const [params] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const inviteToken = params.get("token");
-
-    // ❌ Token illa → login page
-    if (!inviteToken) {
-      navigate("/l-gy5n8r4v2t", { replace: true });
+    const token = new URLSearchParams(window.location.search).get("token");
+    if (!token) {
+      navigate("/l-gy5n8r4v2t");
       return;
     }
 
     axios
-      .get(`http://localhost:5000/verify-invite?token=${inviteToken}`)
+      .get(`http://localhost:5000/verify-invite?token=${token}`)
       .then((res) => {
-
-        // ==========================
-        // 🔑 LOGIN ACCESS (INVITED USER)
-        // ==========================
-        if (res.data.access === "login") {
-          // ✅ USE INVITE TOKEN AS AUTH TOKEN
-          localStorage.setItem("token", inviteToken);
-
-          // 🔐 mark as pending login (restricted user)
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              email: res.data.email,
-              company_name: res.data.company_name,
-              pendingLogin: true,   // ⭐ KEY FLAG
-              isInvite: true
-            })
-          );
-
-          // ✅ GO TO DASHBOARD
-          navigate("/d-oxwilh9dy1", { replace: true });
-          return;
-        }
-
-        // ==========================
-        // 👀 VIEW ACCESS (READ ONLY)
-        // ==========================
+        // =====================
+        // VIEW ACCESS
+        // =====================
         if (res.data.access === "view") {
-          // 🔐 backend generated view token
-          localStorage.setItem("token", res.data.viewToken);
-
+          localStorage.setItem("token", res.data.token);
           localStorage.setItem(
             "user",
             JSON.stringify({
-              firstName: "Viewer",
-              email: res.data.email,
-              company_name: res.data.company_name,
+              role: "employee",
               viewOnly: true,
-              isInvite: true
+              isCompany: true
             })
           );
 
-          // ✅ FILES PAGE
-          navigate("/cf-2g7h9k3l5m", { replace: true });
-          return;
+          navigate("/d-oxwilh9dy1", { replace: true });
         }
 
-        // ❌ fallback
-        navigate("/l-gy5n8r4v2t", { replace: true });
-      })
-      .catch((err) => {
-        console.error("Invite verification failed:", err);
-        navigate("/l-gy5n8r4v2t", { replace: true });
-      });
-  }, [navigate, params]);
+        // =====================
+        // LOGIN ACCESS → COMPANY REGISTER
+        // =====================
+        if (res.data.access === "login" && res.data.forceCompanyRegister) {
+          localStorage.setItem(
+            "inviteLogin",
+            JSON.stringify({
+              email: res.data.email,
+              company_name: res.data.company_name
+            })
+          );
 
-  return (
-    <div style={{ textAlign: "center", marginTop: "60px" }}>
-      <h3>Processing your invitation…</h3>
-      <p>Please wait</p>
-    </div>
-  );
+          navigate("/cr-h2k8j5d1f5", { replace: true });
+        }
+      })
+      .catch(() => navigate("/l-gy5n8r4v2t"));
+  }, [navigate]);
+
+  return <h3 style={{ textAlign: "center" }}>Redirecting...</h3>;
 }
 
 export default InviteRedirect;
