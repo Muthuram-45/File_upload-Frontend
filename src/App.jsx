@@ -187,6 +187,20 @@ function App() {
             }
           />
 
+<<<<<<< HEAD
+=======
+          <Route
+            path="/p-h7t4k9m3zq"
+            element={
+              <ProtectedRoute allowViewOnly>
+                <ProcessedView />
+              </ProtectedRoute>
+            }
+          />
+
+
+
+>>>>>>> 670cca49ea157781fbf24512987969ca59e1f53a
           {/* OTHER */}
           <Route path="/invite-redirect" element={<InviteRedirect />} />
           <Route path="/charts-view" element={<ChartsView />} />
