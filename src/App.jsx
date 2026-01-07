@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { auth } from "./components/firebase";
 
 import Register from "./components/Register";
@@ -23,7 +28,12 @@ import InviteRedirect from "./components/InviteRedirect";
 import "./app.css";
 
 function App() {
-  const [user, setUser] = useState(null);
+  // 🔥 RESTORE USER IMMEDIATELY
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
   const [loading, setLoading] = useState(true);
 
   // ============================
@@ -48,8 +58,11 @@ function App() {
           const data = await res.json();
           if (data.success && data.user) {
             setUser(data.user);
+            localStorage.setItem("user", JSON.stringify(data.user));
           }
-        } catch {}
+        } catch (err) {
+          console.error(err);
+        }
         setLoading(false);
         return;
       }
@@ -70,17 +83,16 @@ function App() {
   }
 
   // ============================
-  // 🔥 FIXED PROTECTED ROUTE
+  // PROTECTED ROUTE
   // ============================
   const ProtectedRoute = ({ children }) => {
     const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
 
-    // ❌ ONLY BLOCK IF NO TOKEN
-    if (!token) {
+    if (!token || !storedUser) {
       return <Navigate to="/l-gy5n8r4v2t" replace />;
     }
 
-    // ✅ DO NOT BLOCK viewOnly HERE
     return children;
   };
 
@@ -97,7 +109,6 @@ function App() {
 
       <div className="App" style={{ marginTop: "80px" }}>
         <Routes>
-
           <Route
             path="/"
             element={
@@ -108,7 +119,7 @@ function App() {
             }
           />
 
-          {/* PUBLIC */}
+          {/* PUBLIC ROUTES */}
           <Route
             path="/l-gy5n8r4v2t"
             element={
@@ -117,6 +128,7 @@ function App() {
               </PublicRoute>
             }
           />
+
           <Route
             path="/r-ya7w1p9s35"
             element={
@@ -125,16 +137,18 @@ function App() {
               </PublicRoute>
             }
           />
+
           <Route
             path="/cl-zv9ng4q6b8"
             element={<CompanyLogin setUser={setUser} />}
           />
+
           <Route
             path="/cr-h2k8j5d1f5"
             element={<CompanyRegister />}
           />
 
-          {/* PROTECTED (VIEW USERS ALLOWED) */}
+          {/* PROTECTED ROUTES */}
           <Route
             path="/d-oxwilh9dy1"
             element={
@@ -143,6 +157,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/cf-2g7h9k3l5m"
             element={
@@ -151,6 +166,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/p-h7t4k9m3zq"
             element={
@@ -160,7 +176,6 @@ function App() {
             }
           />
 
-          {/* 🔥 IMPORTANT: PAGES MUST LOAD */}
           <Route
             path="/u-p2q8k4r9jw"
             element={
@@ -169,6 +184,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/f-vxt2x3s7a1"
             element={
@@ -187,20 +203,6 @@ function App() {
             }
           />
 
-<<<<<<< HEAD
-=======
-          <Route
-            path="/p-h7t4k9m3zq"
-            element={
-              <ProtectedRoute allowViewOnly>
-                <ProcessedView />
-              </ProtectedRoute>
-            }
-          />
-
-
-
->>>>>>> 670cca49ea157781fbf24512987969ca59e1f53a
           {/* OTHER */}
           <Route path="/invite-redirect" element={<InviteRedirect />} />
           <Route path="/charts-view" element={<ChartsView />} />

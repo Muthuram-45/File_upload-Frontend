@@ -10,6 +10,8 @@ import { IoHome } from "react-icons/io5";
 import { SiFiles } from "react-icons/si";
 import { CgProfile } from "react-icons/cg";
 
+const API_BASE = "http://localhost:5000";
+
 function Dashboard() {
   const navigate = useNavigate();
 
@@ -17,9 +19,14 @@ function Dashboard() {
   const [stats, setStats] = useState(null);
   const [showInvite, setShowInvite] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+
+  // 🔥 NEW
+  const [pendingEmployees, setPendingEmployees] = useState([]);
+  const [activeView, setActiveView] = useState("home"); // home | approvals
 
   // ======================================================
-  // 1️⃣ LOAD USER (ONCE)
+  // 1️⃣ LOAD USER + TOKEN VALIDATION
   // ======================================================
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -40,17 +47,19 @@ function Dashboard() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setStats({
-        me: { uploadedFiles: 0, uploadedApi: 0, processedFiles: 0 },
-        company: null,
-      });
+      navigate("/l-gy5n8r4v2t", { replace: true });
       return;
     }
 
-    fetch("http://localhost:5000/dashboard-counts", {
+    fetch(`${API_BASE}/dashboard-counts`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (res.status === 401 || res.status === 403) {
+          throw new Error("unauthorized");
+        }
+        return res.json();
+      })
       .then((data) => {
         setStats({
           me: data?.me ?? {
@@ -62,15 +71,31 @@ function Dashboard() {
         });
       })
       .catch(() => {
-        setStats({
-          me: { uploadedFiles: 0, uploadedApi: 0, processedFiles: 0 },
-          company: null,
-        });
+        localStorage.clear();
+        navigate("/l-gy5n8r4v2t", { replace: true });
       });
-  }, []);
+  }, [navigate]);
 
   // ======================================================
-  // 3️⃣ LOADING STATE
+  // 3️⃣ LOAD PENDING EMPLOYEES (MANAGER ONLY)
+  // ======================================================
+  useEffect(() => {
+    if (!user || user.role !== "manager") return;
+
+    fetch(`${API_BASE}/manager/pending-employees`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPendingEmployees(data.employees || []);
+      })
+      .catch(() => setPendingEmployees([]));
+  }, [user]);
+
+  // ======================================================
+  // 4️⃣ LOADING STATE
   // ======================================================
   if (!user || !stats) {
     return (
@@ -80,14 +105,40 @@ function Dashboard() {
     );
   }
 
-  // ======================================================
-  // 4️⃣ ROLE CHECKS
-  // ======================================================
   const isManager = user.role === "manager";
   const isViewOnly = user.viewOnly === true;
 
   // ======================================================
-  // 5️⃣ UI
+  // 5️⃣ APPROVE / REJECT
+  // ======================================================
+  const approveEmployee = async (id) => {
+    await fetch(`${API_BASE}/manager/approve-employee`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ userId: id }),
+    });
+
+    setPendingEmployees((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const rejectEmployee = async (id) => {
+    await fetch(`${API_BASE}/manager/reject-employee`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ userId: id }),
+    });
+
+    setPendingEmployees((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  // ======================================================
+  // 6️⃣ UI
   // ======================================================
   return (
     <>
@@ -106,16 +157,19 @@ function Dashboard() {
             <div className="nav-section">
               <button
                 className="nav-item"
-                onClick={() => navigate("/d-oxwilh9dy1")}
+                onClick={() => {
+                  setActiveView("home");
+                  navigate("/d-oxwilh9dy1");
+                }}
               >
-                <IoHome /> Home
+                <IoHome id="ho"/> Home
               </button>
 
               <button
                 className="nav-item"
                 onClick={() => navigate("/cf-2g7h9k3l5m")}
               >
-                <SiFiles /> All Files
+                <SiFiles id="fi"/> All Files
               </button>
             </div>
 
@@ -154,16 +208,32 @@ function Dashboard() {
                 className="nav-item"
                 onClick={() => navigate("/settings")}
               >
-                <CgProfile /> Profile
+                <CgProfile id="ho"/> Profile
               </button>
 
               {isManager && (
-                <button
-                  className="nav-item"
-                  onClick={() => setShowInvite(true)}
-                >
-                  <FaUsers /> Invite to Join
-                </button>
+                <>
+                  <button
+                    className="nav-item"
+                    onClick={() => setShowInvite(true)}
+                  >
+                    <FaUsers id="up" /> Invite to Join
+                  </button>
+
+                  {/* 🔥 PENDING APPROVALS MENU */}
+                  <button
+                    className={`nav-item ${activeView === "approvals" ? "active" : ""
+                      }`}
+                    onClick={() => setActiveView("approvals")}
+                  >
+                     Pending Approvals
+                    {pendingEmployees.length > 0 && (
+                      <span className="badge">
+                        {pendingEmployees.length}
+                      </span>
+                    )}
+                  </button>
+                </>
               )}
             </div>
           </nav>
@@ -171,8 +241,8 @@ function Dashboard() {
 
         {/* MAIN CONTENT */}
         <main className="dashboard-main">
-          <div className="main-content">
-
+                <div className="main-content">
+ 
             <div className="welcome">
               <section className="welcome-section">
                 <h1 className="welcome-title">
@@ -180,31 +250,17 @@ function Dashboard() {
                 </h1>
                 <p className="welcome-subtitle">
                   {user.isCompany
-                    ? "Manage your company's data, files, and workflows in one powerful platform."
-                    : "Your centralized platform for data management and file processing."}
+                    ? "Manage your company's data, files, and workflows in one powerful platform.Explore our powerful features to upload, process, and manage your data seamlessly."
+                    : "Your centralized platform for data management and file processing.Explore our powerful features to upload, process, and manage your data seamlessly."}
                 </p>
               </section>
             </div>
-
-            <section className="intro-card">
-              <div className="intro-content">
-                <h2 className="intro-title">Getting Started with Cloud360</h2>
-                <p className="intro-description">
-                  Explore our powerful features to upload, process, and manage your data seamlessly.
-                </p>
-              </div>
-              <div className="intro-visual">
-                <div className="intro-placeholder">
-                  <span className="visual-icon">🚀</span>
-                </div>
-              </div>
-            </section>
-
+ 
             {/* CONNECT DATA */}
             <section className="data-section">
               <h2 className="section-title">Connect your data</h2>
               <div className="action-cards">
-
+ 
                 {/* ✅ UPLOAD – ALWAYS NAVIGATE */}
                 <div
                   className="action-card"
@@ -217,8 +273,8 @@ function Dashboard() {
                       ? "Login required to upload"
                       : "Upload files from your local system"}
                   </p>
+                  <p className="card-subtitle">Supports both Single or multiple files,Once uploaded files will be validated and prepared for further processing.</p>
                 </div>
-
                 {/* FILES */}
                 <div
                   className="action-card"
@@ -227,10 +283,11 @@ function Dashboard() {
                   <div className="card-icon">📁</div>
                   <h3 className="card-title">Browse datasets</h3>
                   <p className="card-description">
-                    View and manage all your uploaded files
+                    Access all your uploaded datasets in one place.
                   </p>
+                  <p className="card-subtitle">Track file details, upload status, processing progress, and download processed output files from a single dashboard.</p>
                 </div>
-
+ 
                 {/* ✅ API – ALWAYS NAVIGATE */}
                 <div
                   className="action-card"
@@ -243,10 +300,67 @@ function Dashboard() {
                       ? "Login required to fetch API"
                       : "Connect to API data sources"}
                   </p>
+                  <p className="card-subtitle">Secure connections to public and private APIs with automated data processing and storage for analysis and reporting.</p>
                 </div>
-
+ 
               </div>
             </section>
+            
+
+            {/* ================= APPROVALS VIEW ================= */}
+            {activeView === "approvals" && isManager && (
+              <section className="approval-section">
+                <div className="approval-header">
+                  <h2>Pending Employee Approvals</h2>
+                  <span className="approval-subtitle">
+                    Review and approve employees requesting access
+                  </span>
+                </div>
+
+                {pendingEmployees.length === 0 ? (
+                  <div className="approval-empty">
+                    <span>🎉</span>
+                    <p>No pending employee requests</p>
+                  </div>
+                ) : (
+                  pendingEmployees.map((emp) => (
+                    <div key={emp.id} className="approval-card">
+                      <div className="approval-user">
+                        <div className="avatar">
+                          {emp.first_name?.charAt(0)}
+                        </div>
+
+                        <div className="user-info">
+                          <h4>
+                            {emp.first_name} {emp.last_name}
+                          </h4>
+                          <p className="email">{emp.email}</p>
+                          <p className="mobile">{emp.mobile}</p>
+                        </div>
+                      </div>
+
+                      <div className="approval-actions">
+                        <button
+                          className="approve-btn"
+                          onClick={() => approveEmployee(emp.id)}
+                        >
+                          Approve
+                        </button>
+
+                        <button
+                          className="reject-btn"
+                          onClick={() => rejectEmployee(emp.id)}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </section>
+
+            )}
+
           </div>
         </main>
       </div>

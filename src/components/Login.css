@@ -210,3 +210,21 @@
  width: 100%;
 }
 }
+.email-field {
+  position: relative;
+}
+
+.input-tooltip {
+  position: absolute;
+  top: -34px;
+  left: 0;
+  background: #fff4e5;
+  color: #b45309;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid #facc15;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  white-space: nowrap;
+  z-index: 20;
+}

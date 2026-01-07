@@ -8,10 +8,15 @@ function ApiFetcher() {
   const [apiUrl, setApiUrl] = useState("");
   const [apiToken, setApiToken] = useState("");
   const [showToken, setShowToken] = useState(false);
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const [responseObj, setResponseObj] = useState(null); // ✅ OBJECT (NOT STRING)
+  const [responseText, setResponseText] = useState(""); // for UI only
+  const [hasFetched, setHasFetched] = useState(false);
+
   const [fileName, setFileName] = useState("");
+  const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
+
   const [popup, setPopup] = useState({
     show: false,
     message: "",
@@ -24,130 +29,123 @@ function ApiFetcher() {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
 
-  // ======================================================
-  // 🔥 HARD ACCESS GUARD (VERY IMPORTANT)
-  // ======================================================
+  // ===============================
+  // 🔐 ACCESS GUARD
+  // ===============================
   useEffect(() => {
-    // ❌ NOT LOGGED IN
     if (!token || !user) {
-      showPopup("🔐 Please login to use Fetch API.", "error");
+      showPopup("🔐 Please login first", "error");
       setTimeout(() => navigate("/l-gy5n8r4v2t"), 1500);
       return;
     }
 
-    // 👀 VIEW ONLY
     if (user.viewOnly) {
-      showPopup(
-        "🚫 View-only access.\nPlease login to fetch API data.",
-        "error"
-      );
+      showPopup("🚫 View-only access not allowed", "error");
       setTimeout(() => navigate("/l-gy5n8r4v2t"), 2000);
       return;
     }
 
-    // 🔐 INVITED BUT NOT REGISTERED
     if (user.pendingLogin || token === "PENDING_LOGIN") {
-      showPopup(
-        "🔐 Please complete company registration to use Fetch API.",
-        "error"
-      );
+      showPopup("🔐 Complete company registration first", "error");
       setTimeout(() => navigate("/cr-h2k8j5d1f5"), 2000);
-      return;
     }
   }, []);
 
-  // =========================
+  // ===============================
   // POPUP
-  // =========================
+  // ===============================
   const showPopup = (message, type = "success", duration = 3000) => {
     setPopup({ show: true, message, type });
     setTimeout(() => setPopup({ show: false, message: "", type }), duration);
   };
 
-  // =========================
-  // FETCH API
-  // =========================
+  // ===============================
+  // STEP 1️⃣ FETCH API
+  // ===============================
   const handleFetch = async () => {
     if (!apiUrl.trim()) {
-      return showPopup("⚠️ Please enter API URL", "error");
+      return showPopup("⚠️ Enter API URL", "error");
     }
 
     try {
       setLoading(true);
-      setResponse("");
+      setHasFetched(false);
+      setResponseObj(null);
+      setResponseText("");
 
       const res = await axios.get(`${API_BASE_URL}/fetch-api`, {
         params: { url: apiUrl },
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // ✅ REQUIRED
           ...(apiToken && { "authorization-external": apiToken }),
         },
       });
 
+      setResponseObj(res.data.data); // ✅ STORE OBJECT
+      setResponseText(JSON.stringify(res.data.data, null, 2)); // UI
+      setHasFetched(true);
       setShowToken(false);
-      setResponse(JSON.stringify(res.data.data || res.data, null, 2));
-    } catch (error) {
-      if (error.response?.status === 401) {
+    } catch (err) {
+      if (err.response?.status === 401) {
         setShowToken(true);
-        return showPopup("🔐 Private API detected. Enter API token.", "error");
+        showPopup("🔐 Private API detected. Enter API token.", "error");
+      } else {
+        showPopup("❌ Failed to fetch API", "error");
       }
-      showPopup("❌ Failed to fetch data", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // =========================
-  // SAVE API DATA
-  // =========================
+  // ===============================
+  // STEP 2️⃣ SAVE API
+  // ===============================
   const handleSave = async () => {
     if (!fileName.trim()) {
-      return showPopup("⚠️ Enter file name", "error");
+      return showPopup("⚠️ Enter File Name", "error");
+    }
+
+    if (!responseObj) {
+      return showPopup("⚠️ Fetch API before saving", "error");
     }
 
     try {
       setSaveLoading(true);
-
-      const check = await axios.get(
-        `${API_BASE_URL}/check-filename?name=${fileName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (check.data.exists) {
-        return showPopup("❌ File name already exists", "error");
-      }
 
       await axios.post(
         `${API_BASE_URL}/save-api-data`,
         {
           api_url: apiUrl,
           file_name: fileName,
-          response,
+          response: responseObj, // ✅ OBJECT ONLY
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            ...(apiToken && { "authorization-external": apiToken }),
           },
         }
       );
 
-      showPopup("✅ API Data saved successfully");
+      showPopup("✅ API saved successfully");
       setFileName("");
+      setHasFetched(false);
     } catch (err) {
-      console.error("SAVE ERROR:", err.response?.data || err);
-      showPopup("❌ Save failed", "error");
+      if (err.response?.status === 409) {
+        showPopup("❌ File name already exists", "error");
+      } else if (err.response?.status === 401) {
+        showPopup("🔐 Invalid API token", "error");
+      } else {
+        showPopup("❌ Save failed", "error");
+      }
     } finally {
       setSaveLoading(false);
     }
   };
 
-  // =========================
+  // ===============================
   // UI
-  // =========================
+  // ===============================
   return (
     <>
       <div className="api-fetcher">
@@ -157,6 +155,7 @@ function ApiFetcher() {
 
         <h2>API Fetcher</h2>
 
+        {/* FETCH */}
         <div className="api-row">
           <input
             type="text"
@@ -165,6 +164,7 @@ function ApiFetcher() {
             placeholder="Enter API URL"
             className="api-input"
           />
+
           <button onClick={handleFetch} className="fetch-btn" disabled={loading}>
             {loading ? "Fetching..." : "Fetch"}
           </button>
@@ -180,19 +180,22 @@ function ApiFetcher() {
           />
         )}
 
+        {/* RESPONSE */}
         <div className="response-box">
-          <pre>{response || "🔎 API response will appear here..."}</pre>
+          <pre>{responseText || "🔎 API response will appear here..."}</pre>
         </div>
 
-        {response && (
+        {/* SAVE */}
+        {hasFetched && (
           <div className="save-section">
             <input
               type="text"
               className="file-input"
-              placeholder="Enter File Name"
+              placeholder="Enter File Name (e.g. orders)"
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
             />
+
             <button
               onClick={handleSave}
               className="save-btn"
@@ -214,3 +217,4 @@ function ApiFetcher() {
 }
 
 export default ApiFetcher;
+ 

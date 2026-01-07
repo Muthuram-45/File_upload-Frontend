@@ -9,7 +9,7 @@ import Footer from "./Footer";
 function CompanyLogin({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [companyName, setCompanyName] = useState("");
+  const [companyName, setCompanyName] = useState(""); // ✅ KEEP
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -26,14 +26,29 @@ function CompanyLogin({ setUser }) {
     try {
       setLoading(true);
 
+      // ❌ DO NOT SEND company_name
       const res = await axios.post("http://localhost:5000/company-login", {
         email: email.trim().toLowerCase(),
         password: password.trim(),
-        company_name: companyName.trim(),
       });
 
       if (!res.data.success) {
         Swal.fire("Error", res.data.error || "Login failed", "error");
+        return;
+      }
+
+      // =========================
+      // ✅ COMPANY NAME VALIDATION
+      // =========================
+      const backendCompany = res.data.user.company_name?.toLowerCase().trim();
+      const inputCompany = companyName.toLowerCase().trim();
+
+      if (backendCompany !== inputCompany) {
+        Swal.fire(
+          "Access Denied",
+          "Company name does not match this account",
+          "error"
+        );
         return;
       }
 
@@ -47,12 +62,11 @@ function CompanyLogin({ setUser }) {
         lastName: res.data.user.lastName || "",
         mobile: res.data.user.mobile || "",
         company_name: res.data.user.company_name,
-        role: res.data.user.role,      // 🔥 FIXED
+        role: res.data.user.role,        // manager / employee
         isCompany: true,
         viewOnly: false,
       };
 
-      // ✅ SINGLE SOURCE OF TRUTH
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(userData));
 
@@ -70,7 +84,11 @@ function CompanyLogin({ setUser }) {
 
     } catch (err) {
       console.error("Company Login Error:", err);
-      Swal.fire("Error", "Server error during login", "error");
+      Swal.fire(
+        "Error",
+        err.response?.data?.error || "Server error during login",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -85,6 +103,7 @@ function CompanyLogin({ setUser }) {
             <h2 className="login-title">Company Login</h2>
             <p className="login-subtitle">Access your company dashboard</p>
 
+            {/* ✅ COMPANY NAME INPUT */}
             <input
               type="text"
               placeholder="Company Name"
