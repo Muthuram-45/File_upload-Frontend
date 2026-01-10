@@ -4,16 +4,16 @@
   padding: 15px 10px;
   box-sizing: border-box;
 }
-
+ 
 /* Header */
 h2 {
   text-align: center;
   color: #233d57;
   font-family: 'segoe ui';
 }
-
+ 
 /* ================= TABS HEADER ================= */
-
+ 
 .file-tabs-container {
   display: flex;
   justify-content: center;
@@ -21,13 +21,13 @@ h2 {
   flex-wrap: wrap;
   gap: 10px;
 }
-
+ 
 /* Left side tabs */
 .file-tabs-left {
   display: flex;
   flex-wrap: wrap;
 }
-
+ 
 /* File tab buttons (YOUR DESIGN PRESERVED) */
 .file-tab-btn {
   background: #3b82d1;
@@ -46,7 +46,7 @@ h2 {
   margin-left: 50px;
   transition: all 0.3s ease;
 }
-
+ 
 .file-tab-btn:hover,
 .file-tab-btn.active {
   background: #daebfa;
@@ -54,7 +54,7 @@ h2 {
   transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
 }
-
+ 
 /* Back Button (YOUR DESIGN PRESERVED) */
 .back-btn {
   color: black;
@@ -69,12 +69,12 @@ h2 {
   margin-right: 88%;
   transition: all 0.3s ease;
 }
-
+ 
 .back-btn:hover {
   background: #3b82d1;
   color: #fefeff;
 }
-
+ 
 /* ======================== CSV TABLE ======================== */
 /* CSV Table */
 .csv-table-section {
@@ -199,16 +199,16 @@ h2 {
 .table-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
-
+ 
 /* ======================== CHART SECTION ======================== */
-
+ 
 .multi-chart-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   margin-top: 20px;
   gap: 20px;
 }
-
+ 
 /* Chart Card (YOUR DESIGN KEPT) */
 .chart-card {
   background: #fff;
@@ -216,7 +216,7 @@ h2 {
   padding: 15px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-
+ 
 .chart-card h4 {
   text-align: center;
   font-size: 16px;
@@ -224,18 +224,9 @@ h2 {
   color: #233d57;
   font-weight: 600;
 }
-
-/* ======================== NLP SECTION ================= */
-
-.nlp-results {
-  margin-top: 30px;
-  background: #f8faff;
-  padding: 20px;
-  border-radius: 10px;
-}
-
+ 
 /* ======================== FOOTER ================= */
-
+ 
 .dashboard-foote {
   margin-top: 50px;
   width: 100%;
@@ -244,77 +235,143 @@ h2 {
   text-align: center;
   padding: 15px 0;
 }
-
+ 
+.nlp-panel-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;   /* top-la konjam space iruka */
+  margin-top: 30px;
+  width: 100%;
+}
+ 
+.nlp-panel {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+ 
+.nlq-search-box {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+ 
+.nlq-search-box input {
+  flex: 1;
+  padding: 8px;
+}
+ 
+.nlq-search-box button {
+  padding: 8px 16px;
+  cursor: pointer;
+  color: black;
+  border: 2px solid #3d82d1;
+  background-color: white;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+ 
+.nlq-search-box button:hover {
+  background: #3b82d1;
+  color: #fefeff;
+}
+ 
+ 
+.error-box {
+  color: red;
+  text-align: center;
+  margin: 10px 0;
+}
+ 
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .nlp-panel input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+ 
+  .nlp-panel button {
+    width: 100%;
+  }
+}
+ 
+ 
 /* ================= IMPROVED RESPONSIVE DESIGN ================= */
-
+ 
 /* ---------- LAPTOP & SMALL DESKTOP ---------- */
 @media (max-width: 1024px) {
-
+ 
   .file-tab-btn {
     margin-left: 10px;
     padding: 6px 12px;
     font-size: 14px;
   }
-
+ 
   .multi-chart-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
 }
-
-
+ 
+ 
 /* ---------- TABLET VIEW ---------- */
 @media (max-width: 768px) {
-
+ 
   .file-tabs-container {
     flex-direction: row;
     justify-content: center;
   }
-
+ 
   .file-tab-btn {
     margin-left: 0;
     padding: 5px 10px;
     font-size: 13px;
     border-radius: 8px;
   }
-
+ 
   .back-btn {
-  
+ 
     padding: 8px 14px;
     font-size: 13px;
   }
-
+ 
   .csv-table-section {
     padding: 8px;
   }
-
+ 
   .table-wrapper table {
     font-size: 13px;
   }
-
+ 
   .table-wrapper td {
     padding: 6px 10px;
   }
-
+ 
   .multi-chart-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-
+ 
   .chart-card {
     padding: 12px;
   }
 }
-
-
+ 
+ 
 /* ---------- MOBILE VIEW ---------- */
 @media (max-width: 480px) {
-
+ 
   /* .file-tabs-container {
     flex-direction: column;
     gap: 6px;
   }
-
+ 
   .file-tab-btn {
     width: 95%;
     font-size: 12px;
@@ -322,33 +379,33 @@ h2 {
     justify-content: center;
     margin-top: 8px;
   }
-
+ 
   .back-btn {
     width: 95%;
     font-size: 12px;
     padding: 6px 10px;
   } */
-
+ 
   /* Table better readability */
   .table-wrapper table {
     font-size: 12px;
   }
-
+ 
   .table-wrapper th,
   .table-wrapper td {
     padding: 5px 8px;
   }
-
+ 
   /* Charts readable */
   .multi-chart-grid {
     grid-template-columns: 1fr;
     padding: 5px;
   }
-
+ 
   .chart-card {
     padding: 10px;
   }
-
+ 
   .chart-card h4 {
     font-size: 13px;
   }
@@ -358,15 +415,16 @@ h2 {
   gap: 10px;
   margin: 15px 0;
 }
-
+ 
 .nlq-search-box input {
   flex: 1;
   padding: 8px;
+  font-size: 14px;
 }
-
-.nlq-result-box {
-  background: #f4f6fa;
-  padding: 12px;
-  border-left: 4px solid #4f46e5;
-  margin-bottom: 15px;
+ 
+.nlq-search-box button {
+  padding: 8px 14px;
+  cursor: pointer;
 }
+ 
+ 

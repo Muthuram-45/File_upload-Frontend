@@ -10,10 +10,24 @@ import registerImage from '../assets/art3.png';
 import Swal from 'sweetalert2';
 import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
-
+ 
 function Register() {
-  const navigate = useNavigate(); // ✅ ADD THIS
-
+  const navigate = useNavigate();
+ 
+  // ===============================
+  // HELPERS
+  // ===============================
+  const isPersonalEmail = (email) => {
+    const allowedDomains = ['gmail.com', 'yahoo.com', 'outlook.com'];
+    if (!email.includes('@')) return false;
+ 
+    const domain = email.split('@')[1];
+    return allowedDomains.includes(domain);
+  };
+ 
+  // ===============================
+  // STATE
+  // ===============================
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -21,138 +35,176 @@ function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
-
+ 
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState('');
-
+  const [loading, setLoading] = useState(false);
+ 
   // ===============================
   // SEND OTP
   // ===============================
   const handleRegister = async () => {
     if (!firstName || !lastName || !email || !mobile || !password || !confirmPassword) {
-      alert('Please fill in all fields.');
+      Swal.fire('Error', 'Please fill in all fields.', 'error');
       return;
     }
+ 
     if (password !== confirmPassword) {
-      alert('Passwords do not match.');
+      Swal.fire('Error', 'Passwords do not match.', 'error');
       return;
     }
+ 
     if (!agreeTerms) {
-      alert('You must accept Terms & Conditions.');
+      Swal.fire('Error', 'You must accept Terms & Conditions.', 'error');
       return;
     }
-
+ 
+    const trimmedEmail = email.trim().toLowerCase();
+ 
+    // 🚫 BLOCK COMPANY EMAILS
+    if (!isPersonalEmail(trimmedEmail)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Email',
+        text: 'Only Gmail, Yahoo, or Outlook emails are allowed for Normal registration.',
+      });
+      return;
+    }
+ 
     try {
-      const trimmedEmail = email.trim().toLowerCase();
-
+      setLoading(true);
+ 
       const res = await axios.post(
         'http://localhost:5000/send-otp',
         { email: trimmedEmail },
         { headers: { 'Content-Type': 'application/json' } }
       );
-
+ 
       if (res.data.success) {
-        alert('✅ OTP sent to your Gmail. Please check your inbox.');
+        Swal.fire('OTP Sent', 'Check your email for OTP', 'success');
         setOtpSent(true);
         setMessage('');
       } else {
-        alert(res.data.error || '❌ Failed to send OTP. Try again.');
+        Swal.fire('Error', res.data.error || 'Failed to send OTP', 'error');
       }
     } catch (err) {
       console.error('Error sending OTP:', err);
-      alert(err.response?.data?.error || 'Server error while sending OTP');
+ 
+      if (err.response?.status === 409) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Already Registered',
+          text: 'Redirecting to login...',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        setTimeout(() => navigate('/login'), 2000);
+      } else {
+        // ❌ Other errors
+        Swal.fire(
+          'Error',
+          err.response?.data?.error || 'Server error while sending OTP',
+          'error'
+        );
+      }
+    } finally {
+      setLoading(false);
     }
   };
-
+ 
   // ===============================
   // VERIFY OTP & REGISTER
   // ===============================
   const handleVerifyOtp = async () => {
     if (!otp) {
-      alert('Enter the OTP you received.');
+      Swal.fire('Error', 'Enter the OTP you received.', 'error');
       return;
     }
-
+ 
     try {
       const trimmedEmail = email.trim().toLowerCase();
       const trimmedOtp = otp.trim();
-
+ 
       const verifyRes = await axios.post(
         'http://localhost:5000/verify-otp',
         { email: trimmedEmail, otp: trimmedOtp },
         { headers: { 'Content-Type': 'application/json' } }
       );
-
+ 
       if (verifyRes.data.success) {
         const registerRes = await axios.post(
           'http://localhost:5000/register',
           { firstName, lastName, email: trimmedEmail, mobile, password },
           { headers: { 'Content-Type': 'application/json' } }
         );
-
+ 
         if (registerRes.data.success) {
-          alert('✅ Registration successful! Please login.');
-          navigate('/login'); // ✅ FIXED HERE
+          Swal.fire('Success', 'Registration successful! Please login.', 'success');
+          navigate('/login');
         } else {
-          alert(registerRes.data.error || '❌ Registration failed. Try again.');
+          Swal.fire('Error', registerRes.data.error || 'Registration failed.', 'error');
         }
       } else {
-        alert('❌ Invalid or expired OTP. Please try again.');
+        Swal.fire('Error', 'Invalid or expired OTP.', 'error');
       }
     } catch (err) {
       console.error('OTP verification failed:', err);
-      alert(err.response?.data?.error || 'OTP verification error');
+      Swal.fire(
+        'Error',
+        err.response?.data?.error || 'OTP verification error',
+        'error'
+      );
     }
   };
-
+ 
   // ===============================
-  // GOOGLE SIGN IN (UNCHANGED)
+  // GOOGLE SIGN IN
   // ===============================
   const handleGoogleSignIn = async () => {
     try {
-      googleProvider.setCustomParameters({
-        prompt: 'select_account',
-      });
-
+      googleProvider.setCustomParameters({ prompt: 'select_account' });
+ 
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const firebaseToken = await user.getIdToken();
-
+ 
       const res = await axios.post('http://localhost:5000/google-login', {
         token: firebaseToken,
       });
-
+ 
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-
+ 
       Swal.fire({
         title: 'Login Successful!',
         text: 'Redirecting to your dashboard...',
         icon: 'success',
-        timer: 5000,
+        timer: 3000,
         showConfirmButton: false,
       });
-
-      navigate('/d-oxwilh9dy1'); // dashboard for Google login
-
+ 
+      navigate('/d-oxwilh9dy1');
     } catch (err) {
       console.error('Google sign-in error:', err);
       Swal.fire('Error', 'Google sign-in failed', 'error');
     }
   };
-
+ 
+  // ===============================
+  // UI
+  // ===============================
   return (
     <>
       <div className="register-container">
         <div className="register-image-section">
           <img src={registerImage} alt="Register illustration" />
         </div>
-
+ 
         <div className="register-page">
           <div className="register-box">
             <h2>Create Account</h2>
-
+ 
             {!otpSent ? (
               <>
                 <div className="form-row">
@@ -169,7 +221,7 @@ function Register() {
                     onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
-
+ 
                 <div className="form-row">
                   <input
                     type="email"
@@ -184,7 +236,7 @@ function Register() {
                     onChange={(e) => setMobile(e.target.value)}
                   />
                 </div>
-
+ 
                 <div className="form-row">
                   <input
                     type="password"
@@ -199,7 +251,7 @@ function Register() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </div>
-
+ 
                 <div className="terms">
                   <input
                     type="checkbox"
@@ -208,9 +260,13 @@ function Register() {
                   />
                   <label>I agree to the Terms & Conditions</label>
                 </div>
-
-                <button onClick={handleRegister} className="register-btn">
-                  Send OTP
+ 
+                <button
+                  onClick={handleRegister}
+                  className="register-btn"
+                  disabled={loading}
+                >
+                  {loading ? 'Sending OTP...' : 'Sign up'}
                 </button>
               </>
             ) : (
@@ -218,6 +274,8 @@ function Register() {
                 <h3>Enter OTP sent to your email</h3>
                 <input
                   type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="______"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
@@ -230,9 +288,9 @@ function Register() {
                 <p>{message}</p>
               </div>
             )}
-
+ 
             <div className="divider">OR</div>
-
+ 
             <button className="google-btn" onClick={handleGoogleSignIn}>
               <img
                 src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -240,7 +298,7 @@ function Register() {
               />
               Sign Up with Google
             </button>
-
+ 
             <button
               className="company-register-btn"
               onClick={() => navigate('/cr-h2k8j5d1f5')}
@@ -250,10 +308,10 @@ function Register() {
           </div>
         </div>
       </div>
-
+ 
       <Footer />
     </>
   );
 }
-
+ 
 export default Register;

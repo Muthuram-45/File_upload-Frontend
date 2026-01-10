@@ -8,6 +8,7 @@ import { FaEye } from "react-icons/fa";
 import { BsBarChartFill } from "react-icons/bs";
 import { RxReload } from "react-icons/rx";
 import { MdOutlineDownloadDone, MdCancel } from "react-icons/md";
+import { AiOutlineClockCircle } from "react-icons/ai";
 
 /* ===============================
    TIME FORMATTER
@@ -21,21 +22,6 @@ const formatTime = (dateString) => {
   });
 };
 
-/* ===============================
-   UPLOADED FILE TIME (UI ONLY)
-================================ */
-const getUploadedFileTime = (file) => {
-  if (file.status === "NEW") {
-    return formatTime(file.created_at);
-  }
-
-  if (file.status === "DONE") {
-    return formatTime(file.last_processed_at || file.created_at);
-  }
-
-  return "-";
-};
-
 function CompanyFiles() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [processedFolders, setProcessedFolders] = useState([]);
@@ -44,28 +30,41 @@ function CompanyFiles() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  // ---------------- Status Icon ----------------
+  /* ===============================
+     STATUS ICON
+  ================================ */
   const getStatusIcon = (status) => {
     switch (status) {
       case "NEW":
-        return (<div className="status-icon"><RxReload size={22} color="orange" className="spin" /> <span className="tooltip">processing</span></div>);
-
       case "PROCESSING":
-        return (<div className="status-icon"><RxReload size={22} color="orange" className="spin" /><span className="tooltip">proccessing</span></div>);
-
+        return (
+          <div className="status-icon">
+            <RxReload size={22} color="orange" className="spin" />
+            <span className="tooltip">Processing</span>
+          </div>
+        );
       case "DONE":
-        return (<div className="status-icon"><MdOutlineDownloadDone size={22} color="green" /><span className="tooltip">Processed</span></div>);
-
+        return (
+          <div className="status-icon">
+            <MdOutlineDownloadDone size={22} color="green" />
+            <span className="tooltip">Processed</span>
+          </div>
+        );
       case "CANCEL":
-        return (<div className="status-icon"><MdCancel size={22} color="red" /><span className="tooltip">Duplicate</span></div>);
-
+        return (
+          <div className="status-icon">
+            <MdCancel size={22} color="red" />
+            <span className="tooltip">Duplicate</span>
+          </div>
+        );
       default:
-        return <RxReload size={22} />;
+        return "-";
     }
   };
-  
 
-  // ---------------- Fetch Files ----------------
+  /* ===============================
+     FETCH FILES
+  ================================ */
   useEffect(() => {
     if (!token) {
       setError("Unauthorized. Please log in.");
@@ -82,8 +81,7 @@ function CompanyFiles() {
         setProcessedFolders(res.data.processedFolders || []);
         setError("");
       } catch (err) {
-        console.error("❌ Fetch error:", err);
-        setError("Error fetching files. Please login again.");
+        setError("Error fetching files");
       }
     };
 
@@ -92,7 +90,18 @@ function CompanyFiles() {
     return () => clearInterval(interval);
   }, [token]);
 
-  // ---------------- Navigation ----------------
+  /* ===============================
+     HELPERS
+  ================================ */
+  const isProcessed = (fileName) =>
+    processedFolders.some((p) => p.folderName === fileName);
+
+  const getProcessedFolder = (fileName) =>
+    processedFolders.find((p) => p.folderName === fileName);
+
+  /* ===============================
+     NAVIGATION
+  ================================ */
   const handleViewFolder = (folder) => {
     navigate("/p-h7t4k9m3zq", { state: { folder, token } });
   };
@@ -101,7 +110,56 @@ function CompanyFiles() {
     navigate("/charts-view", { state: { folder, token } });
   };
 
-  // ---------------- Render ----------------
+  /* ===============================
+     SCHEDULE UI (DB DRIVEN)
+  ================================ */
+  const renderSchedule = (file) => {
+    if (file.source === "API Data") {
+      return (
+        <div className="schedule-cell schedule-api">
+          <span className="last" style={{fontSize:"14px", fontWeight:"500"}}>
+            Last Process : {formatTime(file.last_processed_at)}
+          </span>
+          <span className="next" style={{fontSize:"14px", fontWeight:"500"}}>
+            Next Process : {formatTime(file.next_process_at)}
+          </span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="schedule-cell schedule-uploaded">
+
+        {file.status === "NEW" && (
+          <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Process at<br />12:00</span>
+        )}
+
+        {file.status === "PROCESSING" && (
+          <>
+            <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Process at</span>
+            <span className="completed">
+              {formatTime(file.processed_at)}
+            </span>
+          </>
+        )}
+
+        {file.status === "DONE" && (
+          <>
+            <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Completed at</span>
+            <span className="completed">
+              {formatTime(file.completed_at)}
+            </span>
+          </>
+        )}
+
+        {file.status === "CANCEL" && <span style={{fontSize:"14px", fontWeight:"500"}}>Duplicate</span>}
+      </div>
+    );
+  };
+
+  /* ===============================
+     RENDER
+  ================================ */
   return (
     <>
       <div className="files-page">
@@ -115,115 +173,94 @@ function CompanyFiles() {
 
         {error && <div className="error-box">{error}</div>}
 
-        <div className="split-container">
+        {/* ================= DESKTOP TABLE ================= */}
+        <div className="table-card desktop-only">
+          <table className="pro-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Source</th>
+                <th>Status</th>
+                <th>Schedule</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
 
-          {/* ================= FILES ================= */}
-          <div className="file-sec uploaded-section">
-            <h2 className="h2">Files</h2>
+            <tbody>
+              {uploadedFiles.map((file, idx) => {
+                const processed = isProcessed(file.name);
+                const folderData = getProcessedFolder(file.name);
 
-            {uploadedFiles.length === 0 ? (
-              <p className="empty-msg">No files found.</p>
-            ) : (
-              <table className="files-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>File Name</th>
-                    <th>Source</th>
-                    <th>Status</th>
-                    <th>Schedule</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {uploadedFiles.map((file, idx) => (
-                    <tr key={file.id}>
-                      <td>{idx + 1}</td>
-
-                      <td className="filename">{file.name}</td>
-
-                      <td className={file.source === "API Data" ? "api" : "uploaded"}>
+                return (
+                  <tr key={file.id}>
+                    <td>{idx + 1}</td>
+                    <td className="filename">{file.name}</td>
+                    <td>
+                      <span className={`source-pill ${file.source === "API Data" ? "api" : "uploaded"}`}>
                         {file.source}
-                      </td>
-
-                      <td style={{ textAlign: "center" }}>
-                        {getStatusIcon(file.status)}
-                      </td>
-
-                      {/* ================= SCHEDULE (UI ONLY) ================= */}
-                      <td className="schedule-cell">
-                        {file.source === "API Data" ? (
-                          <>
-                            <div>✅ Last : {formatTime(file.last_processed_at)} - ⏳ Next : {formatTime(file.next_process_at)}</div>
-                            {/* <div></div> */}
-                          </>
-                        ) : (
-                          <>
-                            {file.status === "NEW" && (
-                              <div>
-                                ⏳ Process at 12.00
-                              </div>
-                            )}
-
-                            {file.status === "DONE" && (
-                              <div>
-                                ✅ Completed at 12.15
-                              </div>
-                            )}
-
-                            {file.status === "CANCEL" && <div>Duplicate</div>}
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          {/* ================= PROCESSED TABLES ================= */}
-          <div className="file-sec processed-section">
-            <h2 className="h2">Processed Tables</h2>
-
-            {processedFolders.length === 0 ? (
-              <p className="empty-msg">No processed tables found.</p>
-            ) : (
-              <table className="files-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Folder Name</th>
-                    <th>Actions</th>
+                      </span>
+                    </td>
+                    <td style={{ textAlign: "center" }}>{getStatusIcon(file.status)}</td>
+                    <td>{renderSchedule(file)}</td>
+                    <td className="action-col">
+                      {processed && file.status !== "CANCEL" ? (
+                        <>
+                          <FaEye onClick={() => handleViewFolder(folderData)} />
+                          <BsBarChartFill onClick={() => handleViewChart(folderData)} />
+                        </>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
                   </tr>
-                </thead>
-
-                <tbody>
-                  {processedFolders.map((folder, idx) => (
-                    <tr key={folder.folderName}>
-                      <td>{idx + 1}</td>
-                      <td className="filename">{folder.folderName}</td>
-                      <td>
-                        <FaEye
-                          onClick={() => handleViewFolder(folder)}
-                          style={{ cursor: "pointer" }}
-                        />
-                        &nbsp;&nbsp;&nbsp;
-                        <BsBarChartFill
-                          onClick={() => handleViewChart(folder)}
-                          style={{ cursor: "pointer" }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      </div>
 
+        {/* ================= MOBILE ================= */}
+        <div className="mobile-only">
+          {uploadedFiles.map((file) => {
+            const processed = isProcessed(file.name);
+            const folderData = getProcessedFolder(file.name);
+
+            return (
+              <div className="file-card" key={file.id}>
+                <div className="card-header">
+                  <span className="card-title">{file.name}</span>
+                  {getStatusIcon(file.status)}
+                </div>
+
+                <div className="card-row">
+                  <span className="label">Source</span>
+                  <span className={`source-pill ${file.source === "API Data" ? "api" : "uploaded"}`}>
+                    {file.source}
+                  </span>
+                </div>
+
+                <div className="card-row">
+                  <span className="label">Schedule</span>
+                  {renderSchedule(file)}
+                </div>
+
+                <div className="card-actions">
+                  {processed && file.status !== "CANCEL" ? (
+                    <>
+                      <FaEye onClick={() => handleViewFolder(folderData)} />
+                      <BsBarChartFill onClick={() => handleViewChart(folderData)} />
+                    </>
+                  ) : (
+                    <span className="disabled">No actions</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
       <Footer />
     </>
   );

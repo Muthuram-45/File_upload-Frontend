@@ -1,516 +1,363 @@
-/* =============================================
-   🌟 FILES PAGE – Professional Dashboard Look
-   ============================================= */
 .files-page {
-  font-family: "Poppins", sans-serif;
-  /* background: linear-gradient(135deg, #e3f2fd, #f5f7fa); */
-  background: #daebfa; 
+  font-family: "Segoe UI", system-ui, sans-serif;
+  /* background: #f4f7fb; */
   min-height: 100vh;
-  padding: 30px 0px;
-  
-
+  padding: 30px 0;
 }
 
-/* =============================================
-   🧭 HEADER
-   ============================================= */
-.page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1d3557;
-  margin-bottom: 35px;
-  text-align: center;
-  letter-spacing: 0.3px;
-}
-
-.error-box {
-  background: #ffe5e5;
-  color: #c1121f;
-  padding: 12px 16px;
-  border-radius: 10px;
-  margin-bottom: 25px;
-  text-align: center;
-  font-weight: 500;
-  box-shadow: 0 2px 8px rgba(193, 18, 31, 0.1);
-}
-
-.dashboard-head h1{
-   text-align: center;
-}
-
-/* =============================================
-   💠 SPLIT CONTAINER
-   ============================================= */
-.split-container {
-  width: 90%;
-  display: flex;
-  justify-content:center;
-  align-items: stretch;
-  flex-wrap: wrap;
-  padding: 20px;
-  border-radius: 20px;
-  margin-left: 80px;
-}
-
-/* =============================================
-   📁 FILE SECTION
-   ============================================= */
-.file-sec {
-  flex: 1;
-  min-width: 48%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 25px 5px;
-  transition: all 0.3s ease;
-  
-}
-
-.file-section h2 {
-  font-size: 1.3rem;
-  color: #233d57;
-  font-family: 'segoe ui';
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  
-}
-
-/* =============================================
-   🧾 TABLE DESIGN
-   ============================================= */
-.files-table {
-  width: 100%;
-  /* border-collapse: separate; */
-  border-spacing: 0;
-  font-size: 15px;
-  /* border: 1px solid black; */
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-}
-
-.files-table th {
-  background:#ecf4fe;
-  color: #2057a5;
-  font-weight: 600;
-  padding: 12px 16px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 15px;
-}
-
-.files-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #e5e9f0;
-  background-color: #fff;
-  text-align: center;
-}
-
-.files-table .filename {
-  text-align: left; 
-}
-
-.files-table tbody tr:nth-child(even) td {
-  background-color: #f8faff;
-}
-
-.files-table tbody tr:hover td {
-  background-color: #ebf2ff;
-  transition: all 0.2s ease-in-out;
-}
-
-/* Make header sticky when scrolling large lists */
-.files-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-/* =============================================
-   🔗 BUTTONS & LINKS
-   ============================================= */
-.view-link {
-  padding: 5px 15px;
-  cursor: pointer;
-  color: black;
-  letter-spacing: 1px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-  font-family: 'Poppins', sans-serif;
-}
-.view-btnn{
-  color: black;
-  border: none;
-  background: none;
-  padding: 1px 15px;
-}
-
-/* Add subtle icon sizing */
-.view-link svg,
-.view-btn svg {
-  font-size: 16px;
-}
-.b1:hover{
-  color: #007bff;
-}
-.b2:hover{
-  color: #007bff;
-}
-.view-link:hover{
-  color: #007bff;
-}
-/* =============================================
-   📊 TABLE CONTAINER (Scroll + Consistency)
-   ============================================= */
-.table-wrapper {
-  flex-grow: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 400px;
-  border-radius: 12px;
-}
-
-/* =============================================
-   🌈 EMPTY STATE
-   ============================================= */
-.empty-msg {
-  color: #7a7a7a;
-  text-align: center;
-  padding: 25px 0;
-  font-style: italic;
-  font-size: 15px;
-}
-
-/* =============================================
-   📱 RESPONSIVE DESIGN
-   ============================================= */
-@media (max-width: 1024px) {
-  .split-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .file-section {
-    width: 100%;
-    min-width: 100%;
-    padding: 20px;
-  }
-
-  .files-table {
-    font-size: 14px;
-  }
-}
-
-/* ================================
-   📜 Footer Styles
-================================ */
-.dashboard-foot {
-  /* margin-top: 50px; */
-  width: 100%;
-  background: rgba(255, 255, 255, 0.85);
-  color: #333;
-  text-align: center;
-  padding: 15px 0;
-  border-top: 1px solid #ddd;
-  /* margin-bottom: -30px; */
-  margin-top: 150px;
-}
-
-.dashboard-foot p {
-  margin: 5px 0;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.foot-link {
-  margin-top: 5px;
-  font-size: 13px;
-}
-
-.foot-link a {
-  color: #007bff;
-  text-decoration: none;
-  margin: 0 8px;
-  transition: color 0.2s ease;
-}
-
-.foot-link a:hover {
-  color: #0056b3;
-  text-decoration: underline;
-}
-
-.foot-link span {
-  color: #999;
-}
+/* Back Button */
 .backk-btns {
   position: absolute;
-  top: 115px;
+  top: 110px;
   left: 50px;
-  color: black;
+   color: black;
   border: 2px solid #3d82d1;
   background-color: white;
-  padding: 10px 18px;
+  padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  /* z-index: 1000; */
+  font-size: 14px;
+  transition: 0.3s ease;
+  z-index: 10;
 }
 
 .backk-btns:hover {
- background: #3b82d1;
-  color: #fefeff;
+   background: #3b82d1;
+  color: #ffffff;
   transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
 }
-.dashboard-head{
-  color: #233d57;
-  font-family: 'segoe ui';
-}
-.uploaded-section h2{
-  font-size: 30px;
-  color: #233d57;
-  font-family: 'segoe ui';
+
+/* Header */
+.dashboard-head h1 {
+  text-align: center;
+  font-size: 26px;
   font-weight: 600;
-  
+  color: #1e293b;
+  margin-bottom: 25px;
 }
-.processed-section h2{
-  font-size: 30px;
-  color: #233d57;
-  font-family: 'segoe ui';
+
+/* Error */
+.error-box {
+  width: 90%;
+  margin: 0 auto 20px;
+  padding: 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Card */
+.table-card {
+  width: 100%;
+  margin: auto;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  /* padding: 10px; */
+}
+
+/* Table */
+.pro-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.pro-table th {
+  padding: 16px;
+  background: #9cc8fc;
+}
+
+.pro-table td {
+  padding: 14px;
+  background-color: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.pro-table tbody tr:hover {
+  background: #f9fbff;
+}
+
+.filename {
   font-weight: 600;
-}/* ===============================
-   ✅ FULL RESPONSIVE SUPPORT
-================================ */
+}
+
+/* Source Pill */
+.source-pill {
+  min-width: 110px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.source-pill.uploaded {
+  background: #e0f2fe;
+  color: #166c9a;
+  font-size: 13px;
+}
+
+.source-pill.api {
+  background: #e0f2fe;
+  color: rgb(8, 189, 8);
+  font-size: 13px;
+}
+
+/* Status */
+.status-icon {
+  position: relative;
+}
+
+.status-icon .tooltip {
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111827;
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.status-icon:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.spin {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* Schedule */
+.schedule-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.schedule-api .last {
+  color: #0f766e;
+}
+
+.schedule-api .next {
+  color: #c2410c;
+}
+
+.schedule-uploaded .process {
+  color: #0369a1;
+}
+
+.schedule-uploaded .completed {
+  color: #16a34a;
+}
+
+/* Actions */
+.action-col svg {
+  margin-right: 14px;
+  cursor: pointer;
+  color: #475569;
+}
+
+.action-col svg:hover {
+  color: #2563eb;
+}
+
+.empty-msg {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+}
+@media (min-width: 1200px) {
+  .table-card {
+    max-width: 1200px;
+  }
+}
 @media (max-width: 1024px) {
-  .split-container {
-    flex-direction: row;
+  .table-card {
+    width: 96%;
   }
 
+  .pro-table th,
+  .pro-table td {
+    padding: 12px;
+  }
+
+  .dashboard-head h1 {
+    font-size: 24px;
+  }
 }
-/* Tablets & small laptops */
 @media (max-width: 768px) {
-  .split-container {
-    flex-direction: column;
-    margin-left: 0;
-    width: 100%;
-    padding: 10px;
-  }
-
-  .file-sec {
-    min-width: 100%;
-    padding: 15px 10px;
-  }
-
+  /* Back button moves naturally */
   .backk-btns {
-    position: relative;
-    top: 0;
-    left: 0;
-    margin: 10px 0 20px 20px;
+    position: static;
+    margin: 10px 20px;
   }
-  .files-page {
-  margin-top: -30px;
-}
 
-.split-container {
-margin-bottom: 50px;
-}
-}
+  .dashboard-head h1 {
+    font-size: 22px;
+  }
 
+  .table-card {
+    padding: 12px;
+  }
 
-/* Mobile devices */
+  .pro-table {
+    font-size: 13px;
+  }
+
+  /* Stack schedule tighter */
+  .schedule-cell {
+    font-size: 12px;
+    gap: 1px;
+  }
+
+  /* Action icons closer */
+  .action-col svg {
+    font-size: 15px;
+    margin-right: 10px;
+  }
+}
 @media (max-width: 600px) {
-.files-page {
-  margin-top: -50px;
-}
+  .files-page {
+    padding: 15px 0;
+  }
 
   .dashboard-head h1 {
     font-size: 20px;
-    text-align: center;
   }
 
-  .uploaded-section h2,
-  .processed-section h2 {
-    font-size: 20px;
-    text-align: center;
-  }
-
-  .files-table {
-    font-size: 13px;
-  }
-
-  .files-table th,
-  .files-table td {
-    padding: 8px 6px;
-  }
-
-  .split-container {
+  .table-card {
     width: 100%;
-    margin-left: 0;
-  }
-
-  .view-link,
-  .view-btn {
-    font-size: 13px;
-    padding: 4px 10px;
-  }
-
-  .dashboard-foot {
-    margin-top: 40px;
+    border-radius: 0;
+    box-shadow: none;
     padding: 10px;
   }
 
-  .foot-link {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  /* Enable horizontal scroll */
+  .pro-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 
-  .foot-link span {
+  .pro-table thead,
+  .pro-table tbody,
+  .pro-table tr {
+    display: table;
+    width: 100%;
+  }
+
+  .pro-table th,
+  .pro-table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  /* Source pill smaller */
+  .source-pill {
+    min-width: auto;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  /* Schedule tighter */
+  .schedule-cell {
+    font-size: 11px;
+  }
+
+  /* Actions smaller */
+  .action-col svg {
+    font-size: 14px;
+    margin-right: 8px;
+  }
+}
+/* ===============================
+   RESPONSIVE VISIBILITY
+================================ */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* ===============================
+   MOBILE CARD VIEW
+================================ */
+@media (max-width: 768px) {
+  .desktop-only {
     display: none;
   }
 
-  .backk-btns {
-    left: -40px;
+  .mobile-only {
+    display: block;
+    padding: 0 12px;
+  }
+
+  .file-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: #0f172a;
+  }
+
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
     font-size: 13px;
-    padding: 8px 14px;
   }
-}
-/* CompanyFiles.css */
 
-/* Tooltip wrapper */
-.status-icon {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-
-/* Hidden tooltip by default */
-.status-icon .tooltip {
-  visibility: hidden;
-  width: max-content;
-  max-width: 200px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  text-align: center;
-  padding: 5px 10px;
-  border-radius: 5px;
-  position: absolute;
-  bottom: 125%; /* above the icon */
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  font-size: 13px;
-  white-space: nowrap;
-  z-index: 10;
-}
-
-/* Small arrow */
-.status-icon .tooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%; /* arrow at the bottom of tooltip */
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
-}
-
-/* Show tooltip on hover */
-.status-icon:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
-  transform: translateX(-50%) translateY(-5px);
-}
-.spin {
-  animation: rotate 1s linear infinite;
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-/* CompanyFiles.css */
-.table-cell {
-  font-weight: 600;
-  text-align: center;
-}
-
-.table-cell.api {
-  color: #006064;
-}
-
-.table-cell.uploaded {
-  color: #e65100;
-  
-}
-/* ===========================
-   Status Icon + Tooltip (TOP)
-   =========================== */
-
-.status-icon {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* Tooltip box */
-.status-icon .tooltip {
-  position: absolute;
-  bottom: 120%;            /* 👈 TOP side */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  white-space: nowrap;
-
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 10;
-}
-
-/* Tooltip arrow (optional) */
-.status-icon .tooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: #333 transparent transparent transparent;
-}
-
-/* Show tooltip on hover */
-.status-icon:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* ===========================
-   Processing rotate animation
-   =========================== */
-.spin {
-  animation: rotate 1s linear infinite;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
+  .card-row .label {
+    color: #64748b;
+    font-weight: 500;
   }
-  to {
-    transform: rotate(360deg);
+
+  .card-actions {
+    display: flex;
+    gap: 18px;
+    margin-top: 12px;
+    font-size: 18px;
+    color: #334155;
+  }
+
+  .card-actions svg {
+    cursor: pointer;
+  }
+
+  .card-actions svg:hover {
+    color: #2563eb;
+  }
+
+  .disabled {
+    color: #94a3b8;
+    font-size: 13px;
   }
 }

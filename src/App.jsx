@@ -39,40 +39,22 @@ function App() {
   // ============================
   // AUTH STATE (KEEP AS IS)
   // ============================
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-      const localUser = JSON.parse(localStorage.getItem("user"));
-      const token = localStorage.getItem("token");
+  // ============================
+// AUTH STATE (JWT ONLY)
+// ============================
+useEffect(() => {
+  const savedUser = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
 
-      if (localUser && token) {
-        setUser(localUser);
-        setLoading(false);
-        return;
-      }
+  if (savedUser && token) {
+    setUser(JSON.parse(savedUser));
+  } else {
+    setUser(null);
+  }
 
-      if (firebaseUser) {
-        try {
-          const res = await fetch(
-            `http://localhost:5000/user/${firebaseUser.email}`
-          );
-          const data = await res.json();
-          if (data.success && data.user) {
-            setUser(data.user);
-            localStorage.setItem("user", JSON.stringify(data.user));
-          }
-        } catch (err) {
-          console.error(err);
-        }
-        setLoading(false);
-        return;
-      }
+  setLoading(false);
+}, []);
 
-      setUser(null);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   if (loading) {
     return (
