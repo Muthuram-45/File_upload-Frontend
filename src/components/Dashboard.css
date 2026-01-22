@@ -24,6 +24,7 @@ body {
   min-height: 100vh;
   background: #daebfa;
   width: 100%;
+  margin-top: -20px;
 }
  
 /* ================================
@@ -702,5 +703,201 @@ body {
   .approval-actions {
     width: 100%;
     justify-content: flex-end;
+  }
+}
+.nlp-results-page {
+  padding: 25px;
+}
+
+.nlp-header {
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  padding: 8px 14px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.nlp-table-block {
+  margin-top: 30px;
+}
+.dashboard-page {
+  padding: 30px;
+}
+
+.nlp-dashboard {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.nlp-input-box {
+  display: flex;
+  gap: 10px;
+}
+
+.nlp-input-box input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.nlp-input-box button {
+  padding: 12px 18px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+}
+
+.nlp-error {
+  color: red;
+  margin-top: 10px;
+}
+
+.nlp-results-page {
+  padding: 30px;
+}
+
+.back-btn {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+.chart-wrapper {
+  max-width: 900px;
+  margin: 20px 0;
+}
+
+.chart-toggle {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.chart-toggle button {
+  padding: 6px 12px;
+  border: 1px solid #2563eb;
+  background: white;
+  color: #2563eb;
+  border-radius: 5px;
+}
+
+.tbl-full {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tbl-full th,
+.tbl-full td {
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+}
+.nlp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.nlp-modal {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  max-width: 450px;
+  width: 100%;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions button:first-child {
+  background: #2563eb;
+  color: white;
+}
+
+.modal-actions button:last-child {
+  background: #e5e7eb;
+}
+/* ===============================
+   NLP FLOATING SEARCH (TOP RIGHT)
+   =============================== */
+
+.nlp-floating-search {
+  position: fixed;
+  top: 110px;
+  right: 24px;
+  z-index: 1200;
+  background: #ffffff;
+  padding: 12px 14px;
+  border-radius: 12px;
+  /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); */
+  border: 1px solid #e2e8f0;
+  width: 360px;
+}
+
+.nlp-floating-search .nlp-input-box {
+  display: flex;
+  gap: 8px;
+}
+
+.nlp-floating-search input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5f5;
+  font-size: 14px;
+}
+
+.nlp-floating-search button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nlp-floating-search button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.nlp-floating-search .nlp-error {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #dc2626;
+}
+@media (max-width: 768px) {
+  .nlp-floating-search {
+    right: 12px;
+    left: 12px;
+    width: auto;
+    bottom: 12px;
+    top: auto;
   }
 }

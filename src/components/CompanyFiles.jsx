@@ -131,7 +131,7 @@ function CompanyFiles() {
       <div className="schedule-cell schedule-uploaded">
 
         {file.status === "NEW" && (
-          <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Process at<br />12:00</span>
+          <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Process at<br />00:00</span>
         )}
 
         {file.status === "PROCESSING" && (
@@ -146,7 +146,7 @@ function CompanyFiles() {
         {file.status === "DONE" && (
           <>
             <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Completed at</span>
-            <span className="completed">
+            <span className="completed" style={{fontSize:"14px", fontWeight:"500"}}>
               {formatTime(file.completed_at)}
             </span>
           </>

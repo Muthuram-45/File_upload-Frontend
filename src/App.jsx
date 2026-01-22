@@ -26,6 +26,7 @@ import ChartsView from "./components/ChartsView";
 import InviteRedirect from "./components/InviteRedirect";
 
 import "./app.css";
+import NLPResults from "./components/NLPResults";
 
 function App() {
   // 🔥 RESTORE USER IMMEDIATELY
@@ -188,6 +189,7 @@ useEffect(() => {
           {/* OTHER */}
           <Route path="/invite-redirect" element={<InviteRedirect />} />
           <Route path="/charts-view" element={<ChartsView />} />
+          <Route path="/nlp-results" element={<NLPResults />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

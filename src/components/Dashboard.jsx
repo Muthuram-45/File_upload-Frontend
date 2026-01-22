@@ -19,11 +19,71 @@ function Dashboard() {
   const [stats, setStats] = useState(null);
   const [showInvite, setShowInvite] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
+  const [nlpQuestion, setNlpQuestion] = useState("");
+  const [nlpLoading, setNlpLoading] = useState(false);
+  const [nlpError, setNlpError] = useState("");
+
+  const [showModeModal, setShowModeModal] = useState(false);
+  const [pendingQuestion, setPendingQuestion] = useState("");
+  const [availableTables, setAvailableTables] = useState([]);
+
+
 
   // 🔥 NEW
   const [pendingEmployees, setPendingEmployees] = useState([]);
   const [activeView, setActiveView] = useState("home"); // home | approvals
+
+  const askNLP = async (forceMode = null) => {
+    const questionToAsk = forceMode ? pendingQuestion : nlpQuestion;
+
+    if (!questionToAsk.trim()) {
+      setNlpError("Please enter a question");
+      return;
+    }
+
+    try {
+      setNlpLoading(true);
+      setNlpError("");
+
+      const res = await fetch(`${API_BASE}/nlp/query`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          question: questionToAsk,
+          ...(forceMode && { forceMode }),
+        }),
+      });
+
+      const data = await res.json();
+
+      // 🔥 THIS WAS MISSING
+      if (data.needsUserChoice) {
+        setPendingQuestion(questionToAsk);
+        setAvailableTables(data.datasets || []);
+        setShowModeModal(true);
+        return; // ⛔ STOP HERE
+      }
+
+      // ✅ Only navigate if final result
+      navigate("/nlp-results", {
+        state: {
+          question: questionToAsk,
+          result: data,
+        },
+      });
+
+    } catch (err) {
+      setNlpError("Failed to process NLP query");
+    } finally {
+      setNlpLoading(false);
+    }
+  };
+
+
 
   // ======================================================
   // 1️⃣ LOAD USER + TOKEN VALIDATION
@@ -162,14 +222,14 @@ function Dashboard() {
                   navigate("/d-oxwilh9dy1");
                 }}
               >
-                <IoHome id="ho"/> Home
+                <IoHome id="ho" /> Home
               </button>
 
               <button
                 className="nav-item"
                 onClick={() => navigate("/cf-2g7h9k3l5m")}
               >
-                <SiFiles id="fi"/> All Files
+                <SiFiles id="fi" /> All Files
               </button>
             </div>
 
@@ -208,7 +268,7 @@ function Dashboard() {
                 className="nav-item"
                 onClick={() => navigate("/settings")}
               >
-                <CgProfile id="ho"/> Profile
+                <CgProfile id="ho" /> Profile
               </button>
 
               {isManager && (
@@ -226,7 +286,7 @@ function Dashboard() {
                       }`}
                     onClick={() => setActiveView("approvals")}
                   >
-                     Pending Approvals
+                    Pending Approvals
                     {pendingEmployees.length > 0 && (
                       <span className="badge">
                         {pendingEmployees.length}
@@ -241,8 +301,30 @@ function Dashboard() {
 
         {/* MAIN CONTENT */}
         <main className="dashboard-main">
-                <div className="main-content">
- 
+          <div className="main-content">
+            <div className="nlp-floating-search">
+              <div className="nlp-input-box">
+                <input
+                  type="text"
+                  placeholder="Ask anything about your data..."
+                  value={nlpQuestion}
+                  onChange={(e) => setNlpQuestion(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !showModeModal) {
+                      askNLP();
+                    }
+                  }}
+                />
+                <button onClick={() => askNLP()} disabled={nlpLoading}>
+                  {nlpLoading ? "Thinking..." : "Ask"}
+                </button>
+              </div>
+
+              {nlpError && <p className="nlp-error">{nlpError}</p>}
+            </div>
+
+
+
             <div className="welcome">
               <section className="welcome-section">
                 <h1 className="welcome-title">
@@ -255,12 +337,12 @@ function Dashboard() {
                 </p>
               </section>
             </div>
- 
+
             {/* CONNECT DATA */}
             <section className="data-section">
               <h2 className="section-title">Connect your data</h2>
               <div className="action-cards">
- 
+
                 {/* ✅ UPLOAD – ALWAYS NAVIGATE */}
                 <div
                   className="action-card"
@@ -287,7 +369,7 @@ function Dashboard() {
                   </p>
                   <p className="card-subtitle">Track file details, upload status, processing progress, and download processed output files from a single dashboard.</p>
                 </div>
- 
+
                 {/* ✅ API – ALWAYS NAVIGATE */}
                 <div
                   className="action-card"
@@ -302,10 +384,10 @@ function Dashboard() {
                   </p>
                   <p className="card-subtitle">Secure connections to public and private APIs with automated data processing and storage for analysis and reporting.</p>
                 </div>
- 
+
               </div>
             </section>
-            
+
 
             {/* ================= APPROVALS VIEW ================= */}
             {activeView === "approvals" && isManager && (
@@ -371,6 +453,54 @@ function Dashboard() {
       {showInvite && isManager && (
         <InviteEmployee onClose={() => setShowInvite(false)} />
       )}
+      {showModeModal && (
+        <div className="nlp-modal-backdrop">
+          <div className="nlp-modal">
+            <h3>Multiple datasets found</h3>
+
+            <p>
+              Your question matches <b>{availableTables.length}</b> datasets.
+              How do you want the result?
+            </p>
+
+            <ul>
+              {availableTables.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+
+            <div className="modal-actions">
+              <button
+                onClick={() => {
+                  setShowModeModal(false);
+                  askNLP("combined");
+                }}
+              >
+                Aggregate Result
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowModeModal(false);
+                  askNLP("separate");
+                }}
+              >
+                Separate Results
+              </button>
+              <button
+                onClick={() => {
+                  setShowModeModal(false);
+                  setPendingQuestion("");
+                }}
+              >
+                Cancel
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 }

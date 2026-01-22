@@ -73,7 +73,7 @@ function ProcessedView() {
  
       setNlpResult(res.data.result || []);
     } catch {
-      setError("Currently working is progress");
+      setError("Wrong .....");
     } finally {
       setLoading(false);
     }

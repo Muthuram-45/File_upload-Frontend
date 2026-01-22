@@ -237,32 +237,34 @@
 }
 @media (max-width: 992px) {
   .navbar {
-    padding: 8px 20px;
+    padding: 6px 18px;
+    height: auto;
   }
 
   .logo {
-    width: 150px;
-    height: 60px;
+    width: 140px;
+    height: 55px;
   }
 
   .profile-name {
-    display: none; /* hide name on tablet to save space */
+    display: none; /* correct for tablet */
   }
 
   .dropdown-menu.modern {
+    top: 65px;   /* 👈 FIXED for reduced navbar height */
     min-width: 240px;
-    right: -10px;
+    right: 0;
   }
 }
 @media (max-width: 576px) {
   .navbar {
-    padding: 8px 12px;
-    flex-direction: row;
+    padding: 6px 12px;
+    height: auto;
   }
 
   .logo {
     width: 120px;
-    height: 50px;
+    height: 48px;
   }
 
   .avatar-ring {
@@ -281,19 +283,15 @@
   }
 
   .dropdown-menu.modern {
-    width: 90vw;
-    right: 5px;
-    top: 70px;
+    width: calc(100vw - 20px);
+    right: 10px;
+    top: 62px;   /* 👈 IMPORTANT */
   }
 
   .profile-header {
     flex-direction: column;
     align-items: center;
-    text-align: center;
-  }
-
-  .profile-text h3,
-  .profile-text p {
+    gap: 8px;
     text-align: center;
   }
 
@@ -311,6 +309,7 @@
     font-size: 0.85rem;
   }
 }
+
 .modal-overlay {
   position: fixed;
   inset: 0;

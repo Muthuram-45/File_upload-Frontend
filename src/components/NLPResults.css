@@ -1,0 +1,510 @@
+/* ===============================
+   NLP RESULTS – SPLIT & FULL TABLE
+   ================================ */
+
+:root {
+  /* Emerald & Teal Theme */
+  --primary: #059669;
+  /* Emerald 600 */
+  --primary-hover: #047857;
+  /* Emerald 700 */
+  --primary-bg: #ecfdf5;
+  /* Emerald 50 */
+  --accent: #0ea5e9;
+  /* Sky 500 */
+
+  --bg-main: #f8fafc;
+  /* Slate 50 */
+  --bg-card: #ffffff;
+
+  --text-primary: #1e293b;
+  /* Slate 800 */
+  --text-secondary: #64748b;
+  /* Slate 500 */
+  --text-muted: #94a3b8;
+  /* Slate 400 */
+
+  --border: #e2e8f0;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  --radius-xl: 16px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-main);
+}
+
+.nlp-results-page {
+  background-color: var(--bg-main);
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+
+/* ---------- LAYOUT CONTAINER ---------- */
+
+.nlp-table-block {
+  display: grid;
+  /* gap: 24px; */
+  /* Mobile: Stacked */
+  grid-template-columns: 1fr;
+  animation: fadeUp 0.5s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 
+   Desktop Grid Layout:
+   Col 1: Insights (30%)
+   Col 2: Chart (70%)
+   Row 3: Table (Full)
+*/
+@media (min-width: 1200px) {
+  .nlp-table-block {
+    grid-template-columns: 1fr 1fr;
+    /* Even width for insights and chart */
+    grid-template-rows: auto auto auto 1fr;
+    /* Header, Controls, Chart, Table */
+    align-items: start;
+  }
+
+  /* Title spans full width */
+  .nlp-table-block>h3 {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  /* Insights: Left Column, taller span to cover controls + chart area */
+  .insights-box {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+    /* Span across controls and chart rows */
+    height: 100%;
+    margin-bottom: 0;
+  }
+
+  /* Controls: Right Column, Row 2 */
+  .metric-selector {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    justify-self: start;
+    margin-bottom: 12px;
+  }
+
+  .chart-toggle {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    justify-self: end;
+    margin-bottom: 12px;
+  }
+
+  /* Chart: Right Column, Row 3 */
+  .chart-wrapper {
+    grid-column: 2;
+    grid-row: 3;
+    height: 380px;
+    /* Match typical insight height roughly */
+  }
+
+  /* Table: Full Width, Row 4 */
+  .table-wrapper {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    margin-top: 8px;
+  }
+}
+
+/* Component Title */
+.nlp-table-block h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 16px;
+}
+
+/* ---------- INSIGHTS (Vertical Stack for Side Column) ---------- */
+
+.insights-box {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Component Title inside containers */
+.chart-wrapper h4,
+.table-wrapper h4,
+.insights-box h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.insights-box h4 {
+  /* Specific override if needed, but shared style is good */
+  border-bottom: none;
+}
+
+.insights-box ul {
+  display: grid;
+  /* Grid look */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  height: auto;
+}
+
+/* Soft Colored Tile Design */
+.insights-box li {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  border: 1px solid transparent;
+  /* No border initially */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+/* Color variations for freshness */
+.insights-box li:nth-child(4n+1) {
+  background: #eff6ff;
+  /* Blue */
+  border-left: 4px solid #3b82f6;
+  /* color: #1e40af; */
+}
+
+.insights-box li:nth-child(4n+2) {
+  background: #f0fdf4;
+  /* Green */
+  border-left: 4px solid #22c55e;
+  /* color: #166534; */
+}
+
+.insights-box li:nth-child(4n+3) {
+  background: #fdf4ff;
+  /* Fuchsia */
+  border-left: 4px solid #d946ef;
+  /* color: #86198f; */
+}
+
+.insights-box li:nth-child(4n+4) {
+  background: #fff7ed;
+  /* Orange */
+  border-left: 4px solid #f97316;
+  /* color: #9a3412; */
+}
+
+.insights-box li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  filter: brightness(0.98);
+}
+
+.insights-box li::after {
+  display: none;
+}
+
+.insights-box li::before {
+  display: none;
+}
+
+/* Make numbers pop */
+.insights-box li strong,
+.insights-box li b {
+  font-size: 16px;
+  font-weight: 800;
+  opacity: 0.9;
+  color: inherit;
+  margin-right: 6px;
+}
+
+/* ---------- CHART CONTROLS ---------- */
+
+.metric-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-selector label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.metric-selector select {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.chart-toggle {
+  display: inline-flex;
+  background: var(--border);
+  padding: 2px;
+  border-radius: var(--radius-md);
+}
+
+.chart-toggle button {
+  padding: 4px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.chart-toggle button:hover {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- CHART AREA ---------- */
+
+.chart-wrapper {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-canvas-box {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  /* Flexbox trick for chartjs responsive */
+}
+
+/* ---------- FULL TABLE ---------- */
+
+.table-wrapper {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  /* Header is inside now */
+  min-height: 300px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-wrapper h4 {
+  padding: 20px 24px 12px;
+  margin: 0;
+  background: var(--bg-card);
+  z-index: 10;
+}
+
+.table-scroll {
+  overflow: auto;
+  flex: 1;
+}
+
+.tbl-full {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tbl-full thead {
+  position: sticky;
+  top: 0;
+  background: var(--bg-main);
+  z-index: 5;
+  box-shadow: inset 0 -1px 0 var(--border);
+}
+
+.tbl-full th {
+  text-align: left;
+  padding: 14px 24px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: white;
+}
+
+.tbl-full td {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.tbl-full tr:last-child td {
+  border-bottom: none;
+}
+
+.tbl-full tr:hover td {
+  background: var(--primary-bg);
+}
+
+/* ---------- EMPTY STATE ---------- */
+
+.nlp-empty {
+  text-align: center;
+  padding: 80px;
+}
+
+.nlp-empty h2 {
+  font-size: 24px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.nlp-empty button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (min-width: 1100px) {
+  .nlp-table-block {
+    column-gap: 40px; /* 👈 KEY LINE */
+  }
+
+  .insights-box {
+    padding-right: 16px;
+  }
+
+  .chart-wrapper {
+    padding-left: 16px;
+  }
+}
+/* ===============================
+   MOBILE VIEW (Phones)
+   =============================== */
+@media (max-width: 767px) {
+
+  .nlp-table-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Title */
+  .nlp-table-block h3 {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  /* INSIGHTS */
+  .insights-box ul {
+    grid-template-columns: 1fr; /* 👈 ONE CARD PER ROW */
+    gap: 12px;
+  }
+
+  .insights-box li {
+    padding: 16px;
+    font-size: 13px;
+  }
+
+  /* METRIC SELECTOR */
+  .metric-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* CHART */
+  .chart-wrapper {
+    height: 300px;
+    padding: 16px;
+  }
+
+  /* TABLE */
+  .table-wrapper {
+    max-height: none;
+  }
+
+  .tbl-full th,
+  .tbl-full td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+/* ===============================
+   TABLET VIEW
+   =============================== */
+@media (min-width: 768px) and (max-width: 1099px) {
+
+  .nlp-table-block {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* INSIGHTS: two per row */
+  .insights-box ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* CHART */
+  .chart-wrapper {
+    height: 340px;
+  }
+
+  /* METRIC SELECTOR */
+  .metric-selector {
+    align-self: flex-start;
+  }
+}
