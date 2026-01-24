@@ -216,3 +216,40 @@ h2 {
 
 /* ================= NLP STYLES REMOVED ================= */
 /* (Intentionally left blank – NLP feature removed) */
+.multi-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* ✅ 2 columns */
+  gap: 20px;
+  padding: 20px;
+}
+.chart-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.chart-card h4 {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #233d57;
+}
+@media (max-width: 1024px) {
+  .multi-chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .multi-chart-grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+}
