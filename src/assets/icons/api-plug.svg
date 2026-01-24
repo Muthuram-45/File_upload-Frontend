@@ -1,0 +1,35 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Soft background glow -->
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="#E9D5FF"></stop>
+      <stop offset="100%" stop-color="transparent"></stop>
+    </radialGradient>
+  </defs>
+
+  <circle cx="64" cy="64" r="46" fill="url(#glow)"></circle>
+
+  <!-- Plug body -->
+  <rect x="36" y="50" width="40" height="28" rx="10" fill="url(#plugBody)"></rect>
+
+  <!-- Plug gradient -->
+  <defs>
+    <linearGradient id="plugBody" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C084FC"></stop>
+      <stop offset="100%" stop-color="#9333EA"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Plug pins -->
+  <rect x="44" y="34" width="6" height="18" rx="3" fill="#7E22CE"></rect>
+  <rect x="58" y="34" width="6" height="18" rx="3" fill="#7E22CE"></rect>
+
+  <!-- Cable -->
+  <path d="M76 64H92C102 64 108 70 108 78C108 86 102 92 92 92H78" stroke="#7E22CE" stroke-width="6" stroke-linecap="round"></path>
+
+  <!-- Connector node -->
+  <circle cx="78" cy="92" r="8" fill="#A855F7"></circle>
+  <circle cx="78" cy="92" r="4" fill="#F5D0FE"></circle>
+
+</svg>

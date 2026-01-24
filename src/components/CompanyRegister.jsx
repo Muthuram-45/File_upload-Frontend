@@ -163,9 +163,6 @@ function CompanyRegister() {
   return (
     <>
       <div className="register-container">
-        <div className="register-image-section">
-          <img src={registerImage} alt="Company Register illustration" />
-        </div>
  
         <div className="register-page">
           <div className="register-box">

@@ -5,10 +5,13 @@ import Footer from "./Footer";
 import Chatbot from "./Chatbot";
 import InviteEmployee from "./InviteEmployee";
 
-import { FaUsers } from "react-icons/fa";
-import { IoHome } from "react-icons/io5";
+// Icons
+import { FaUsers, FaCogs, FaBolt, } from "react-icons/fa";
+import { IoHome, IoCloudDone } from "react-icons/io5";
 import { SiFiles } from "react-icons/si";
 import { CgProfile } from "react-icons/cg";
+import { BsPersonFillAdd } from "react-icons/bs";
+
 
 const API_BASE = "http://localhost:5000";
 
@@ -20,69 +23,13 @@ function Dashboard() {
   const [showInvite, setShowInvite] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const [nlpQuestion, setNlpQuestion] = useState("");
-  const [nlpLoading, setNlpLoading] = useState(false);
-  const [nlpError, setNlpError] = useState("");
-
-  const [showModeModal, setShowModeModal] = useState(false);
-  const [pendingQuestion, setPendingQuestion] = useState("");
-  const [availableTables, setAvailableTables] = useState([]);
-
-
-
-  // 🔥 NEW
+  // 🔥 VIEW STATE
   const [pendingEmployees, setPendingEmployees] = useState([]);
   const [activeView, setActiveView] = useState("home"); // home | approvals
 
-  const askNLP = async (forceMode = null) => {
-    const questionToAsk = forceMode ? pendingQuestion : nlpQuestion;
-
-    if (!questionToAsk.trim()) {
-      setNlpError("Please enter a question");
-      return;
-    }
-
-    try {
-      setNlpLoading(true);
-      setNlpError("");
-
-      const res = await fetch(`${API_BASE}/nlp/query`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          question: questionToAsk,
-          ...(forceMode && { forceMode }),
-        }),
-      });
-
-      const data = await res.json();
-
-      // 🔥 THIS WAS MISSING
-      if (data.needsUserChoice) {
-        setPendingQuestion(questionToAsk);
-        setAvailableTables(data.datasets || []);
-        setShowModeModal(true);
-        return; // ⛔ STOP HERE
-      }
-
-      // ✅ Only navigate if final result
-      navigate("/nlp-results", {
-        state: {
-          question: questionToAsk,
-          result: data,
-        },
-      });
-
-    } catch (err) {
-      setNlpError("Failed to process NLP query");
-    } finally {
-      setNlpLoading(false);
-    }
-  };
-
+  function capitalizeFirstLetter(name = "") {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
 
 
   // ======================================================
@@ -213,88 +160,109 @@ function Dashboard() {
 
         {/* SIDEBAR */}
         <aside className={`dashboard-sidebar ${isSidebarOpen ? "open" : ""}`}>
+          <div className="sidebar-backdrop" onClick={() => setIsSidebarOpen(false)}></div>
           <nav className="sidebar-nav">
-            <div className="nav-section">
+
+            <div className="nav-group">
               <button
-                className="nav-item"
+                className={`nav-item ${activeView === "home" ? "active" : ""}`}
                 onClick={() => {
                   setActiveView("home");
                   navigate("/d-oxwilh9dy1");
                 }}
               >
-                <IoHome id="ho" /> Home
+                <span className="nav-icon"><IoHome /></span>
+                <span className="nav-label">Home</span>
               </button>
 
               <button
                 className="nav-item"
                 onClick={() => navigate("/cf-2g7h9k3l5m")}
               >
-                <SiFiles id="fi" /> All Files
+                <span className="nav-icon"><SiFiles /></span>
+                <span className="nav-label">All Files</span>
               </button>
             </div>
 
-            <div className="nav-section">
-              <div className="nav-section-title">My Works</div>
+            <div className="nav-group">
+              <div className="nav-group-title">My Works</div>
               <button className="nav-item">
-                Uploaded <b>{stats.me.uploadedFiles}</b>
+                <span className="nav-icon"><IoCloudDone /></span>
+                <span className="nav-label">Uploaded</span>
+                <span className="count-badge">{stats.me.uploadedFiles}</span>
               </button>
               <button className="nav-item">
-                API <b>{stats.me.uploadedApi}</b>
+                <span className="nav-icon"><FaBolt /></span>
+                <span className="nav-label">API</span>
+                <span className="count-badge">{stats.me.uploadedApi}</span>
               </button>
               <button className="nav-item">
-                Processed <b>{stats.me.processedFiles}</b>
+                <span className="nav-icon"><FaCogs /></span>
+                <span className="nav-label">Processed</span>
+                <span className="count-badge">{stats.me.processedFiles}</span>
               </button>
             </div>
 
             {isManager && stats.company && (
-              <div className="nav-section">
-                <div className="nav-section-title">Company Works</div>
+              <div className="nav-group">
+                <div className="nav-group-title">Company Works</div>
                 <button className="nav-item">
-                  Uploaded <b>{stats.company.uploadedFiles}</b>
+                  <span className="nav-icon"><IoCloudDone /></span>
+                  <span className="nav-label">Uploaded</span>
+                  <span className="count-badge">{stats.company.uploadedFiles}</span>
                 </button>
                 <button className="nav-item">
-                  API <b>{stats.company.uploadedApi}</b>
+                  <span className="nav-icon"><FaBolt /></span>
+                  <span className="nav-label">API</span>
+                  <span className="count-badge">{stats.company.uploadedApi}</span>
                 </button>
                 <button className="nav-item">
-                  Processed <b>{stats.company.processedFiles}</b>
+                  <span className="nav-icon"><FaCogs /></span>
+                  <span className="nav-label">Processed</span>
+                  <span className="count-badge">{stats.company.processedFiles}</span>
                 </button>
               </div>
             )}
 
-            <div className="nav-section">
-              <div className="nav-section-title">Settings</div>
+            <div className="nav-group">
+              <div className="nav-group-title">Settings</div>
 
               <button
                 className="nav-item"
                 onClick={() => navigate("/settings")}
               >
-                <CgProfile id="ho" /> Profile
+                <span className="nav-icon"><CgProfile /></span>
+                <span className="nav-label">Profile</span>
               </button>
 
               {isManager && (
                 <>
-                  <button
-                    className="nav-item"
-                    onClick={() => setShowInvite(true)}
-                  >
-                    <FaUsers id="up" /> Invite to Join
-                  </button>
-
                   {/* 🔥 PENDING APPROVALS MENU */}
                   <button
                     className={`nav-item ${activeView === "approvals" ? "active" : ""
                       }`}
                     onClick={() => setActiveView("approvals")}
                   >
-                    Pending Approvals
+                    <span className="nav-icon"><FaUsers /></span>
+                    <span className="nav-label">Approvals</span>
                     {pendingEmployees.length > 0 && (
-                      <span className="badge">
+                      <span className="count-badge warning">
                         {pendingEmployees.length}
                       </span>
                     )}
                   </button>
+
+                  <button
+                    className="nav-item"
+                    onClick={() => setShowInvite(true)}
+                  >
+                    <span className="nav-icon"><BsPersonFillAdd /></span>
+                    <span className="nav-label">Invite User</span>
+                  </button>
                 </>
               )}
+
+
             </div>
           </nav>
         </aside>
@@ -302,92 +270,86 @@ function Dashboard() {
         {/* MAIN CONTENT */}
         <main className="dashboard-main">
           <div className="main-content">
-            <div className="nlp-floating-search">
-              <div className="nlp-input-box">
-                <input
-                  type="text"
-                  placeholder="Ask anything about your data..."
-                  value={nlpQuestion}
-                  onChange={(e) => setNlpQuestion(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !showModeModal) {
-                      askNLP();
-                    }
-                  }}
-                />
-                <button onClick={() => askNLP()} disabled={nlpLoading}>
-                  {nlpLoading ? "Thinking..." : "Ask"}
-                </button>
-              </div>
 
-              {nlpError && <p className="nlp-error">{nlpError}</p>}
-            </div>
-
-
-
-            <div className="welcome">
-              <section className="welcome-section">
+            {/* WELCOME HEADER */}
+            <div className="welcome-header">
+              <div className="welcome-text">
                 <h1 className="welcome-title">
-                  Hi {user.firstName}, Welcome to Cloud360
+                  Welcome, <span className="highlight-text">
+                    {capitalizeFirstLetter(user.firstName)}!
+                  </span>
+
                 </h1>
                 <p className="welcome-subtitle">
-                  {user.isCompany
-                    ? "Manage your company's data, files, and workflows in one powerful platform.Explore our powerful features to upload, process, and manage your data seamlessly."
-                    : "Your centralized platform for data management and file processing.Explore our powerful features to upload, process, and manage your data seamlessly."}
+                  Manage your data, files, and workflows in one powerful platform
                 </p>
-              </section>
+              </div>
             </div>
 
-            {/* CONNECT DATA */}
-            <section className="data-section">
-              <h2 className="section-title">Connect your data</h2>
-              <div className="action-cards">
+            {/* ACTION CARDS - Only show on 'home' view */}
+            {activeView === 'home' && (
+              <div className="dashboard-cards">
+                {/* CARD 1: UPLOAD DATA */}
+                <div className="dash-card">
+                  <div className="card-image-bg blue-bg">
+                    <img
+                      src="src/assets/icons/upload-cloud.svg"
+                      className="card-3d-icon"
+                      alt="Upload Data"
+                    />
 
-                {/* ✅ UPLOAD – ALWAYS NAVIGATE */}
-                <div
-                  className="action-card"
-                  onClick={() => navigate("/u-p2q8k4r9jw")}
-                >
-                  <div className="card-icon">⬆️</div>
-                  <h3 className="card-title">Upload data</h3>
-                  <p className="card-description">
-                    {isViewOnly
-                      ? "Login required to upload"
-                      : "Upload files from your local system"}
-                  </p>
-                  <p className="card-subtitle">Supports both Single or multiple files,Once uploaded files will be validated and prepared for further processing.</p>
-                </div>
-                {/* FILES */}
-                <div
-                  className="action-card"
-                  onClick={() => navigate("/cf-2g7h9k3l5m")}
-                >
-                  <div className="card-icon">📁</div>
-                  <h3 className="card-title">Browse datasets</h3>
-                  <p className="card-description">
-                    Access all your uploaded datasets in one place.
-                  </p>
-                  <p className="card-subtitle">Track file details, upload status, processing progress, and download processed output files from a single dashboard.</p>
+                  </div>
+                  <h3 className="card-heading">Upload Data</h3>
+                  <p className="card-text">Upload files securely from your system</p>
+                  <button
+                    className="card-btn blue-btn"
+                    onClick={() => navigate("/u-p2q8k4r9jw")}
+                  >
+                    Upload Data
+                  </button>
                 </div>
 
-                {/* ✅ API – ALWAYS NAVIGATE */}
-                <div
-                  className="action-card"
-                  onClick={() => navigate("/f-vxt2x3s7a1")}
-                >
-                  <div className="card-icon">🔗</div>
-                  <h3 className="card-title">Connect API</h3>
-                  <p className="card-description">
-                    {isViewOnly
-                      ? "Login required to fetch API"
-                      : "Connect to API data sources"}
-                  </p>
-                  <p className="card-subtitle">Secure connections to public and private APIs with automated data processing and storage for analysis and reporting.</p>
+                {/* CARD 2: BROWSE DATASETS */}
+                <div className="dash-card">
+                  <div className="card-image-bg green-bg">
+                    <img
+                      src="src/assets/icons/database-stack.svg"
+                      className="card-3d-icon"
+                      alt="Browse Datasets"
+                    />
+
+                  </div>
+                  <h3 className="card-heading">Browse Datasets</h3>
+                  <p className="card-text">View and manage all processed datasets</p>
+                  <button
+                    className="card-btn green-btn"
+                    onClick={() => navigate("/cf-2g7h9k3l5m")}
+                  >
+                    Browse Datasets
+                  </button>
                 </div>
 
+                {/* CARD 3: CONNECT API */}
+                <div className="dash-card">
+                  <div className="card-image-bg purple-bg">
+                    <img
+                      src="src/assets/icons/api-plug.svg"
+                      className="card-3d-icon"
+                      alt="Connect API"
+                    />
+
+                  </div>
+                  <h3 className="card-heading">Connect API</h3>
+                  <p className="card-text">Integrate data using secure APIs</p>
+                  <button
+                    className="card-btn purple-btn"
+                    onClick={() => navigate("/f-vxt2x3s7a1")}
+                  >
+                    Connect API
+                  </button>
+                </div>
               </div>
-            </section>
-
+            )}
 
             {/* ================= APPROVALS VIEW ================= */}
             {activeView === "approvals" && isManager && (
@@ -409,7 +371,7 @@ function Dashboard() {
                     <div key={emp.id} className="approval-card">
                       <div className="approval-user">
                         <div className="avatar">
-                          {emp.first_name?.charAt(0)}
+                          {capitalizeFirstLetter(emp.first_name)?.charAt(0)}
                         </div>
 
                         <div className="user-info">
@@ -452,53 +414,6 @@ function Dashboard() {
 
       {showInvite && isManager && (
         <InviteEmployee onClose={() => setShowInvite(false)} />
-      )}
-      {showModeModal && (
-        <div className="nlp-modal-backdrop">
-          <div className="nlp-modal">
-            <h3>Multiple datasets found</h3>
-
-            <p>
-              Your question matches <b>{availableTables.length}</b> datasets.
-              How do you want the result?
-            </p>
-
-            <ul>
-              {availableTables.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-
-            <div className="modal-actions">
-              <button
-                onClick={() => {
-                  setShowModeModal(false);
-                  askNLP("combined");
-                }}
-              >
-                Aggregate Result
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowModeModal(false);
-                  askNLP("separate");
-                }}
-              >
-                Separate Results
-              </button>
-              <button
-                onClick={() => {
-                  setShowModeModal(false);
-                  setPendingQuestion("");
-                }}
-              >
-                Cancel
-              </button>
-
-            </div>
-          </div>
-        </div>
       )}
 
     </>

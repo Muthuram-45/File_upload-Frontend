@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import "./CompanyLogin.css";
-import loginImage from "../assets/art3.png";
+
 import Footer from "./Footer";
 
 function CompanyLogin({ setUser }) {
@@ -96,7 +96,7 @@ function CompanyLogin({ setUser }) {
 
   return (
     <>
-      <div className="login-container">
+      <div className="login-container" x>
         {/* LEFT FORM */}
         <div className="login-form-section">
           <div className="login-box">
@@ -158,10 +158,6 @@ function CompanyLogin({ setUser }) {
           </div>
         </div>
 
-        {/* RIGHT IMAGE */}
-        <div className="login-image-section">
-          <img src={loginImage} alt="Login Illustration" />
-        </div>
       </div>
 
       <Footer />

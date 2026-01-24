@@ -1,19 +1,19 @@
-/* MAIN CONTAINER */
+/* ================= MAIN CONTAINER ================= */
 .processed-container {
   width: 100%;
   padding: 15px 10px;
   box-sizing: border-box;
 }
- 
+
 /* Header */
 h2 {
   text-align: center;
   color: #233d57;
   font-family: 'segoe ui';
 }
- 
+
 /* ================= TABS HEADER ================= */
- 
+
 .file-tabs-container {
   display: flex;
   justify-content: center;
@@ -21,14 +21,8 @@ h2 {
   flex-wrap: wrap;
   gap: 10px;
 }
- 
-/* Left side tabs */
-.file-tabs-left {
-  display: flex;
-  flex-wrap: wrap;
-}
- 
-/* File tab buttons (YOUR DESIGN PRESERVED) */
+
+/* File tab buttons */
 .file-tab-btn {
   background: #3b82d1;
   color: #fefeff;
@@ -46,7 +40,7 @@ h2 {
   margin-left: 50px;
   transition: all 0.3s ease;
 }
- 
+
 .file-tab-btn:hover,
 .file-tab-btn.active {
   background: #daebfa;
@@ -54,8 +48,8 @@ h2 {
   transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
 }
- 
-/* Back Button (YOUR DESIGN PRESERVED) */
+
+/* Back Button */
 .back-btn {
   color: black;
   border: 2px solid #3d82d1;
@@ -69,47 +63,47 @@ h2 {
   margin-right: 88%;
   transition: all 0.3s ease;
 }
- 
+
 .back-btn:hover {
   background: #3b82d1;
   color: #fefeff;
 }
- 
-/* ======================== CSV TABLE ======================== */
-/* CSV Table */
+
+/* ================= CSV TABLE ================= */
+
 .csv-table-section {
   margin-top: 20px;
   padding: 20px 40px;
   display: flex;
-  justify-content: center; /* center table horizontally */
-  flex-direction: column; /* vertically stack tables if multiple */
-  gap: 30px; /* spacing between tables */
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
 }
- 
-/* Table Wrapper */
+
+/* ✅ SCROLL FIX APPLIED HERE */
 .table-wrapper {
   max-height: 600px;
-  max-width: 95%; /* responsive width */
-  overflow: auto; /* scroll if table is too wide/tall */
+  max-width: 95%;
+  overflow-x: auto;   /* ✅ horizontal scroll */
+  overflow-y: auto;   /* vertical scroll */
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   background-color: #fff;
-  /* padding: 10px; space around table */
   border: 1px solid #e0e0e0;
-  margin: 0 auto; /* center inside container */
+  margin: 0 auto;
 }
- 
-/* Table Base */
+
+/* ✅ FORCE TABLE TO OVERFLOW */
 .table-wrapper table {
-  width: auto;        /* auto width to fit content */
-  min-width: 300px;   /* for very small tables */
+  width: max-content;   /* ✅ enables X-scroll */
+  min-width: 100%;
   border-collapse: separate;
   table-layout: auto;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
   color: #333;
 }
- 
+
 /* Table Header */
 .table-wrapper th {
   position: sticky;
@@ -121,32 +115,29 @@ h2 {
   font-size: 15px;
   letter-spacing: 0.6px;
   border-bottom: 1px solid #d0d0d0;
-  background-clip: padding-box;
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.05));
-  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1);
 }
- 
-/* Table Type Header Colors */
+
+/* Header colors */
 .tbl-full th {
   background-color: #007bff;
   color: #fff;
 }
- 
+
 .tbl-entity th {
   background-color: #17a2b8;
   color: #fff;
 }
- 
+
 .tbl-dimension th {
   background-color: #024184e3;
   color: #fff;
 }
- 
+
 .tbl-metrics th {
-  background-color:#306596;
+  background-color: #306596;
   color: #fff;
 }
- 
+
 /* Rows */
 .table-wrapper td {
   padding: 5px 10px;
@@ -155,276 +146,73 @@ h2 {
   text-align: center;
   transition: all 0.2s ease-in-out;
 }
- 
-/* Hover Effect */
+
+/* Hover */
 .table-wrapper tbody tr:hover td {
   background-color: #e6f0ff;
 }
- 
-/* Stripe per Table Type */
+
+/* Stripe */
 .table-wrapper tbody tr:nth-child(even) td {
-  background-color: #f9f9f9; /* general */
+  background-color: #f9f9f9;
 }
- 
-.tbl-entity tbody tr:nth-child(even) td {
-  /* background-color: #e0f7fa; */
-}
- 
-.tbl-dimension tbody tr:nth-child(even) td {
-  /* background-color: #f3e5f5; */
-}
- 
-.tbl-metrics tbody tr:nth-child(even) td {
-  /* background-color: #fff3e0; */
-}
- 
-/* Column Widths Auto-Fit */
-.tbl-entity th, .tbl-entity td,
-.tbl-dimension th, .tbl-dimension td,
-.tbl-metrics th, .tbl-metrics td {
-  width: auto;
-}
- 
-/* Smooth Scrollbar for better UI */
+
+/* Scrollbar */
 .table-wrapper::-webkit-scrollbar {
   height: 10px;
   width: 10px;
 }
- 
+
 .table-wrapper::-webkit-scrollbar-thumb {
   background: rgba(0,0,0,0.2);
   border-radius: 4px;
 }
- 
+
 .table-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
- 
-/* ======================== CHART SECTION ======================== */
- 
-.multi-chart-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  margin-top: 20px;
-  gap: 20px;
-}
- 
-/* Chart Card (YOUR DESIGN KEPT) */
-.chart-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
- 
-.chart-card h4 {
-  text-align: center;
-  font-size: 16px;
-  margin-bottom: 12px;
-  color: #233d57;
-  font-weight: 600;
-}
- 
-/* ======================== FOOTER ================= */
- 
-.dashboard-foote {
-  margin-top: 50px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.85);
-  color: #333;
-  text-align: center;
-  padding: 15px 0;
-}
- 
-.nlp-panel-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;   /* top-la konjam space iruka */
-  margin-top: 30px;
-  width: 100%;
-}
- 
-.nlp-panel {
-  width: 100%;
-  max-width: 900px;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  text-align: center;
-}
- 
-.nlq-search-box {
-  display: flex;
-  gap: 10px;
-  margin: 15px 0;
-}
- 
-.nlq-search-box input {
-  flex: 1;
-  padding: 8px;
-}
- 
-.nlq-search-box button {
-  padding: 8px 16px;
-  cursor: pointer;
-  color: black;
-  border: 2px solid #3d82d1;
-  background-color: white;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
- 
-.nlq-search-box button:hover {
-  background: #3b82d1;
-  color: #fefeff;
-}
- 
- 
-.error-box {
-  color: red;
-  text-align: center;
-  margin: 10px 0;
-}
- 
+
 /* ================= RESPONSIVE ================= */
-@media (max-width: 768px) {
-  .nlp-panel input {
-    width: 100%;
-    margin-bottom: 10px;
-  }
- 
-  .nlp-panel button {
-    width: 100%;
-  }
-}
- 
- 
-/* ================= IMPROVED RESPONSIVE DESIGN ================= */
- 
-/* ---------- LAPTOP & SMALL DESKTOP ---------- */
+
 @media (max-width: 1024px) {
- 
   .file-tab-btn {
     margin-left: 10px;
     padding: 6px 12px;
     font-size: 14px;
   }
- 
-  .multi-chart-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
 }
- 
- 
-/* ---------- TABLET VIEW ---------- */
+
 @media (max-width: 768px) {
- 
-  .file-tabs-container {
-    flex-direction: row;
-    justify-content: center;
-  }
- 
   .file-tab-btn {
     margin-left: 0;
     padding: 5px 10px;
     font-size: 13px;
-    border-radius: 8px;
   }
- 
+
   .back-btn {
- 
     padding: 8px 14px;
     font-size: 13px;
   }
- 
+
   .csv-table-section {
     padding: 8px;
   }
- 
+
   .table-wrapper table {
     font-size: 13px;
   }
- 
-  .table-wrapper td {
-    padding: 6px 10px;
-  }
- 
-  .multi-chart-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
- 
-  .chart-card {
-    padding: 12px;
-  }
 }
- 
- 
-/* ---------- MOBILE VIEW ---------- */
+
 @media (max-width: 480px) {
- 
-  /* .file-tabs-container {
-    flex-direction: column;
-    gap: 6px;
-  }
- 
-  .file-tab-btn {
-    width: 95%;
-    font-size: 12px;
-    padding: 5px 8px;
-    justify-content: center;
-    margin-top: 8px;
-  }
- 
-  .back-btn {
-    width: 95%;
-    font-size: 12px;
-    padding: 6px 10px;
-  } */
- 
-  /* Table better readability */
   .table-wrapper table {
     font-size: 12px;
   }
- 
+
   .table-wrapper th,
   .table-wrapper td {
     padding: 5px 8px;
   }
- 
-  /* Charts readable */
-  .multi-chart-grid {
-    grid-template-columns: 1fr;
-    padding: 5px;
-  }
- 
-  .chart-card {
-    padding: 10px;
-  }
- 
-  .chart-card h4 {
-    font-size: 13px;
-  }
 }
-.nlq-search-box {
-  display: flex;
-  gap: 10px;
-  margin: 15px 0;
-}
- 
-.nlq-search-box input {
-  flex: 1;
-  padding: 8px;
-  font-size: 14px;
-}
- 
-.nlq-search-box button {
-  padding: 8px 14px;
-  cursor: pointer;
-}
- 
- 
+
+/* ================= NLP STYLES REMOVED ================= */
+/* (Intentionally left blank – NLP feature removed) */

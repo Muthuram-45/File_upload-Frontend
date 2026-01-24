@@ -13,6 +13,14 @@ import { Bar } from "react-chartjs-2";
 import "./Dashboard.css";
 import "./NLPResults.css";
 
+function formatTableName(name) {
+  return name
+    .replace(/_fulltable$/i, "")   // remove _fulltable
+    .replace(/_/g, " ")            // underscores → spaces
+    .toUpperCase();                // optional: uppercase
+}
+
+
 
 /* ================= CHART SETUP ================= */
 
@@ -31,7 +39,7 @@ function NLPResults() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  if (!state || !state.result || !state.result.results) {
+  if (!state || !state.result) {
     return (
       <div className="nlp-empty">
         <h2>No NLP result found</h2>
@@ -42,11 +50,38 @@ function NLPResults() {
 
   const { question, result } = state;
 
+  // ❌ Access denied
+  if (result.success === false) {
+    return (
+      <div className="nlp-empty">
+        <h2>Access Denied</h2>
+        <p>{result.message}</p>
+        <button onClick={() => navigate(-1)}>Go Back</button>
+      </div>
+    );
+  }
+
+  // ⚠️ Empty result
+  if (!result.results || Object.keys(result.results).length === 0) {
+    return (
+      <div className="nlp-empty">
+        <h2>No Data Found</h2>
+        <p>{"No results available"}</p>
+        <button onClick={() => navigate(-1)}>Go Back</button>
+      </div>
+    );
+  }
+
   return (
     <>
-      <p style={{ textAlign: "center", fontSize: "19px" }}><b>Question:</b> {question}</p>
+      <p style={{ textAlign: "center", fontSize: "19px", marginTop: "15px" }}>
+        <b>Question:</b> {question}
+      </p>
+
       <div className="nlp-results-page">
-        <button className="back-btn" onClick={() => navigate(-1)}> Back</button>
+        <button className="back-btn" onClick={() => navigate(-1)}>Back</button>
+        <br /><br />
+
         {Object.entries(result.results).map(([table, rows]) => (
           <TableWithInsights key={table} table={table} rows={rows} />
         ))}
@@ -55,15 +90,8 @@ function NLPResults() {
   );
 }
 
-export default NLPResults;
 
-/* ================= TABLE + INSIGHTS + SMART CHART ================= */
-// function formatTableName(name) {
-//   return name
-//     .replace(/_fulltable$/i, "")
-//     .replace(/_/g, " ")
-//     .toUpperCase();
-// }
+export default NLPResults;
 
 
 function TableWithInsights({ table, rows }) {
@@ -74,9 +102,7 @@ function TableWithInsights({ table, rows }) {
   if (!rows || rows.length === 0) {
     return (
       <div className="nlp-table-block">
-        <h3>
-          {table.replace(/_fulltable$/i, "").replace(/_/g, " ").toUpperCase()}
-        </h3>
+        <h3>{formatTableName(table)}</h3>
         <p>No data found</p>
       </div>
     );
@@ -190,7 +216,8 @@ function TableWithInsights({ table, rows }) {
 
   return (
     <div className="nlp-table-block">
-      <h3>{table}</h3>
+     <h3>{formatTableName(table)}</h3>
+
 
       {/* INSIGHTS + PIE */}
       <div className="insights-box">

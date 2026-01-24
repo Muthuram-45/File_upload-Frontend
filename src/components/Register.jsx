@@ -6,25 +6,24 @@ import {
   signInWithPopup,
 } from './firebase';
 import './Register.css';
-import registerImage from '../assets/art3.png';
 import Swal from 'sweetalert2';
 import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
- 
-function Register() {
+
+function Register({ setUser }) {
   const navigate = useNavigate();
- 
+
   // ===============================
   // HELPERS
   // ===============================
   const isPersonalEmail = (email) => {
     const allowedDomains = ['gmail.com', 'yahoo.com', 'outlook.com'];
     if (!email.includes('@')) return false;
- 
+
     const domain = email.split('@')[1];
     return allowedDomains.includes(domain);
   };
- 
+
   // ===============================
   // STATE
   // ===============================
@@ -35,12 +34,12 @@ function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
- 
+
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
- 
+
   // ===============================
   // SEND OTP
   // ===============================
@@ -49,19 +48,19 @@ function Register() {
       Swal.fire('Error', 'Please fill in all fields.', 'error');
       return;
     }
- 
+
     if (password !== confirmPassword) {
       Swal.fire('Error', 'Passwords do not match.', 'error');
       return;
     }
- 
+
     if (!agreeTerms) {
       Swal.fire('Error', 'You must accept Terms & Conditions.', 'error');
       return;
     }
- 
+
     const trimmedEmail = email.trim().toLowerCase();
- 
+
     // 🚫 BLOCK COMPANY EMAILS
     if (!isPersonalEmail(trimmedEmail)) {
       Swal.fire({
@@ -71,16 +70,16 @@ function Register() {
       });
       return;
     }
- 
+
     try {
       setLoading(true);
- 
+
       const res = await axios.post(
         'http://localhost:5000/send-otp',
         { email: trimmedEmail },
         { headers: { 'Content-Type': 'application/json' } }
       );
- 
+
       if (res.data.success) {
         Swal.fire('OTP Sent', 'Check your email for OTP', 'success');
         setOtpSent(true);
@@ -90,7 +89,7 @@ function Register() {
       }
     } catch (err) {
       console.error('Error sending OTP:', err);
- 
+
       if (err.response?.status === 409) {
         Swal.fire({
           icon: 'error',
@@ -112,7 +111,7 @@ function Register() {
       setLoading(false);
     }
   };
- 
+
   // ===============================
   // VERIFY OTP & REGISTER
   // ===============================
@@ -121,24 +120,24 @@ function Register() {
       Swal.fire('Error', 'Enter the OTP you received.', 'error');
       return;
     }
- 
+
     try {
       const trimmedEmail = email.trim().toLowerCase();
       const trimmedOtp = otp.trim();
- 
+
       const verifyRes = await axios.post(
         'http://localhost:5000/verify-otp',
         { email: trimmedEmail, otp: trimmedOtp },
         { headers: { 'Content-Type': 'application/json' } }
       );
- 
+
       if (verifyRes.data.success) {
         const registerRes = await axios.post(
           'http://localhost:5000/register',
           { firstName, lastName, email: trimmedEmail, mobile, password },
           { headers: { 'Content-Type': 'application/json' } }
         );
- 
+
         if (registerRes.data.success) {
           Swal.fire('Success', 'Registration successful! Please login.', 'success');
           navigate('/login');
@@ -157,25 +156,28 @@ function Register() {
       );
     }
   };
- 
+
   // ===============================
   // GOOGLE SIGN IN
   // ===============================
   const handleGoogleSignIn = async () => {
     try {
       googleProvider.setCustomParameters({ prompt: 'select_account' });
- 
+
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const firebaseToken = await user.getIdToken();
- 
+
       const res = await axios.post('http://localhost:5000/google-login', {
         token: firebaseToken,
       });
- 
+
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
- 
+
+      // 🔥 THIS WAS MISSING
+      setUser(res.data.user);
+
       Swal.fire({
         title: 'Login Successful!',
         text: 'Redirecting to your dashboard...',
@@ -183,28 +185,29 @@ function Register() {
         timer: 3000,
         showConfirmButton: false,
       });
- 
-      navigate('/d-oxwilh9dy1');
+
+      navigate('/d-oxwilh9dy1', { replace: true });
+
     } catch (err) {
       console.error('Google sign-in error:', err);
       Swal.fire('Error', 'Google sign-in failed', 'error');
     }
   };
- 
+
   // ===============================
   // UI
   // ===============================
   return (
     <>
       <div className="register-container">
-        <div className="register-image-section">
+        {/* <div className="register-image-section">
           <img src={registerImage} alt="Register illustration" />
         </div>
- 
+  */}
         <div className="register-page">
           <div className="register-box">
             <h2>Create Account</h2>
- 
+
             {!otpSent ? (
               <>
                 <div className="form-row">
@@ -221,7 +224,7 @@ function Register() {
                     onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
- 
+
                 <div className="form-row">
                   <input
                     type="email"
@@ -236,7 +239,7 @@ function Register() {
                     onChange={(e) => setMobile(e.target.value)}
                   />
                 </div>
- 
+
                 <div className="form-row">
                   <input
                     type="password"
@@ -251,7 +254,7 @@ function Register() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </div>
- 
+
                 <div className="terms">
                   <input
                     type="checkbox"
@@ -260,7 +263,7 @@ function Register() {
                   />
                   <label>I agree to the Terms & Conditions</label>
                 </div>
- 
+
                 <button
                   onClick={handleRegister}
                   className="register-btn"
@@ -288,9 +291,9 @@ function Register() {
                 <p>{message}</p>
               </div>
             )}
- 
+
             <div className="divider">OR</div>
- 
+
             <button className="google-btn" onClick={handleGoogleSignIn}>
               <img
                 src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -298,7 +301,7 @@ function Register() {
               />
               Sign Up with Google
             </button>
- 
+            <br />
             <button
               className="company-register-btn"
               onClick={() => navigate('/cr-h2k8j5d1f5')}
@@ -308,10 +311,10 @@ function Register() {
           </div>
         </div>
       </div>
- 
+
       <Footer />
     </>
   );
 }
- 
+
 export default Register;

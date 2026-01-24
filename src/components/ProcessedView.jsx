@@ -2,48 +2,65 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ProcessedView.css";
- 
+
 function ProcessedView() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { folder, token } = state || {};
- 
+
   const [tables, setTables] = useState([]);
   const [activeTab, setActiveTab] = useState("full");
   const [error, setError] = useState("");
- 
-  // NLP states
-  const [nlpQuery, setNlpQuery] = useState("");
-  const [nlpResult, setNlpResult] = useState([]);
-  const [loading, setLoading] = useState(false);
- 
+
+  // =============================
+  // 🔐 SAFETY: Redirect on refresh
+  // =============================
+  useEffect(() => {
+    if (!folder || !token) {
+      navigate(-1);
+    }
+  }, [folder, token, navigate]);
+
+  // =============================
+  // 📦 FETCH PROCESSED TABLES
+  // =============================
   useEffect(() => {
     if (!folder?.tables || !token) return;
- 
+
     const fetchTables = async () => {
-    try {
-      const requests = folder.tables.map((tableName) =>
-        axios.get(`http://localhost:5000/processed-table/${tableName}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }).then(res => ({
-          tableName,
-          rows: res.data.rows || [],
-        }))
-      );
- 
-      const result = await Promise.all(requests);
-      setTables(result);
-    } catch {
-      setError("Failed to load table data");
-    }
-  };
- 
+      try {
+        const requests = folder.tables.map((tableName) =>
+          axios
+            .get(`http://localhost:5000/processed-table/${tableName}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((res) => ({
+              tableName,
+              rows: res.data.rows || [],
+              status: res.data.status || "READY",
+            }))
+        );
+
+        const result = await Promise.all(requests);
+        setTables(result);
+        setError("");
+      } catch (err) {
+        console.error("API ERROR:", err.response?.data);
+        setError(err.response?.data?.error || "Failed to load table data");
+      }
+    };
+
     fetchTables();
   }, [folder, token]);
- 
+
+  // =============================
+  // 🧠 TABLE SELECTION
+  // =============================
   const getTableByType = (type) =>
     tables.find((t) => t.tableName.toLowerCase().endsWith(type));
- 
+
   const activeTable =
     activeTab === "full"
       ? getTableByType("_fulltable")
@@ -54,37 +71,25 @@ function ProcessedView() {
       : activeTab === "dimension"
       ? getTableByType("_dimension")
       : null;
- 
-  const handleNLP = async () => {
-    if (!nlpQuery.trim()) return;
- 
-    try {
-      setLoading(true);
-      setNlpResult([]);
- 
-      const res = await axios.post(
-        "http://localhost:5000/nlp/query",
-        {
-          question: nlpQuery,
-          baseName: folder.folderName,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
- 
-      setNlpResult(res.data.result || []);
-    } catch {
-      setError("Wrong .....");
-    } finally {
-      setLoading(false);
-    }
-  };
- 
+
+  // =============================
+  // 📊 TABLE RENDER
+  // =============================
   const renderTable = (table) => {
-    if (!table || table.rows.length === 0)
-      return <p className="empty-msg">Please wait your datas are loading!...</p>;
- 
+    if (!table) {
+      return <p className="empty-msg">No table selected</p>;
+    }
+
+    if (table.status === "WAITING") {
+      return <p className="empty-msg">⏳ Processing in progress...</p>;
+    }
+
+    if (table.rows.length === 0) {
+      return <p className="empty-msg">No data available</p>;
+    }
+
     const columns = Object.keys(table.rows[0]);
- 
+
     return (
       <div className="table-wrapper">
         <table className="tbl-full">
@@ -108,17 +113,20 @@ function ProcessedView() {
       </div>
     );
   };
- 
+
+  // =============================
+  // 🧩 UI
+  // =============================
   return (
     <div className="processed-container">
       <h2>{folder?.folderName}</h2>
- 
+
       <button className="back-btn" onClick={() => navigate(-1)}>
         Back
       </button>
- 
+
       {error && <div className="error-box">{error}</div>}
- 
+
       {/* TABS */}
       <div className="file-tabs-container">
         <button
@@ -127,85 +135,35 @@ function ProcessedView() {
         >
           Full Table
         </button>
- 
+
         <button
           className={`file-tab-btn ${activeTab === "entity" ? "active" : ""}`}
           onClick={() => setActiveTab("entity")}
         >
           Entity Table
         </button>
- 
+
         <button
           className={`file-tab-btn ${activeTab === "metrics" ? "active" : ""}`}
           onClick={() => setActiveTab("metrics")}
         >
           Metrics Table
         </button>
- 
+
         <button
           className={`file-tab-btn ${activeTab === "dimension" ? "active" : ""}`}
           onClick={() => setActiveTab("dimension")}
         >
           Dimension Table
         </button>
- 
-        <button
-          className={`file-tab-btn ${activeTab === "nlp" ? "active" : ""}`}
-          onClick={() => setActiveTab("nlp")}
-        >
-          NLP Query
-        </button>
       </div>
- 
+
       {/* CONTENT */}
       <div className="csv-table-section">
-        {activeTab !== "nlp" && renderTable(activeTable)}
- 
-        {activeTab === "nlp" && (
-          <div className="nlp-panel-wrapper">
-            <div className="nlp-panel">
-              <h3>Ask me something related to this data</h3>
- 
-              <div className="nlq-search-box">
-                <input
-                  type="text"
-                  value={nlpQuery}
-                  onChange={(e) => setNlpQuery(e.target.value)}
-                  placeholder="Type your question here..."
-                />
-                <button onClick={handleNLP} disabled={loading}>
-                  {loading ? "Processing..." : "Send"}
-                </button>
-              </div>
- 
-              {nlpResult.length > 0 && (
-                <div className="table-wrapper">
-                  <table className="tbl-full">
-                    <thead>
-                      <tr>
-                        {Object.keys(nlpResult[0]).map((k) => (
-                          <th key={k}>{k}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {nlpResult.map((row, i) => (
-                        <tr key={i}>
-                          {Object.keys(row).map((k) => (
-                            <td key={k}>{String(row[k] ?? "")}</td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {renderTable(activeTable)}
       </div>
     </div>
   );
 }
- 
+
 export default ProcessedView;

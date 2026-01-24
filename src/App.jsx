@@ -41,20 +41,20 @@ function App() {
   // AUTH STATE (KEEP AS IS)
   // ============================
   // ============================
-// AUTH STATE (JWT ONLY)
-// ============================
-useEffect(() => {
-  const savedUser = localStorage.getItem("user");
-  const token = localStorage.getItem("token");
+  // AUTH STATE (JWT ONLY)
+  // ============================
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
-  if (savedUser && token) {
-    setUser(JSON.parse(savedUser));
-  } else {
-    setUser(null);
-  }
+    if (savedUser && token) {
+      setUser(JSON.parse(savedUser));
+    } else {
+      setUser(null);
+    }
 
-  setLoading(false);
-}, []);
+    setLoading(false);
+  }, []);
 
 
   if (loading) {
@@ -90,7 +90,7 @@ useEffect(() => {
     <Router>
       <Navbar user={user} setUser={setUser} />
 
-      <div className="App" style={{ marginTop: "80px" }}>
+      <div className="App" >
         <Routes>
           <Route
             path="/"
@@ -116,10 +116,11 @@ useEffect(() => {
             path="/r-ya7w1p9s35"
             element={
               <PublicRoute>
-                <Register />
+                <Register setUser={setUser} />
               </PublicRoute>
             }
           />
+
 
           <Route
             path="/cl-zv9ng4q6b8"

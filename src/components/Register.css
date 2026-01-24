@@ -1,527 +1,235 @@
-/* 🔹 Universal Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  
-}
 
-/* 🔹 Full Page Layout */
 .register-container {
-  height: 85vh;
-  width: 100vw;
+  min-height: calc(100vh - 80px);
+  width: 100%;
   display: flex;
-  font-family: 'Poppins', sans-serif; 
-  overflow-y: hidden;
-  /* margin-top: -150px; */
+   background: #daebfa;
+  overflow: hidden;
 }
-
-/* 🔹 Left Image Section */
-.register-image-section {
-  flex: 1; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: -50px;
-}
-
-.register-image-section img {
-  width: 80%;
-  height: 90%;
-  object-fit: cover;
-  border-radius: 0;
-}
-
-/* 🔹 Right Form Section */
+/* Right Form Section */
 .register-page {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: fadeIn 0.6s ease-in-out;
+  padding: 20px;
+  background: #daebfa;
 }
-
-/* 🔹 Form Box */
+ 
 .register-box {
+  width: 100%;
+  max-width: 460px;
   background: #ffffff;
-  border-radius: 16px;
-  padding: 20px 40px;
-  /* height: 80%; */
-  width: 420px;
-  /* height: 90%; */
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  transition: all 0.3s ease-in-out;
-  animation: slideIn 0.7s ease;
-  margin-top: -85px;
-
+  padding: 36px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease;
 }
-/* 🔹 Title */
+ 
+/* Title */
 .register-box h2 {
-  font-size: 26px;
-  color: #007bff;
-  font-family: 'segoe ui';
- font-weight: bold;
-  margin-bottom: 25px;
-  letter-spacing: 0.5px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 28px;
 }
-
-/* 🔹 Input Fields */
+ 
+/* Form Rows */
 .form-row {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 14px;
 }
-
+ 
+/* Inputs */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 13px 14px;
+  border-radius: 6px;
+  border: 1px solid #d0d7e2;
   font-size: 14px;
-  transition: 0.3s;
+  color: #0f172a;
+  background: #fff;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
 }
-
+ 
+input::placeholder {
+  color: #94a3b8;
+}
+ 
 input:focus {
-  border-color: #007bff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
   outline: none;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
-
-/* 🔹 Terms */
+ 
+/* Terms */
 .terms {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: flex-start;
   gap: 10px;
-  font-size: 14px;
-  color: #444;
-  margin: 15px 0 25px 0;
-  line-height: 1.4;
-  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  color: #475569;
+  margin: 12px 0 24px;
 }
-
-.terms input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #007bff;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+ 
+.terms input {
+  accent-color: #2563eb;
 }
-
-.terms input[type="checkbox"]:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
-}
-
-.terms label {
-  cursor: pointer;
-  color: #333;
-  user-select: none;
-  transition: color 0.2s ease;
-}
-
-.terms label:hover {
-  color: #007bff;
-}
-
-
-/* 🔹 Buttons */
+ 
+/* Primary Button */
 .register-btn,
 .verify-btn {
   width: 100%;
-  background: linear-gradient(135deg, #007bff, #00bfff);
-  color: white;
+  padding: 13px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
   font-weight: 600;
-  padding: 12px;
+  border-radius: 6px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 15px;
-  transition: all 0.3s ease;
-  /* margin-bottom: 10px; */
+  transition: all 0.25s ease;
+  letter-spacing: 0.04em;
 }
-.already-account{
-    margin-top: 30px;
-}
+ 
 .register-btn:hover,
 .verify-btn:hover {
-  background: linear-gradient(135deg, #0056b3, #007bff);
-  transform: translateY(-2px);
+  background: #1e40af;
+  transform: translateY(-1px);
 }
-
-/* 🔹 Divider */
+ 
+.register-btn:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+ 
+/* Divider */
 .divider {
-  margin: 25px 0;
-  color: #888;
-  text-align: center;
-  position: relative;
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12px;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
-
+ 
 .divider::before,
 .divider::after {
   content: "";
-  position: absolute;
-  top: 50%;
-  width: 40%;
+  flex: 1;
   height: 1px;
-  background: #ccc;
+  background: #e5e7eb;
 }
-
-.divider::before {
-  left: 0;
-}
-.divider::after {
-  right: 0;
-}
-
-/* 🔹 Google Button */
+ 
+/* ================================
+   🌐 GOOGLE LOGIN – PREMIUM STYLE
+   ================================ */
+ 
 .google-btn {
   width: 100%;
-  background: #ffffff;
-  border: 2px solid #007bff;
-  color: #007bff;
-  font-weight: 600;
-  padding: 12px;
+  padding: 12px 16px;
   border-radius: 8px;
-  cursor: pointer;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: all 0.3s ease;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
 }
-
+ 
 .google-btn:hover {
-  background: #007bff;
-  color: white;
-  transform: translateY(-2px);
+  background: #f8fafc;
+  border-color: #c7d2fe;
+  box-shadow: 0 6px 16px rgba(37,99,235,0.12);
+  transform: translateY(-1px);
 }
-
+ 
+.google-btn:active {
+  transform: scale(0.98);
+}
+ 
 .google-btn img {
   width: 20px;
   height: 20px;
+  object-fit: contain;
 }
-
-/* 🔹 OTP Section Styling */
-.otp-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: fadeIn 0.6s ease-in-out;
+ 
+/* Login Text */
+.already-account {
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 26px;
 }
-
-.otp-section h3 {
-  font-size: 20px;
-  color: #007bff;
+ 
+.already-account span {
+  color: #2563eb;
   font-weight: 600;
-  margin-bottom: 20px;
+  cursor: pointer;
 }
-
+ 
+/* OTP */
+.otp-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+}
+ 
 .otp-input {
-  width: 180px;
+  width: 100%;
+  max-width: 220px;
+  padding: 12px;
+  font-size: 22px;
   letter-spacing: 10px;
   text-align: center;
-  font-size: 22px;
-  font-weight: 600;
-  border: 2px solid #007bff;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 20px;
-  background-color: #f9fcff;
-  transition: 0.3s;
+  border-radius: 6px;
+  border: 2px solid #cbd5e1;
 }
-
+ 
 .otp-input:focus {
-  outline: none;
-  border-color: #0056b3;
-  box-shadow: 0 0 8px rgba(0, 91, 255, 0.2);
+  border-color: #2563eb;
 }
-
-.otp-section p {
-  font-size: 14px;
-  color: #333;
-  margin-top: 10px;
-}
-
-/* 🔹 Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* 🔹 Responsive Design */
+ 
+/* Responsive */
 @media (max-width: 900px) {
   .register-container {
     flex-direction: column;
-    height: auto;
   }
-
-  .register-image-section {
-    height: 40vh;
-  }
-
-  .register-page {
-    height: auto;
-    padding: 40px 0;
-  }
-}
-/* 🔹 Modern Mobile OTP Section */
-.mobile-otp-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-top: 20px;
-  background: #f0f8ff;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #d0e7ff;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
-  transition: all 0.3s ease;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.mobile-otp-section:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 123, 255, 0.15);
-}
-
-/* 🔹 Input Field */
-.mobile-otp-section input[type="text"],
-.mobile-otp-section input[type="number"] {
-  width: 70%;
-  padding: 10px 14px;
-  border: 1.5px solid #007bff;
-  border-radius: 10px;
-  font-size: 16px;
-  text-align: center;
-  letter-spacing: 3px;
-  font-weight: 600;
-  color: #333;
-  background: #fff;
-  transition: all 0.3s ease;
-}
-
-.mobile-otp-section input:focus {
-  border-color: #0056b3;
-  box-shadow: 0 0 10px rgba(0, 91, 255, 0.2);
-  outline: none;
-}
-
-/* 🔹 Buttons */
-.send-mobile-otp-btn,
-.verify-mobile-otp-btn {
-  background: linear-gradient(135deg, #007bff, #00bfff);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 18px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-}
-
-.send-mobile-otp-btn:hover,
-.verify-mobile-otp-btn:hover {
-  background: linear-gradient(135deg, #0056b3, #007bff);
-  transform: scale(1.05);
-}
-
-/* 🔹 Verified Status Text */
-.verified-text {
-  color: #28a745;
-  font-weight: 700;
-  font-size: 15px;
-  margin-top: 10px;
-  letter-spacing: 0.3px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.verified-text::before {
-  content: "✔";
-  font-size: 16px;
-}
-.mobile-signup-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #1d976c, #2cc197);
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  width: 100%;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(29, 151, 108, 0.25);
-}
-
-.mobile-signup-btn i {
-  font-size: 20px;
-}
-
-.mobile-signup-btn:hover {
-  background: linear-gradient(135deg, #159957, #155799);
-  box-shadow: 0 6px 20px rgba(21, 89, 153, 0.3);
-  transform: translateY(-2px);
-}
-.company-option {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.company-link {
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: underline;
-  font-weight: 500;
-}
-
-.company-link:hover {
-  color: #0056b3;
-}
-.company-register-btn {
-  background-color: #4b9cd3;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
-  margin-top: 15px;
-  font-size: 16px;
-  width: 100%;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.company-register-btn:hover {
-  background-color: #357ab8;
-}
-/* ================= RESPONSIVE FIXED DESIGN ================= */
-
-/* ✅ Tablet View */
-/* ================= TABLET FIX (Perfect View) ================= */
-@media (min-width: 601px) and (max-width: 992px) {
-
-  .register-container {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-   padding-bottom: 50px;
-  }
-
-  .register-image-section {
-    display: none !important;
-  }
-
-  .register-page {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  
-  }
-
-  .register-box {
-    width: 70%;
-    max-width: 600px;
-    padding: 30px;
-    border-radius: 16px;
-    margin: 0 auto;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .register-box h2 {
-    font-size: 26px;
-    text-align: center;
-  }
-
-  .register-btn,
-  .google-btn {
-    width: 100%;
-  }
-}
-
-/* ✅ Mobile View */
-@media (max-width: 600px) {
-  .register-container {
-    flex-direction: column;
-    height: auto;
-    padding: 10px;
-  }
-
+ 
   .register-image-section {
     display: none;
   }
-
+ 
   .register-page {
-    width: 100%;
-    padding: 10px 0;
+    padding: 24px;
   }
-
+ 
   .register-box {
-    width: 100%;
-    padding: 20px;
-    margin-top: 0;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 28px;
+    box-shadow: none;
   }
-
-  .register-box h2 {
-    font-size: 22px;
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    font-size: 15px;
-    padding: 10px;
-  }
-
-  .terms {
-    font-size: 13px;
-  }
-
-  .register-btn,
-  .verify-btn,
-  .google-btn,
-  .company-register-btn {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .otp-input {
-    width: 100%;
-    font-size: 18px;
-    letter-spacing: 6px;
-  }
-
-  .mobile-otp-section input {
-    width: 100%;
-  }
+}
+.company-register-btn{
+   width: 100%;
+  padding: 13px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  letter-spacing: 0.04em;
+ 
 }

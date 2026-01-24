@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import './Login.css';
-import loginImage from '../assets/art3.png';
+import "./CompanyLogin.css";
 import Footer from './Footer';
 
 // ✅ ONLY ALLOWED PERSONAL EMAIL DOMAINS
@@ -158,9 +157,6 @@ function Login({ setUser }) {
           </div>
         </div>
 
-        <div className="login-image-section">
-          <img src={loginImage} alt="Login Illustration" />
-        </div>
       </div>
 
       <Footer />

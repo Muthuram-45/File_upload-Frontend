@@ -48,6 +48,7 @@ body {
   font-family: var(--font-sans);
   color: var(--text-primary);
   box-sizing: border-box;
+  padding: 30px;
 }
 
 
@@ -154,6 +155,7 @@ body {
   background: transparent;
   display: flex;
   flex-direction: column;
+  padding: 10px;
 }
 
 /* Component Title inside containers */
@@ -334,18 +336,19 @@ body {
 
 /* ---------- FULL TABLE ---------- */
 
-.table-wrapper {
+
+.nlp-results-page .table-wrapper {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
-  overflow: hidden;
-  /* Header is inside now */
+  overflow: hidden;     /* OK ONLY for NLP */
   min-height: 300px;
   max-height: 600px;
   display: flex;
   flex-direction: column;
 }
+
 
 .table-wrapper h4 {
   padding: 20px 24px 12px;
@@ -507,4 +510,18 @@ body {
   .metric-selector {
     align-self: flex-start;
   }
+}
+/* 🔍 Compact Ask AI (near profile) */
+.navbar-search-wrapper.compact {
+  width: 260px;          /* small & neat */
+  margin-right: 10px;    /* small gap before profile */
+}
+
+.navbar-search-wrapper.compact .navbar-search {
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.navbar-search-wrapper.compact input {
+  font-size: 13px;
 }

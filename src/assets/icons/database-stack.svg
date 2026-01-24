@@ -1,0 +1,13 @@
+<svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Top layer -->
+  <ellipse cx="12" cy="6" rx="7" ry="3" fill="#4ADE80"></ellipse>
+  <path d="M5 6V10C5 11.7 8.1 13 12 13C15.9 13 19 11.7 19 10V6" fill="#22C55E"></path>
+
+  <!-- Middle layer -->
+  <path d="M5 10V14C5 15.7 8.1 17 12 17C15.9 17 19 15.7 19 14V10" fill="#16A34A"></path>
+
+  <!-- Bottom layer -->
+  <path d="M5 14V18C5 19.7 8.1 21 12 21C15.9 21 19 19.7 19 18V14" fill="#15803D"></path>
+
+</svg>
