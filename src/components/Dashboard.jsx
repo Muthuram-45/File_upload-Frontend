@@ -264,6 +264,11 @@ function Dashboard() {
 
 
             </div>
+
+            <small style={{ paddingLeft: "12px", color: "#9ca3af" }}>
+              Reports are emailed daily
+            </small>
+
           </nav>
         </aside>
 
@@ -350,6 +355,7 @@ function Dashboard() {
                 </div>
               </div>
             )}
+
 
             {/* ================= APPROVALS VIEW ================= */}
             {activeView === "approvals" && isManager && (

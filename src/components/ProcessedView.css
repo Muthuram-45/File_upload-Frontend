@@ -4,16 +4,16 @@
   padding: 15px 10px;
   box-sizing: border-box;
 }
-
+ 
 /* Header */
 h2 {
   text-align: center;
   color: #233d57;
-  font-family: 'segoe ui';
+  font-family: 'Segoe UI';
 }
-
+ 
 /* ================= TABS HEADER ================= */
-
+ 
 .file-tabs-container {
   display: flex;
   justify-content: center;
@@ -21,7 +21,7 @@ h2 {
   flex-wrap: wrap;
   gap: 10px;
 }
-
+ 
 /* File tab buttons */
 .file-tab-btn {
   background: #3b82d1;
@@ -40,7 +40,7 @@ h2 {
   margin-left: 50px;
   transition: all 0.3s ease;
 }
-
+ 
 .file-tab-btn:hover,
 .file-tab-btn.active {
   background: #daebfa;
@@ -48,7 +48,7 @@ h2 {
   transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
 }
-
+ 
 /* Back Button */
 .back-btn {
   color: black;
@@ -63,14 +63,14 @@ h2 {
   margin-right: 88%;
   transition: all 0.3s ease;
 }
-
+ 
 .back-btn:hover {
   background: #3b82d1;
   color: #fefeff;
 }
-
+ 
 /* ================= CSV TABLE ================= */
-
+ 
 .csv-table-section {
   margin-top: 20px;
   padding: 20px 40px;
@@ -79,23 +79,22 @@ h2 {
   flex-direction: column;
   gap: 30px;
 }
-
-/* ✅ SCROLL FIX APPLIED HERE */
+ 
+/* Table Wrapper */
 .table-wrapper {
   max-height: 600px;
   max-width: 95%;
-  overflow-x: auto;   /* ✅ horizontal scroll */
-  overflow-y: auto;   /* vertical scroll */
+  overflow-x: auto;
+  overflow-y: auto;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   background-color: #fff;
   border: 1px solid #e0e0e0;
   margin: 0 auto;
 }
-
-/* ✅ FORCE TABLE TO OVERFLOW */
+ 
 .table-wrapper table {
-  width: max-content;   /* ✅ enables X-scroll */
+  width: max-content;
   min-width: 100%;
   border-collapse: separate;
   table-layout: auto;
@@ -103,7 +102,7 @@ h2 {
   font-size: 14px;
   color: #333;
 }
-
+ 
 /* Table Header */
 .table-wrapper th {
   position: sticky;
@@ -113,128 +112,90 @@ h2 {
   text-align: center;
   font-weight: 600;
   font-size: 15px;
-  letter-spacing: 0.6px;
   border-bottom: 1px solid #d0d0d0;
 }
-
-/* Header colors */
+ 
 .tbl-full th {
   background-color: #007bff;
   color: #fff;
 }
-
+ 
 .tbl-entity th {
   background-color: #17a2b8;
   color: #fff;
 }
-
+ 
 .tbl-dimension th {
   background-color: #024184e3;
   color: #fff;
 }
-
+ 
 .tbl-metrics th {
   background-color: #306596;
   color: #fff;
 }
-
-/* Rows */
+ 
+/* Table Rows */
 .table-wrapper td {
   padding: 5px 10px;
   border-bottom: 1px solid #e0e0e0;
   white-space: nowrap;
   text-align: center;
-  transition: all 0.2s ease-in-out;
 }
-
-/* Hover */
+ 
 .table-wrapper tbody tr:hover td {
   background-color: #e6f0ff;
 }
-
-/* Stripe */
+ 
 .table-wrapper tbody tr:nth-child(even) td {
   background-color: #f9f9f9;
 }
-
+ 
 /* Scrollbar */
 .table-wrapper::-webkit-scrollbar {
   height: 10px;
   width: 10px;
 }
-
+ 
 .table-wrapper::-webkit-scrollbar-thumb {
   background: rgba(0,0,0,0.2);
   border-radius: 4px;
 }
-
-.table-wrapper::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 1024px) {
-  .file-tab-btn {
-    margin-left: 10px;
-    padding: 6px 12px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 768px) {
-  .file-tab-btn {
-    margin-left: 0;
-    padding: 5px 10px;
-    font-size: 13px;
-  }
-
-  .back-btn {
-    padding: 8px 14px;
-    font-size: 13px;
-  }
-
-  .csv-table-section {
-    padding: 8px;
-  }
-
-  .table-wrapper table {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 480px) {
-  .table-wrapper table {
-    font-size: 12px;
-  }
-
-  .table-wrapper th,
-  .table-wrapper td {
-    padding: 5px 8px;
-  }
-}
-
-/* ================= NLP STYLES REMOVED ================= */
-/* (Intentionally left blank – NLP feature removed) */
+ 
+/* ================= CHART GRID ================= */
+ 
 .multi-chart-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* ✅ 2 columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 20px;
 }
+ 
+/* ================= CHART CARD (FIXED) ================= */
+ 
 .chart-card {
   background: #ffffff;
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+ 
+  /* 🔥 IMPORTANT FIX */
+  outline: none;
+  border: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
-
-.chart-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+ 
+.chart-card:focus,
+.chart-card:focus-visible,
+.chart-card:active {
+  outline: none !important;
+  border: none !important;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
 }
-
+ 
 .chart-card h4 {
   text-align: center;
   font-size: 15px;
@@ -242,14 +203,101 @@ h2 {
   margin-bottom: 10px;
   color: #233d57;
 }
+ 
+/* ================= RESPONSIVE ================= */
+ 
 @media (max-width: 1024px) {
   .multi-chart-grid {
     grid-template-columns: 1fr;
   }
+ 
+  .file-tab-btn {
+    margin-left: 10px;
+  }
 }
+ 
 @media (max-width: 600px) {
   .multi-chart-grid {
-    grid-template-columns: 1fr;
     padding: 10px;
   }
+}
+ 
+/* ================= CHART CONTROLS ================= */
+ 
+.chart-type-selector,
+.chart-toggle {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+ 
+.chart-type-selector button,
+.chart-toggle button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #f2f2f2;
+}
+ 
+.chart-type-selector .active,
+.chart-toggle button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.chart-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  outline: none;
+}
+ 
+/* ❌ click / focus / active border remove */
+.chart-card:focus,
+.chart-card:focus-visible,
+.chart-card:active {
+  outline: none !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+ 
+/* ❌ accidental highlight remove */
+.chart-card * {
+  outline: none;
+}
+.chart-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: zoom-in;
+  user-select: none;
+  outline: none; /* blue border remove */
+}
+ 
+ /*Hover
+.chart-card:hover {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+}
+ 
+/* 🔥 DOUBLE CLICK → ZOOM (PERSISTENT)
+.chart-card:focus,
+.chart-card:focus-within {
+  transform: scale(1.25);
+  z-index: 20;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  cursor: zoom-out;
+}
+ 
+/* Smooth grid spacing
+.multi-chart-grid {
+  overflow: visible;
+}*/
+ 
+ 
+.chart-card {
+  cursor: zoom-in;
 }
