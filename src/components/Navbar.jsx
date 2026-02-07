@@ -294,7 +294,7 @@ function Navbar({ user, setUser }) {
                 className="profile-trigger"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                <div className="profile-avatar">
+                <div className="profile-avatar1">
                   {user.firstName?.[0]?.toUpperCase() || "A"}
                 </div>
               </div>
@@ -302,7 +302,7 @@ function Navbar({ user, setUser }) {
               {dropdownOpen && (
                 <div className="dropdown-menu modern show">
                   <div className="profile-header">
-                    <div className="profile-avatar large">
+                    <div className="profile-avatar1 large">
                       {user.firstName?.[0]?.toUpperCase() || "U"}
                     </div>
                     <div>
@@ -431,3 +431,4 @@ function Navbar({ user, setUser }) {
 }
  
 export default Navbar;
+ 

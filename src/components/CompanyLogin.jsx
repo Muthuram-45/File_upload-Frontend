@@ -3,17 +3,18 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import "./CompanyLogin.css";
-
+ 
 import Footer from "./Footer";
-
+import { FaChartLine,FaBrain,FaCloud,FaChartBar,FaMicrochip} from "react-icons/fa";
+ 
 function CompanyLogin({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState(""); // ✅ KEEP
   const [loading, setLoading] = useState(false);
-
+ 
   const navigate = useNavigate();
-
+ 
   // =========================
   // HANDLE COMPANY LOGIN
   // =========================
@@ -22,36 +23,36 @@ function CompanyLogin({ setUser }) {
       Swal.fire("Error", "Please fill all fields", "error");
       return;
     }
-
+ 
     try {
       setLoading(true);
-
+ 
       // ❌ DO NOT SEND company_name
       const res = await axios.post("http://localhost:5000/company-login", {
         email: email.trim().toLowerCase(),
         password: password.trim(),
       });
-
+ 
       if (!res.data.success) {
         Swal.fire("Error", res.data.error || "Login failed", "error");
         return;
       }
-
+ 
       // =========================
       // ✅ COMPANY NAME VALIDATION
       // =========================
       const backendCompany = res.data.user.company_name?.toLowerCase().trim();
       const inputCompany = companyName.toLowerCase().trim();
-
+ 
       if (backendCompany !== inputCompany) {
         Swal.fire(
           "Access Denied",
           "Company name does not match this account",
-          "error"
+          "error",
         );
         return;
       }
-
+ 
       // =========================
       // ✅ TRUST BACKEND ROLE
       // =========================
@@ -62,16 +63,16 @@ function CompanyLogin({ setUser }) {
         lastName: res.data.user.lastName || "",
         mobile: res.data.user.mobile || "",
         company_name: res.data.user.company_name,
-        role: res.data.user.role,        // manager / employee
+        role: res.data.user.role, // manager / employee
         isCompany: true,
         viewOnly: false,
       };
-
+ 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(userData));
-
+ 
       setUser(userData);
-
+ 
       Swal.fire({
         title: "Login Successful",
         text: `Welcome ${userData.company_name}`,
@@ -79,30 +80,57 @@ function CompanyLogin({ setUser }) {
         timer: 1500,
         showConfirmButton: false,
       });
-
+ 
       navigate("/d-oxwilh9dy1", { replace: true });
-
     } catch (err) {
       console.error("Company Login Error:", err);
       Swal.fire(
         "Error",
         err.response?.data?.error || "Server error during login",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
     }
   };
-
+ 
   return (
     <>
       <div className="login-container" x>
         {/* LEFT FORM */}
+        <div className="hero-text">
+          <div className="hero-title">
+            <h1>Cloud360</h1>
+          </div>
+ 
+          <p>
+            Smart data analysis and real-time processing
+            <br />
+            built to drive faster, better decisions.
+          </p>
+          <br />
+          <div className="icon-group">
+            <div className="icon-card">
+              <FaChartLine className="hero-icon" />
+              <span>Analytics</span>
+            </div>
+ 
+            <div className="icon-card">
+              <FaBrain className="hero-icon" />
+              <span>AI Engine</span>
+            </div>
+ 
+            <div className="icon-card">
+              <FaChartBar className="hero-icon" />
+              <span>Insights</span>
+            </div>
+          </div>
+        </div>
         <div className="login-form-section">
           <div className="login-box">
             <h2 className="login-title">Company Login</h2>
             <p className="login-subtitle">Access your company dashboard</p>
-
+ 
             {/* ✅ COMPANY NAME INPUT */}
             <input
               type="text"
@@ -111,7 +139,7 @@ function CompanyLogin({ setUser }) {
               onChange={(e) => setCompanyName(e.target.value)}
               className="login-input"
             />
-
+ 
             <input
               type="email"
               placeholder="Company Email"
@@ -119,7 +147,7 @@ function CompanyLogin({ setUser }) {
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
             />
-
+ 
             <input
               type="password"
               placeholder="Password"
@@ -127,7 +155,7 @@ function CompanyLogin({ setUser }) {
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
             />
-
+ 
             <button
               onClick={handleLogin}
               className="login-btn"
@@ -135,7 +163,7 @@ function CompanyLogin({ setUser }) {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
-
+ 
             <p className="footer-text">
               New company?{" "}
               <span
@@ -145,7 +173,7 @@ function CompanyLogin({ setUser }) {
                 Register here
               </span>
             </p>
-
+ 
             <p className="footer-text">
               Normal User?{" "}
               <span
@@ -157,12 +185,12 @@ function CompanyLogin({ setUser }) {
             </p>
           </div>
         </div>
-
       </div>
-
-      <Footer />
+ 
+      {/* <Footer /> */}
     </>
   );
 }
-
+ 
 export default CompanyLogin;
+ 

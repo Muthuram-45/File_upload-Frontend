@@ -10,9 +10,8 @@
   font-family: 'Poppins', sans-serif;
   width: 100%;
   margin-top: -30px;
- 
 }
-
+ 
 /* 🧾 Form Box */
 .change-mobile-form {
   background: #fff;
@@ -22,12 +21,13 @@
   width: 360px;
   text-align: center;
   transition: all 0.3s ease;
+   margin-top: 130px;
 }
-
+ 
 .change-mobile-form:hover {
   transform: translateY(-3px);
 }
-
+ 
 /* 🏷️ Heading */
 .change-mobile-form h2 {
   color: #1976d2;
@@ -36,7 +36,7 @@
   font-family: 'segoe ui';
  font-weight: bold;
 }
-
+ 
 /* ✏️ Input Fields */
 .change-mobile-form input {
   width: 100%;
@@ -48,12 +48,12 @@
   outline: none;
   transition: 0.3s;
 }
-
+ 
 .change-mobile-form input:focus {
   border-color: #1976d2;
   box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
 }
-
+ 
 /* 🔘 Button */
 .change-mobile-form button {
   width: 100%;
@@ -68,11 +68,11 @@
   margin-top: 15px;
   transition: background 0.3s ease;
 }
-
+ 
 .change-mobile-form button:hover {
   background: #125aa3;
 }
-
+ 
 /* 🔙 Back Link */
 .back-link {
   margin-top: 15px;
@@ -82,23 +82,25 @@
   font-size: 14px;
   text-decoration: underline;
 }
-
+ 
 .back-link:hover {
   color: #0d47a1;
 }
-
+ 
 /* 📱 Mobile Responsive */
 @media (max-width: 480px) {
   .change-mobile-form {
     width: 90%;
     padding: 30px 25px;
   }
-
+ 
   .change-mobile-form h2 {
     font-size: 20px;
   }
-
+ 
   .change-mobile-form button {
     font-size: 15px;
   }
 }
+ 
+ 

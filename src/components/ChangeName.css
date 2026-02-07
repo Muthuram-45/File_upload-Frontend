@@ -7,7 +7,7 @@
   background: white;
   font-family: 'Poppins', sans-serif;
 }
-
+ 
 /* 🧾 Form Box */
 .change-name-form {
   background: #fff;
@@ -17,12 +17,14 @@
   width: 360px;
   text-align: center;
   transition: all 0.3s ease;
+  margin-left: 369px;
+  margin-top: 86px;
 }
-
+ 
 .change-name-form:hover {
   transform: translateY(-3px);
 }
-
+ 
 /* 🏷️ Heading */
 .change-name-form h2 {
   color: #1976d2;
@@ -31,7 +33,7 @@
  font-family: 'segoe ui';
  font-weight: bold;
 }
-
+ 
 /* ✏️ Input Fields */
 .change-name-form input {
   width: 100%;
@@ -43,17 +45,17 @@
   outline: none;
   transition: 0.3s;
 }
-
+ 
 .change-name-form input:focus {
   border-color: #1976d2;
   box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
 }
-
+ 
 .change-name-form input[readonly] {
   background-color: #f1f1f1;
   cursor: not-allowed;
 }
-
+ 
 /* 🔘 Button */
 .change-name-form button {
   width: 100%;
@@ -68,11 +70,11 @@
   margin-top: 15px;
   transition: background 0.3s ease;
 }
-
+ 
 .change-name-form button:hover {
   background: #125aa3;
 }
-
+ 
 /* 🔙 Back Link */
 .back-link {
   margin-top: 15px;
@@ -82,23 +84,25 @@
   font-size: 14px;
   text-decoration: underline;
 }
-
+ 
 .back-link:hover {
   color: #0d47a1;
 }
-
+ 
 /* 📱 Mobile Responsive */
 @media (max-width: 480px) {
   .change-name-form {
     width: 90%;
     padding: 30px 25px;
   }
-
+ 
   .change-name-form h2 {
     font-size: 20px;
   }
-
+ 
   .change-name-form button {
     font-size: 15px;
   }
 }
+ 
+ 

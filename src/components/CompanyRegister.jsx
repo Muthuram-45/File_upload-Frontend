@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './Register.css';
-import registerImage from '../assets/art3.png';
-import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
-import Footer from './Footer';
+import React, { useState } from "react";
+import axios from "axios";
+import "./Register.css";
+import registerImage from "../assets/art3.png";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
+import {
+  FaChartLine,
+  FaBrain,
+  FaCloud,
+  FaChartBar,
+  FaMicrochip,
+} from "react-icons/fa";
  
 const API_BASE = "http://localhost:5000";
  
 function CompanyRegister() {
   const navigate = useNavigate();
  
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [otp, setOtp] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,7 +41,12 @@ function CompanyRegister() {
     const domain = email.split("@")[1].toLowerCase();
  
     // block personal email providers
-    const blockedDomains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com"];
+    const blockedDomains = [
+      "gmail.com",
+      "yahoo.com",
+      "outlook.com",
+      "hotmail.com",
+    ];
     if (blockedDomains.includes(domain)) return false;
  
     const normalizedCompany = company
@@ -51,18 +63,26 @@ function CompanyRegister() {
   const handleSendOtp = async () => {
     setEmailError("");
  
-    if (!firstName || !lastName || !companyName || !email || !mobile || !password || !confirmPassword) {
-      Swal.fire('Error', 'Please fill in all fields.', 'error');
+    if (
+      !firstName ||
+      !lastName ||
+      !companyName ||
+      !email ||
+      !mobile ||
+      !password ||
+      !confirmPassword
+    ) {
+      Swal.fire("Error", "Please fill in all fields.", "error");
       return;
     }
  
     if (password !== confirmPassword) {
-      Swal.fire('Error', 'Passwords do not match.', 'error');
+      Swal.fire("Error", "Passwords do not match.", "error");
       return;
     }
  
     if (!agreeTerms) {
-      Swal.fire('Error', 'You must accept Terms & Conditions.', 'error');
+      Swal.fire("Error", "You must accept Terms & Conditions.", "error");
       return;
     }
  
@@ -83,29 +103,31 @@ function CompanyRegister() {
       const res = await axios.post(`${API_BASE}/send-otp`, { email });
  
       if (res.data.success) {
-        setMessage('OTP has been sent to your registered company email.');
-        Swal.fire('OTP Sent', 'Please check your company email inbox.', 'success');
+        setMessage("OTP has been sent to your registered company email.");
+        Swal.fire(
+          "OTP Sent",
+          "Please check your company email inbox.",
+          "success",
+        );
         setOtpSent(true);
       } else {
-        Swal.fire('Error', 'Failed to send OTP. Try again.', 'error');
+        Swal.fire("Error", "Failed to send OTP. Try again.", "error");
       }
- 
     } catch (err) {
-      console.error('OTP send error:', err);
+      console.error("OTP send error:", err);
  
       if (err.response?.status === 409) {
         Swal.fire({
-          icon: 'error',
-          title: 'Already Registered',
-          text: 'Redirecting to login...',
+          icon: "error",
+          title: "Already Registered",
+          text: "Redirecting to login...",
           timer: 2000,
           showConfirmButton: false,
         });
-        setTimeout(() => navigate('/cl-zv9ng4q6b8'), 2000);
+        setTimeout(() => navigate("/cl-zv9ng4q6b8"), 2000);
       } else {
         Swal.fire("Server Error", "Could not send OTP.", "error");
       }
- 
     } finally {
       setLoading(false); // 🔥 STOP LOADING
     }
@@ -116,7 +138,7 @@ function CompanyRegister() {
   // ======================================================
   const handleVerifyOtp = async () => {
     if (!otp) {
-      Swal.fire('Error', 'Enter the OTP you received.', 'error');
+      Swal.fire("Error", "Enter the OTP you received.", "error");
       return;
     }
  
@@ -137,25 +159,25 @@ function CompanyRegister() {
         });
  
         Swal.fire({
-          title: '✅ Company Registered Successfully!',
-          text: 'Redirecting to Company Login...',
-          icon: 'success',
+          title: "✅ Company Registered Successfully!",
+          text: "Redirecting to Company Login...",
+          icon: "success",
           timer: 2000,
           showConfirmButton: false,
         });
  
         setTimeout(() => {
-          navigate('/cl-zv9ng4q6b8');
+          navigate("/cl-zv9ng4q6b8");
         }, 2000);
       } else {
-        Swal.fire('Error', 'Invalid or expired OTP.', 'error');
+        Swal.fire("Error", "Invalid or expired OTP.", "error");
       }
     } catch (err) {
-      console.error('Company registration error:', err);
+      console.error("Company registration error:", err);
       Swal.fire(
-        'Error',
-        err.response?.data?.error || 'Server error during registration.',
-        'error'
+        "Error",
+        err.response?.data?.error || "Server error during registration.",
+        "error",
       );
     }
   };
@@ -163,6 +185,34 @@ function CompanyRegister() {
   return (
     <>
       <div className="register-container">
+        <div className="hero-text">
+          <div className="hero-title">
+            <h1>Cloud360</h1>
+          </div>
+ 
+          <p>
+            Begin your journey with intelligent data
+            <br />
+            and smarter decisions.
+          </p>
+          <br />
+          <div className="icon-group">
+            <div className="icon-card">
+              <FaChartLine className="hero-icon" />
+              <span>Analytics</span>
+            </div>
+ 
+            <div className="icon-card">
+              <FaBrain className="hero-icon" />
+              <span>AI Engine</span>
+            </div>
+ 
+            <div className="icon-card">
+              <FaChartBar className="hero-icon" />
+              <span>Insights</span>
+            </div>
+          </div>
+        </div>
  
         <div className="register-page">
           <div className="register-box">
@@ -204,9 +254,7 @@ function CompanyRegister() {
                   />
  
                   {emailError && (
-                    <div className="input-tooltip">
-                      ⚠️ {emailError}
-                    </div>
+                    <div className="input-tooltip">⚠️ {emailError}</div>
                   )}
                 </div>
  
@@ -248,18 +296,22 @@ function CompanyRegister() {
                   className="register-btn"
                   disabled={loading}
                 >
-                  {loading ? 'Sending OTP...' : 'Send OTP'}
+                  {loading ? "Sending OTP..." : "Send OTP"}
                 </button>
  
                 {message && (
-                  <p style={{ color: 'gray', marginTop: '10px' }}>{message}</p>
+                  <p style={{ color: "gray", marginTop: "10px" }}>{message}</p>
                 )}
  
                 <p className="already-account">
                   Already have an account?{" "}
                   <span
-                    onClick={() => navigate('/cl-zv9ng4q6b8')}
-                    style={{ color: '#007bff', cursor: 'pointer', fontWeight: '600' }}
+                    onClick={() => navigate("/cl-zv9ng4q6b8")}
+                    style={{
+                      color: "#007bff",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                    }}
                   >
                     Login here
                   </span>
@@ -280,7 +332,7 @@ function CompanyRegister() {
                   Verify & Register Company
                 </button>
                 {message && (
-                  <p style={{ color: 'gray', marginTop: '10px' }}>{message}</p>
+                  <p style={{ color: "gray", marginTop: "10px" }}>{message}</p>
                 )}
               </div>
             )}
@@ -288,9 +340,11 @@ function CompanyRegister() {
         </div>
       </div>
  
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
  
 export default CompanyRegister;
+ 
+ 

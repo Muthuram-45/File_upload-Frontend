@@ -17,30 +17,30 @@
   top: 0;
   z-index: 1000;
 }
-
+ 
 /* ===== Logo + Title ===== */
 .brand-container {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
+ 
 .logo {
   height: 140px;
   /* Reduced specific height for cleaner look */
   width: 140px;
   object-fit: contain;
 }
-
+ 
 /* ===== 🔍 Search Bar ===== */
 .navbar-search.rectangular {
   position: relative;
   display: flex;
   align-items: center;
-
+ 
   height: 45px;
   width: 260px;
-
+ 
   padding-left: 42px;
   padding-right: 16px;
   background: #f9fafb;
@@ -50,7 +50,7 @@
    border-color: #c7d2fe;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
 }
-
+ 
 /* icon */
 .search-icon.inside {
   position: absolute;
@@ -59,7 +59,7 @@
   color: black;
   pointer-events: none;
 }
-
+ 
 /* input */
 .navbar-search.rectangular input {
   width: 80%;
@@ -72,11 +72,11 @@
   background: transparent;
   font-size: 14px;
 }
-
+ 
 .navbar-search.rectangular input::placeholder {
   color: #858990;
 }
-
+ 
 /* focus (single clean glow) */
 .navbar-search.rectangular:focus-within {
   background: #ffffff;
@@ -94,7 +94,7 @@
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
-
+ 
 /* animation */
 @keyframes spin {
   from {
@@ -104,8 +104,8 @@
     transform: rotate(360deg);
   }
 }
-
-
+ 
+ 
 /* ===============================
    👤 Profile + Dropdown
 ================================= */
@@ -114,18 +114,18 @@
   align-items: center;
   gap: 20px;
 }
-
+ 
 .profile-area {
   position: relative;
   cursor: pointer;
 }
-
+ 
 .profile-trigger {
   display: flex;
   align-items: center;
 }
-
-.profile-avatar {
+ 
+.profile-avatar1{
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -140,11 +140,11 @@
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
   transition: transform 0.2s;
 }
-
-.profile-trigger:hover .profile-avatar {
+ 
+.profile-trigger:hover .profile-avatar1 {
   transform: scale(1.05);
 }
-
+ 
 /* ===============================
    🌈 Dropdown Menu
 ================================= */
@@ -160,27 +160,27 @@
   border: 1px solid #f0f0f0;
   animation: slideDown 0.2s ease-out;
 }
-
+ 
 @keyframes slideDown {
   from {
     opacity: 0;
     transform: translateY(-10px);
   }
-
+ 
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
+ 
 .profile-header {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 20px;
 }
-
-.profile-avatar.large {
+ 
+.profile-avatar1.large {
   width: 56px;
   height: 56px;
   font-size: 24px;
@@ -188,26 +188,26 @@
   background: #e0e7ff;
   color: #2563eb;
 }
-
+ 
 .profile-header h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #1a2b49;
 }
-
+ 
 .profile-header p {
   margin: 4px 0 0;
   font-size: 13px;
   color: #64748b;
 }
-
+ 
 .dropdown-menu hr {
   border: none;
   border-top: 1px solid #f1f5f9;
   margin: 16px 0;
 }
-
+ 
 .time-display,
 .last-login {
   padding: 8px 12px;
@@ -217,7 +217,7 @@
   color: #64748b;
   margin-bottom: 8px;
 }
-
+ 
 .time-display span,
 .last-login span {
   display: block;
@@ -225,13 +225,13 @@
   font-weight: 500;
   margin-top: 2px;
 }
-
+ 
 .dropdown-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
+ 
 .dropdown-actions button {
   width: 100%;
   text-align: left;
@@ -248,44 +248,44 @@
   transition: all 0.2s;
   font-weight: 500;
 }
-
+ 
 .dropdown-actions button:hover {
   background: #f1f5f9;
   color: #2563eb;
 }
-
+ 
 .logout-btn {
   color: #ef4444 !important;
 }
-
+ 
 .logout-btn:hover {
   background: #fef2f2 !important;
   color: #dc2626 !important;
 }
-
+ 
 /* Responsive */
 @media (max-width: 768px) {
   .navbar {
     padding: 0 20px;
     height: 70px;
   }
-
+ 
   .brand-text {
     font-size: 20px;
   }
-
+ 
   .navbar-search-wrapper {
     display: none;
     /* Hide search on mobile for now or make it an icon trigger */
   }
 }
-
+ 
 /* Auth Buttons */
 .auth-buttons {
   display: flex;
   gap: 12px;
 }
-
+ 
 .nav-btn {
   padding: 8px 16px;
   border-radius: 6px;
@@ -294,19 +294,19 @@
   cursor: pointer;
   transition: all 0.2s;
 }
-
+ 
 .nav-btn.outline {
   background: transparent;
   border: 1px solid #2563eb;
   color: #2563eb;
 }
-
+ 
 .nav-btn.primary {
   background: #2563eb;
   border: 1px solid #2563eb;
   color: white;
 }
-
+ 
 /* NLP Modal Styles */
 .nlp-modal-backdrop {
   position: fixed;
@@ -320,7 +320,7 @@
   align-items: center;
   justify-content: center;
 }
-
+ 
 .nlp-modal {
   background: white;
   padding: 25px;
@@ -328,12 +328,12 @@
   width: 400px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
-
+ 
 .nlp-modal h3 {
   margin-top: 0;
   color: #1e293b;
 }
-
+ 
 .nlp-modal ul {
   background: #f8fafc;
   padding: 15px 25px;
@@ -341,13 +341,13 @@
   max-height: 150px;
   overflow-y: auto;
 }
-
+ 
 .modal-actions {
   display: flex;
   gap: 10px;
   margin-top: 20px;
 }
-
+ 
 .modal-actions button {
   flex: 1;
   padding: 10px;
@@ -357,8 +357,9 @@
   border-radius: 8px;
   cursor: pointer;
 }
-
+ 
 .modal-actions button.cancel {
   background: #e2e8f0;
   color: #475569;
 }
+ 

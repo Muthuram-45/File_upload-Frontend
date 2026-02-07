@@ -80,7 +80,7 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 9px 12px;
+  padding: 7px 12px;
   background: transparent;
   border: none;
   border-radius: 8px;
@@ -90,7 +90,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   font-family: var(--font-family);
 }
 
