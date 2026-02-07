@@ -27,13 +27,13 @@ function SettingsPage() {
  
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
  
-  // Redirect to login if no token
+  // 🔐 Redirect if no token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/l-gy5n8r4v2t");
   }, [navigate]);
  
-  // Load user info
+  // 👤 LOAD USER + EMAIL BASED ROLE CHECK
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem("user"));
     const googleUser = JSON.parse(localStorage.getItem("googleUserInfo"));
@@ -44,10 +44,19 @@ function SettingsPage() {
  
     if (companyUser) {
       activeUser = companyUser;
-      type = "company";
+      type = "manager"; // 🟥 Company = Manager
     } else if (localUser) {
       activeUser = localUser;
-      type = "user";
+ 
+      // 🔥 EMAIL BASED MANAGER CHECK
+      if (
+        localUser.email &&
+        localUser.email.toLowerCase().includes("manager@")
+      ) {
+        type = "manager";
+      } else {
+        type = "user";
+      }
     } else if (googleUser) {
       activeUser = googleUser;
       type = "google";
@@ -61,6 +70,7 @@ function SettingsPage() {
     setUser(activeUser);
     setLoginType(type);
  
+    // 🔄 Sync with backend
     if (activeUser?.email) {
       fetch(`http://localhost:5000/user/${activeUser.email}`)
         .then((res) => res.json())
@@ -70,8 +80,11 @@ function SettingsPage() {
             setUser(updatedUser);
  
             if (type === "google")
-              localStorage.setItem("googleUserInfo", JSON.stringify(updatedUser));
-            else if (type === "user")
+              localStorage.setItem(
+                "googleUserInfo",
+                JSON.stringify(updatedUser)
+              );
+            else if (type === "user" || type === "manager")
               localStorage.setItem("user", JSON.stringify(updatedUser));
             else if (type === "company")
               localStorage.setItem("company", JSON.stringify(updatedUser));
@@ -84,7 +97,7 @@ function SettingsPage() {
     }
   }, [navigate]);
  
-  // Close sidebar on outside click
+  // ❌ Close sidebar on outside click
   useEffect(() => {
     const handleClickOutside = () => {
       if (sidebarOpen) setSidebarOpen(false);
@@ -94,6 +107,7 @@ function SettingsPage() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, [sidebarOpen]);
  
+  // 🧾 PROFILE SECTION
   const renderProfile = () => {
     const companyName =
       user?.company_name ||
@@ -132,6 +146,7 @@ function SettingsPage() {
         </div>
  
         <div className="profile-info-grid">
+          {/* PERSONAL INFO */}
           <div className="info-card">
             <div className="info-card-header">
               <FaUserCircle className="info-icon" />
@@ -143,18 +158,29 @@ function SettingsPage() {
                 <span className="info-label">First Name</span>
                 <span className="info-value">{user?.firstName || "—"}</span>
               </div>
+ 
               <div className="info-row">
                 <span className="info-label">Last Name</span>
                 <span className="info-value">{user?.lastName || "—"}</span>
               </div>
+ 
               <div className="info-row">
                 <span className="info-label">Mobile Number</span>
                 <span className="info-value">{user?.mobile || "—"}</span>
               </div>
+ 
+              {/* ✅ COMPANY NAME INSIDE PERSONAL INFO */}
+              {companyName && (
+                <div className="info-row">
+                  <span className="info-label">Company Name</span>
+                  <span className="info-value">{companyName}</span>
+                </div>
+              )}
             </div>
           </div>
  
-          {companyName && (
+          {/* ORGANIZATION */}
+          {/* {companyName && (
             <div className="info-card">
               <div className="info-card-header">
                 <FaBuilding className="info-icon" />
@@ -168,8 +194,9 @@ function SettingsPage() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
  
+          {/* SECURITY */}
           <div className="info-card">
             <div className="info-card-header">
               <FaShieldAlt className="info-icon" />
@@ -179,10 +206,23 @@ function SettingsPage() {
             <div className="info-card-body">
               <div className="info-row">
                 <span className="info-label">Login Type</span>
-                <span className="info-value login-type-badge">
-                  {loginType || "—"}
+                <span
+                  className={`info-value login-type-badge ${
+                    loginType === "manager"
+                      ? "manager"
+                      : loginType === "google"
+                      ? "google"
+                      : "user"
+                  }`}
+                >
+                  {loginType === "manager"
+                    ? "Manager"
+                    : loginType === "google"
+                    ? "Google User"
+                    : "Normal User"}
                 </span>
               </div>
+ 
               <div className="info-row">
                 <span className="info-label">Account Status</span>
                 <span className="info-value status-active">Active</span>
@@ -221,11 +261,11 @@ function SettingsPage() {
   return (
     <>
       <div className="settings-page">
-        {/* HAMBURGER */}
+        {/* 🍔 HAMBURGER */}
         <div
           className="hamburger"
           onClick={(e) => {
-            e.stopPropagation(); // 🔥 FIX
+            e.stopPropagation();
             toggleSidebar();
           }}
         >
@@ -234,10 +274,10 @@ function SettingsPage() {
           <div className="bar"></div>
         </div>
  
-        {/* SIDEBAR */}
+        {/* 📂 SIDEBAR */}
         <aside
           className={`settings-sidebar ${sidebarOpen ? "open" : ""}`}
-          onClick={(e) => e.stopPropagation()} // 🔥 FIX
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="sidebar-header">
             <IoMdArrowRoundBack
@@ -307,5 +347,3 @@ function SettingsPage() {
 }
  
 export default SettingsPage;
- 
- 
