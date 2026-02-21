@@ -1,5 +1,5 @@
-/* 🌈 Page Background */
-/* 🌈 Container inside settings page */
+/* Page Background */
+/* Container inside settings page */
 .change-mobile-container {
   display: flex;
   justify-content: center;
@@ -12,7 +12,7 @@
   margin-top: -30px;
 }
  
-/* 🧾 Form Box */
+/* Form Box */
 .change-mobile-form {
   background: #fff;
   padding: 40px 45px;
@@ -25,10 +25,10 @@
 }
  
 .change-mobile-form:hover {
-  transform: translateY(-3px);
+  /* transform: translateY(-3px); */
 }
  
-/* 🏷️ Heading */
+/* Heading */
 .change-mobile-form h2 {
   color: #1976d2;
   font-size: 24px;
@@ -37,7 +37,7 @@
  font-weight: bold;
 }
  
-/* ✏️ Input Fields */
+/* Input Fields */
 .change-mobile-form input {
   width: 100%;
   padding: 12px 14px;
@@ -54,7 +54,7 @@
   box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
 }
  
-/* 🔘 Button */
+/* Button */
 .change-mobile-form button {
   width: 100%;
   padding: 12px;
@@ -102,5 +102,6 @@
     font-size: 15px;
   }
 }
+ 
  
  

@@ -1,8 +1,9 @@
 /* ================= MAIN CONTAINER ================= */
 .processed-container {
-  width: 100%;
-  padding: 15px 10px;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 15px 10px;
+    box-sizing: border-box;
+    background: #daebfa;
 }
  
 /* Header */
@@ -301,3 +302,4 @@ h2 {
 .chart-card {
   cursor: zoom-in;
 }
+ 

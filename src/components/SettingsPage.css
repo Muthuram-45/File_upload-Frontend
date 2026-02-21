@@ -59,7 +59,7 @@
  
 .hamburger:hover {
   box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
 }
  
 .hamburger .bar {
@@ -148,7 +148,7 @@
 .nav-button:hover {
   background: var(--gray-50);
   color: var(--primary-blue);
-  transform: translateX(4px);
+  /* transform: translateX(4px); */
 }
  
 .nav-button.active {
@@ -183,7 +183,7 @@
 .back-button:hover {
   background: var(--gray-200);
   color: var(--primary-black);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
 }
  
 /* ==================== MAIN CONTENT ==================== */
@@ -251,7 +251,7 @@
 .settings-content button:hover {
   background: #2563eb;
   box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
 }
  
 .loading-container {
@@ -380,7 +380,7 @@
  
 .info-card:hover {
   box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
+  /* transform: translateY(-4px); */
 }
  
 .info-card-header {
@@ -605,4 +605,5 @@
     display: none;
   }
 }
+ 
  

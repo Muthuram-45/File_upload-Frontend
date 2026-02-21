@@ -22,9 +22,13 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:5000/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ question: userMsg.text }),
       });
 
@@ -64,7 +68,7 @@ export default function Chatbot() {
               <div className="header-icon">
                 <RiRobot3Line size={18} />
               </div>
-              <span className="header-title">Cloud360 - AI Assistant</span>   
+              <span className="header-title">Cloud360 - AI Assistant</span>
             </div>
             <div className="header-controls">
               <div className="close-btn" onClick={toggleChat}>
@@ -91,7 +95,7 @@ export default function Chatbot() {
               </div>
             ))}
             {loading && <div className="bot-msg">Typing...</div>}
-            {/* Dummy suggestions as seen in image if user hasn't typed anything yet? 
+            {/* Dummy suggestions as seen in image if user hasn't typed anything yet?
                 User asked "without affecting any functionality", so I won't mock user messages unless asked.
                 I will stick to keeping functionality same: Show messages.
             */}
@@ -106,8 +110,8 @@ export default function Chatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               />
-              <button className="send-btn" style={{border:"none",borderRadius:"45px" ,background:"#1d4ed8",color:"white"}}onClick={sendMessage} disabled={loading}>
-                <FaArrowUp size={16}/>
+              <button className="send-btn" style={{ border: "none", borderRadius: "45px", background: "#1d4ed8", color: "white" }} onClick={sendMessage} disabled={loading}>
+                <FaArrowUp size={16} />
               </button>
             </div>
           </div>

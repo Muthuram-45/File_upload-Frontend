@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ChangeName from "./ChangeName";
 import ChangeMobile from "./ChangeMobile";
 import ChangePassword from "./ChangePassword";
+import DailyReport from "./DailyReport"; // ✅ ADDED
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Footer from "./Footer";
 import {
@@ -14,12 +15,14 @@ import {
   FaEnvelope,
   FaBuilding,
   FaShieldAlt,
+  FaFileAlt, // ✅ ADDED ICON
 } from "react-icons/fa";
 import "./SettingsPage.css";
  
 function SettingsPage() {
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState("profile");
+  const [searchParams] = useSearchParams();
+  const [activeSection, setActiveSection] = useState(searchParams.get("section") || "profile");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loginType, setLoginType] = useState("");
@@ -27,13 +30,16 @@ function SettingsPage() {
  
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
  
-  // 🔐 Redirect if no token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/l-gy5n8r4v2t");
   }, [navigate]);
  
-  // 👤 LOAD USER + EMAIL BASED ROLE CHECK
+  useEffect(() => {
+    const section = searchParams.get("section");
+    if (section) setActiveSection(section);
+  }, [searchParams]);
+ 
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem("user"));
     const googleUser = JSON.parse(localStorage.getItem("googleUserInfo"));
@@ -44,11 +50,9 @@ function SettingsPage() {
  
     if (companyUser) {
       activeUser = companyUser;
-      type = "manager"; // 🟥 Company = Manager
+      type = "manager";
     } else if (localUser) {
       activeUser = localUser;
- 
-      // 🔥 EMAIL BASED MANAGER CHECK
       if (
         localUser.email &&
         localUser.email.toLowerCase().includes("manager@")
@@ -70,7 +74,6 @@ function SettingsPage() {
     setUser(activeUser);
     setLoginType(type);
  
-    // 🔄 Sync with backend
     if (activeUser?.email) {
       fetch(`http://localhost:5000/user/${activeUser.email}`)
         .then((res) => res.json())
@@ -97,7 +100,6 @@ function SettingsPage() {
     }
   }, [navigate]);
  
-  // ❌ Close sidebar on outside click
   useEffect(() => {
     const handleClickOutside = () => {
       if (sidebarOpen) setSidebarOpen(false);
@@ -107,7 +109,6 @@ function SettingsPage() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, [sidebarOpen]);
  
-  // 🧾 PROFILE SECTION
   const renderProfile = () => {
     const companyName =
       user?.company_name ||
@@ -169,7 +170,6 @@ function SettingsPage() {
                 <span className="info-value">{user?.mobile || "—"}</span>
               </div>
  
-              {/* ✅ COMPANY NAME INSIDE PERSONAL INFO */}
               {companyName && (
                 <div className="info-row">
                   <span className="info-label">Company Name</span>
@@ -178,23 +178,6 @@ function SettingsPage() {
               )}
             </div>
           </div>
- 
-          {/* ORGANIZATION */}
-          {/* {companyName && (
-            <div className="info-card">
-              <div className="info-card-header">
-                <FaBuilding className="info-icon" />
-                <h3>Organization</h3>
-              </div>
- 
-              <div className="info-card-body">
-                <div className="info-row">
-                  <span className="info-label">Company Name</span>
-                  <span className="info-value">{companyName}</span>
-                </div>
-              </div>
-            </div>
-          )} */}
  
           {/* SECURITY */}
           <div className="info-card">
@@ -207,19 +190,18 @@ function SettingsPage() {
               <div className="info-row">
                 <span className="info-label">Login Type</span>
                 <span
-                  className={`info-value login-type-badge ${
-                    loginType === "manager"
+                  className={`info-value login-type-badge ${loginType === "manager"
                       ? "manager"
                       : loginType === "google"
-                      ? "google"
-                      : "user"
-                  }`}
+                        ? "google"
+                        : "user"
+                    }`}
                 >
                   {loginType === "manager"
                     ? "Manager"
                     : loginType === "google"
-                    ? "Google User"
-                    : "Normal User"}
+                      ? "Google User"
+                      : "Normal User"}
                 </span>
               </div>
  
@@ -233,6 +215,7 @@ function SettingsPage() {
       </div>
     );
   };
+ 
  
   const renderSection = () => {
     if (loading) {
@@ -253,6 +236,8 @@ function SettingsPage() {
         return <ChangeMobile />;
       case "password":
         return <ChangePassword />;
+      case "dailyReport":
+        return <DailyReport user={user} />;
       default:
         return <div className="settings-content">Select a section</div>;
     }
@@ -261,7 +246,6 @@ function SettingsPage() {
   return (
     <>
       <div className="settings-page">
-        {/* 🍔 HAMBURGER */}
         <div
           className="hamburger"
           onClick={(e) => {
@@ -274,7 +258,6 @@ function SettingsPage() {
           <div className="bar"></div>
         </div>
  
-        {/* 📂 SIDEBAR */}
         <aside
           className={`settings-sidebar ${sidebarOpen ? "open" : ""}`}
           onClick={(e) => e.stopPropagation()}
@@ -289,9 +272,8 @@ function SettingsPage() {
  
           <nav className="sidebar-nav">
             <button
-              className={`nav-button ${
-                activeSection === "profile" ? "active" : ""
-              }`}
+              className={`nav-button ${activeSection === "profile" ? "active" : ""
+                }`}
               onClick={() => setActiveSection("profile")}
             >
               <FaUserCircle className="icon" />
@@ -299,9 +281,8 @@ function SettingsPage() {
             </button>
  
             <button
-              className={`nav-button ${
-                activeSection === "name" ? "active" : ""
-              }`}
+              className={`nav-button ${activeSection === "name" ? "active" : ""
+                }`}
               onClick={() => setActiveSection("name")}
             >
               <FaUserEdit className="icon" />
@@ -309,9 +290,8 @@ function SettingsPage() {
             </button>
  
             <button
-              className={`nav-button ${
-                activeSection === "mobile" ? "active" : ""
-              }`}
+              className={`nav-button ${activeSection === "mobile" ? "active" : ""
+                }`}
               onClick={() => setActiveSection("mobile")}
             >
               <FaPhoneAlt className="icon" />
@@ -319,13 +299,22 @@ function SettingsPage() {
             </button>
  
             <button
-              className={`nav-button ${
-                activeSection === "password" ? "active" : ""
-              }`}
+              className={`nav-button ${activeSection === "password" ? "active" : ""
+                }`}
               onClick={() => setActiveSection("password")}
             >
               <FaLock className="icon" />
               <span>Change Password</span>
+            </button>
+ 
+            {/* ✅ DAILY REPORT BUTTON ADDED */}
+            <button
+              className={`nav-button ${activeSection === "dailyReport" ? "active" : ""
+                }`}
+              onClick={() => setActiveSection("dailyReport")}
+            >
+              <FaFileAlt className="icon" />
+              <span>Daily Report</span>
             </button>
           </nav>
  
@@ -347,3 +336,5 @@ function SettingsPage() {
 }
  
 export default SettingsPage;
+ 
+ 
