@@ -72,11 +72,12 @@ function App() {
             window.location.href = "/l-gy5n8r4v2t?error=account_inactive";
           }
         })
-        .catch((err) => console.error("Failed to refresh subscription:", err));
+        .catch((err) => console.error("Failed to refresh subscription:", err))
+        .finally(() => setLoading(false));
     } else {
       setUser(null);
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   if (loading) {
@@ -230,17 +231,29 @@ function NavbarWrapper({ user, setUser }) {
 
   useEffect(() => {
     if (user && user.status === 'EXPIRED') {
-      const allowedPaths = ["/subscription", "/l-gy5n8r4v2t", "/cl-zv9ng4q6b8"];
+      const allowedPaths = [
+        "/subscription", 
+        "/l-gy5n8r4v2t", 
+        "/cl-zv9ng4q6b8",
+        "/d-oxwilh9dy1", // Dashboard
+        "/settings",     // Settings & Profile
+        "/invite-redirect"
+      ];
+      
       if (!allowedPaths.includes(location.pathname)) {
         Swal.fire({
           title: "Subscription Expired",
-          text: "Your subscription has expired. Please renew to continue using the portal.",
+          text: "Your subscription has expired. Please renew to access this feature.",
           icon: "warning",
+          showCancelButton: true,
           confirmButtonText: "Go to Subscription",
+          cancelButtonText: "Close",
           allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
             navigate("/subscription");
+          } else {
+            navigate("/d-oxwilh9dy1"); // Send back to dashboard
           }
         });
       }

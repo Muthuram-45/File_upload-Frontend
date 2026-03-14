@@ -80,6 +80,10 @@ function CompanyLogin({ setUser }) {
         role: res.data.user.role, // manager / employee
         isCompany: true,
         viewOnly: false,
+        subscription_plan: res.data.user.subscription_plan || null,
+        subscription_expiry: res.data.user.subscription_expiry || null,
+        status: res.data.user.status || 'ACTIVE',
+        isSubscriptionActive: res.data.user.isSubscriptionActive,
       };
  
       localStorage.setItem("token", res.data.token);

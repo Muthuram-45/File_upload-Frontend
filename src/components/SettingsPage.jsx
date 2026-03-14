@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import ChangeName from "./ChangeName";
 import ChangeMobile from "./ChangeMobile";
 import ChangePassword from "./ChangePassword";
@@ -39,6 +40,24 @@ function SettingsPage() {
     const section = searchParams.get("section");
     if (section) setActiveSection(section);
   }, [searchParams]);
+
+  // 🔥 INTERCEPT RESTRICTED TABS FOR EXPIRED USERS
+  useEffect(() => {
+    if (user && user.status === 'EXPIRED' && activeSection === 'dailyReport') {
+      Swal.fire({
+        title: "Subscription Expired",
+        text: "Your subscription has expired. Please renew to access the Daily Report.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Go to Subscription",
+        cancelButtonText: "Close"
+      }).then((result) => {
+        if (result.isConfirmed) navigate("/subscription");
+      });
+      // Fallback to profile
+      setActiveSection("profile");
+    }
+  }, [user, activeSection, navigate]);
  
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem("user"));
@@ -115,99 +134,70 @@ function SettingsPage() {
       user?.companyName ||
       user?.company ||
       user?.organization ||
-      null;
- 
+      "";
+
     const getInitials = () => {
       const firstName = user?.firstName || user?.displayName || "U";
       const lastName = user?.lastName || "";
       return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
     };
- 
+
     return (
       <div className="settings-content profile-section">
         <div className="profile-header-card">
           <div className="profile-banner"></div>
- 
+
           <div className="profile-avatar-section">
             <div className="profile-avatar">
               <span className="avatar-initials">{getInitials()}</span>
             </div>
- 
+
             <div className="profile-header-info">
               <h2 className="profile-name">
                 {user?.firstName || user?.displayName || "User"}{" "}
                 {user?.lastName || ""}
               </h2>
               <p className="profile-email">
-                <FaEnvelope className="inline-icon" />
                 {user?.email || "—"}
+              </p>
+              <p className="profile-company">
+                {companyName}
               </p>
             </div>
           </div>
         </div>
- 
+
         <div className="profile-info-grid">
           {/* PERSONAL INFO */}
           <div className="info-card">
             <div className="info-card-header">
-              <FaUserCircle className="info-icon" />
               <h3>Personal Information</h3>
             </div>
- 
+
             <div className="info-card-body">
               <div className="info-row">
                 <span className="info-label">First Name</span>
                 <span className="info-value">{user?.firstName || "—"}</span>
               </div>
- 
+
               <div className="info-row">
                 <span className="info-label">Last Name</span>
                 <span className="info-value">{user?.lastName || "—"}</span>
               </div>
- 
+
               <div className="info-row">
-                <span className="info-label">Mobile Number</span>
+                <span className="info-label">Email</span>
+                <span className="info-value">{user?.email || "—"}</span>
+              </div>
+
+              <div className="info-row">
+                <span className="info-label">Mobile</span>
                 <span className="info-value">{user?.mobile || "—"}</span>
               </div>
- 
-              {companyName && (
-                <div className="info-row">
-                  <span className="info-label">Company Name</span>
-                  <span className="info-value">{companyName}</span>
-                </div>
-              )}
-            </div>
-          </div>
- 
-          {/* SECURITY */}
-          <div className="info-card">
-            <div className="info-card-header">
-              <FaShieldAlt className="info-icon" />
-              <h3>Account Security</h3>
-            </div>
- 
-            <div className="info-card-body">
+
               <div className="info-row">
-                <span className="info-label">Login Type</span>
-                <span
-                  className={`info-value login-type-badge ${loginType === "manager"
-                      ? "manager"
-                      : loginType === "google"
-                        ? "google"
-                        : "user"
-                    }`}
-                >
-                  {loginType === "manager"
-                    ? "Manager"
-                    : loginType === "google"
-                      ? "Google User"
-                      : "Normal User"}
-                </span>
-              </div>
- 
-              <div className="info-row">
-                <span className="info-label">Account Status</span>
-                <span className="info-value status-active">Active</span>
+                <span className="info-label">Company</span>
+                <span className="info-value">{companyName || "—"}</span>
               </div>
             </div>
           </div>

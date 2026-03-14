@@ -423,7 +423,7 @@ function Dashboard() {
         </main>
       </div>
  
-      <Chatbot />
+      <Chatbot user={user} />
       <Footer />
  
       {showInvite && isManager && (

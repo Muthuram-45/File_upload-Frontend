@@ -5,15 +5,33 @@ import { IoMdClose, IoMdExpand } from "react-icons/io";
 import { RiRobot3Line } from "react-icons/ri";
 import { GrCircleQuestion } from "react-icons/gr";
 import "./Chatbot.css";
+import Swal from "sweetalert2";
 
-export default function Chatbot() {
+export default function Chatbot({ user }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const toggleChat = () => setOpen(!open);
+  const toggleChat = () => {
+    if (user && user.status === 'EXPIRED') {
+      Swal.fire({
+        title: "Subscription Expired",
+        text: "Your subscription has expired. Please renew to access the Chatbot.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Go to Subscription",
+        cancelButtonText: "Close"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/subscription");
+        }
+      });
+      return;
+    }
+    setOpen(!open);
+  };
 
   async function sendMessage() {
     if (!input.trim()) return;

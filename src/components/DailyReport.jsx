@@ -78,9 +78,13 @@ function DailyReport({ user }) {
     const [hour, minute] = time.split(":");
     try {
       setLoading(true);
+      const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:4000/api/report-time", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           email: user.email,
           hour: Number(hour),
@@ -94,8 +98,7 @@ function DailyReport({ user }) {
         setSavedTimezone(timezone);
         setMessage("success");
       } else {
-        const errData = await res.json();
-        if (errData.subscriptionExpired) {
+        if (data.subscriptionExpired) {
             alert("💳 Subscription Expired. Redirecting to subscription page...");
             navigate("/subscription");
         }
