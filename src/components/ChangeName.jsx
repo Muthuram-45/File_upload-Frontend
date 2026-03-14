@@ -41,7 +41,7 @@ function ChangeName() {
     e.preventDefault();
  
     try {
-      const res = await fetch('http://localhost:5000/change-name', {
+      const res = await fetch('http://localhost:4000/change-name', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, firstName, lastName }),

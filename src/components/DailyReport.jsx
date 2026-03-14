@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./DailyReport.css";
 
 function DailyReport({ user }) {
+  const navigate = useNavigate();
   // Initialize with props if available
   const getInitialTime = () => {
     if (user?.report_hour !== undefined && user?.report_hour !== null) {
@@ -44,7 +46,7 @@ function DailyReport({ user }) {
     const fetchSavedTime = async () => {
       if (!user?.email) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/report-time/${encodeURIComponent(user.email)}`);
+        const res = await fetch(`http://localhost:4000/api/report-time/${encodeURIComponent(user.email)}`);
         const data = await res.json();
         if (data.success) {
           if (data.hour !== null && data.hour !== undefined) {
@@ -76,7 +78,7 @@ function DailyReport({ user }) {
     const [hour, minute] = time.split(":");
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/report-time", {
+      const res = await fetch("http://localhost:4000/api/report-time", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -92,6 +94,11 @@ function DailyReport({ user }) {
         setSavedTimezone(timezone);
         setMessage("success");
       } else {
+        const errData = await res.json();
+        if (errData.subscriptionExpired) {
+            alert("💳 Subscription Expired. Redirecting to subscription page...");
+            navigate("/subscription");
+        }
         setMessage("error");
       }
     } catch (err) {

@@ -73,7 +73,7 @@ function CompanyFiles() {
 
     const fetchFiles = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/files", {
+        const res = await axios.get("http://localhost:4000/files", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

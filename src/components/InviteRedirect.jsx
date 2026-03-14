@@ -13,7 +13,7 @@ function InviteRedirect() {
     }
 
     axios
-      .get(`http://localhost:5000/verify-invite?token=${token}`)
+      .get(`http://localhost:4000/verify-invite?token=${token}`)
       .then((res) => {
         // =====================
         // VIEW ACCESS

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaArrowUp } from "react-icons/fa6";
 import { IoMdClose, IoMdExpand } from "react-icons/io";
 import { RiRobot3Line } from "react-icons/ri";
@@ -6,6 +7,7 @@ import { GrCircleQuestion } from "react-icons/gr";
 import "./Chatbot.css";
 
 export default function Chatbot() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -23,7 +25,7 @@ export default function Chatbot() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/chat", {
+      const res = await fetch("http://localhost:4000/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,6 +35,13 @@ export default function Chatbot() {
       });
 
       if (!res.ok) {
+        const errData = await res.json();
+        if (errData.subscriptionExpired) {
+            setMessages((prev) => [...prev, { role: "bot", text: "💳 Subscription expired. Please activate a new plan." }]);
+            setTimeout(() => navigate("/subscription"), 2000);
+            setLoading(false);
+            return;
+        }
         throw new Error("Server error: " + res.status);
       }
 

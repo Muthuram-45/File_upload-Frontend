@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { auth } from "./components/firebase";
 import Register from "./components/Register";
@@ -26,6 +28,7 @@ import ChartsView from "./components/ChartsView";
 import InviteRedirect from "./components/InviteRedirect";
 import "./app.css";
 import NLPResults from "./components/NLPResults";
+import Subscription from "./components/Subscription";
 function App() {
   // 🔥 RESTORE USER IMMEDIATELY
   const [user, setUser] = useState(() => {
@@ -43,7 +46,33 @@ function App() {
     const savedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
     if (savedUser && token) {
-      setUser(JSON.parse(savedUser));
+      const userObj = JSON.parse(savedUser);
+      setUser(userObj);
+
+      // 🔥 Fetch latest subscription status from backend
+      fetch("http://localhost:4000/api/subscription-status", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            const updatedUser = { 
+              ...userObj, 
+              subscription_plan: data.plan,
+              subscription_expiry: data.expiry,
+              isSubscriptionActive: data.isActive,
+              status: data.status
+            };
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+          } else if (data.accountInactive) {
+            // 🚫 Auto logout if account is deactivated or expired in admin
+            localStorage.clear();
+            setUser(null);
+            window.location.href = "/l-gy5n8r4v2t?error=account_inactive";
+          }
+        })
+        .catch((err) => console.error("Failed to refresh subscription:", err));
     } else {
       setUser(null);
     }
@@ -57,40 +86,7 @@ function App() {
 </div>
     );
   }
-  // ============================
-  // PROTECTED ROUTE
-  // ============================
-  const ProtectedRoute = ({ children }) => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (!token || !storedUser) {
-      return <Navigate to="/l-gy5n8r4v2t" replace />;
-    }
-    return children;
-  };
-  const PublicRoute = ({ children }) => {
-    if (user) {
-      return <Navigate to="/d-oxwilh9dy1" replace />;
-    }
-    return children;
-  };
- 
-  function NavbarWrapper({ user, setUser }) {
-  const location = useLocation();
- 
-  const hideNavbarRoutes = [
-    "/l-gy5n8r4v2t",
-    "/r-ya7w1p9s35",
-    "/cl-zv9ng4q6b8",
-    "/cr-h2k8j5d1f5",
-  ];
- 
-  if (hideNavbarRoutes.includes(location.pathname)) {
-    return null;
-  }
- 
-  return <Navbar user={user} setUser={setUser} />;
-}
+
  
  
   return (
@@ -111,17 +107,17 @@ function App() {
 <Route
             path="/l-gy5n8r4v2t"
             element={
-<PublicRoute>
-<Login setUser={setUser} />
-</PublicRoute>
+              <PublicRoute user={user}>
+                <Login setUser={setUser} />
+              </PublicRoute>
             }
           />
-<Route
+          <Route
             path="/r-ya7w1p9s35"
             element={
-<PublicRoute>
-<Register setUser={setUser} />
-</PublicRoute>
+              <PublicRoute user={user}>
+                <Register setUser={setUser} />
+              </PublicRoute>
             }
           />
 
@@ -185,15 +181,22 @@ function App() {
           {/* OTHER */}
 <Route path="/invite-redirect" element={<InviteRedirect />} />
 <Route path="/charts-view" element={<ChartsView />} />
-<Route path="/nlp-results" element={<NLPResults />} />
 <Route
-          path="/nlp-results"
-          element={
-<ProtectedRoute>
-<NLPResults />
-</ProtectedRoute>
-          }
-          />
+  path="/subscription"
+  element={
+    <ProtectedRoute>
+      <Subscription />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/nlp-results"
+  element={
+    <ProtectedRoute>
+      <NLPResults />
+    </ProtectedRoute>
+  }
+/>
 <Route path="*" element={<Navigate to="/" replace />} />
 </Routes>
 </div>
@@ -201,3 +204,59 @@ function App() {
   );
 }
 export default App;
+
+// ============================
+// UTILITY COMPONENTS
+// ============================
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const storedUser = localStorage.getItem("user");
+  if (!token || !storedUser) {
+    return <Navigate to="/l-gy5n8r4v2t" replace />;
+  }
+  return children;
+};
+
+const PublicRoute = ({ children, user }) => {
+  if (user) {
+    return <Navigate to="/d-oxwilh9dy1" replace />;
+  }
+  return children;
+};
+
+function NavbarWrapper({ user, setUser }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.status === 'EXPIRED') {
+      const allowedPaths = ["/subscription", "/l-gy5n8r4v2t", "/cl-zv9ng4q6b8"];
+      if (!allowedPaths.includes(location.pathname)) {
+        Swal.fire({
+          title: "Subscription Expired",
+          text: "Your subscription has expired. Please renew to continue using the portal.",
+          icon: "warning",
+          confirmButtonText: "Go to Subscription",
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/subscription");
+          }
+        });
+      }
+    }
+  }, [user, location.pathname, navigate]);
+
+  const hideNavbarRoutes = [
+    "/l-gy5n8r4v2t",
+    "/r-ya7w1p9s35",
+    "/cl-zv9ng4q6b8",
+    "/cr-h2k8j5d1f5",
+  ];
+
+  if (hideNavbarRoutes.includes(location.pathname)) {
+    return null;
+  }
+
+  return <Navbar user={user} setUser={setUser} />;
+}

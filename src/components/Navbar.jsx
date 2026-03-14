@@ -4,11 +4,10 @@ import { FiSettings, FiLogOut } from "react-icons/fi";
 import logo from "../assets/logo.png";
 import axios from "axios";
 import InviteEmployee from "./InviteEmployee";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaSearch, FaCreditCard } from "react-icons/fa";
 import "./Navbar.css";
-import { FaSearch } from "react-icons/fa";
  
-const API_BASE = "http://localhost:5000";
+const API_BASE = "http://localhost:4000";
  
 /* =========================================================
    ✅ HOOK INSIDE SAME FILE
@@ -92,7 +91,7 @@ function useUserTimeAndLogin({ user, isFullUser }) {
  
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:5000/user/${user.email}`, {
+        const res = await axios.get(`http://localhost:4000/user/${user.email}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
  
@@ -164,6 +163,15 @@ function Navbar({ user, setUser }) {
  
       const data = await res.json();
  
+      if (!res.ok) {
+        if (data.subscriptionExpired) {
+          setNlpError("💳 Subscription expired. Please activate a plan.");
+          setTimeout(() => navigate("/subscription"), 2000);
+          return;
+        }
+        throw new Error(data.error || "Failed to process NLP query");
+      }
+ 
       if (data.needsUserChoice) {
         setPendingQuestion(questionToAsk);
         setAvailableTables(data.datasets || []);
@@ -180,7 +188,7 @@ function Navbar({ user, setUser }) {
       setNlpQuestion("");
     } catch (err) {
       console.log(err);
-      setNlpError("Failed to process NLP query");
+      if (!nlpError) setNlpError("Failed to process NLP query");
     } finally {
       setNlpLoading(false);
     }
@@ -265,11 +273,17 @@ function Navbar({ user, setUser }) {
  
         <div className="navbar-right">
           {user && localStorage.getItem("token") && (
-            <div className="navbar-search-wrapper compact">
-              <div className="navbar-search rectangular">
-                <FaSearch className="search-icon inside" />
- 
-                <input
+            <>
+              {/* STATUS BADGE IN NAVBAR */}
+              <div className="navbar-status-badge" style={{ backgroundColor: user.isSubscriptionActive ? '#22c55e' : '#ef4444' }}>
+                  {user.isSubscriptionActive ? 'ACTIVE' : 'EXPIRED'}
+              </div>
+
+              <div className="navbar-search-wrapper compact">
+                <div className="navbar-search rectangular">
+                  <FaSearch className="search-icon inside" />
+  
+                  <input
                   type="text"
                   placeholder="Ask anything about your data"
                   value={nlpQuestion}
@@ -285,6 +299,7 @@ function Navbar({ user, setUser }) {
                 {nlpLoading && <span className="search-loader"></span>}
               </div>
             </div>
+            </>
           )}
  
           {/* 👤 PROFILE */}
@@ -344,6 +359,16 @@ function Navbar({ user, setUser }) {
                       </button>
                     )}
  
+                    <button
+                      className="settings-btn"
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        navigate("/subscription");
+                      }}
+                    >
+                      <FaCreditCard /> Subscription
+                    </button>
+
                     <button
                       className="settings-btn"
                       onClick={handleSettingsClick}

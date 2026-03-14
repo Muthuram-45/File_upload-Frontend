@@ -13,7 +13,7 @@ function OtpVerify() {
     if (!email) return alert('Session expired. Please register again.');
 
     try {
-      const res = await axios.post('http://localhost:5000/verify-otp', { email, otp });
+      const res = await axios.post('http://localhost:4000/verify-otp', { email, otp });
       alert(res.data.message);
       localStorage.removeItem('email');
       navigate('/login');

@@ -100,7 +100,7 @@ function NLPResults() {
         .map((ref) => ref?.getPdfBlock())
         .filter(Boolean);
 
-      const res = await fetch("http://localhost:5000/nlp/send-pdf", {
+      const res = await fetch("http://localhost:4000/nlp/send-pdf", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

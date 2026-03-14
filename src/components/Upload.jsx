@@ -126,7 +126,7 @@ function Upload() {
       setUploadProgress(0);
 
       const res = await axios.post(
-        "http://localhost:5000/upload",
+        "http://localhost:4000/upload",
         formData,
         {
           headers: {
@@ -154,7 +154,12 @@ function Upload() {
 
     } catch (err) {
       console.error("Upload Error:", err);
-      showPopup(err.response?.data?.error || "❌ Upload failed", "error");
+      if (err.response?.data?.subscriptionExpired) {
+          showPopup("💳 Subscription Expired.\nPlease activate a plan to upload files.", "error");
+          setTimeout(() => navigate("/subscription"), 2500);
+      } else {
+          showPopup(err.response?.data?.error || "❌ Upload failed", "error");
+      }
       setUploadProgress(0);
     }
   };

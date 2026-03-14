@@ -14,6 +14,20 @@ function CompanyLogin({ setUser }) {
   const [loading, setLoading] = useState(false);
  
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") === "account_inactive") {
+      Swal.fire({
+        title: "Account Inactive",
+        text: "Your company account has been deactivated or your subscription has expired. Please contact support.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+      });
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
  
   // =========================
   // HANDLE COMPANY LOGIN
@@ -28,7 +42,7 @@ function CompanyLogin({ setUser }) {
       setLoading(true);
  
       // ❌ DO NOT SEND company_name
-      const res = await axios.post("http://localhost:5000/company-login", {
+      const res = await axios.post("http://localhost:4000/company-login", {
         email: email.trim().toLowerCase(),
         password: password.trim(),
       });

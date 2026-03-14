@@ -79,7 +79,7 @@ function Register({ setUser }) {
       setLoading(true);
  
       const res = await axios.post(
-        "http://localhost:5000/send-otp",
+        "http://localhost:4000/send-otp",
         { email: trimmedEmail },
         { headers: { "Content-Type": "application/json" } },
       );
@@ -130,14 +130,14 @@ function Register({ setUser }) {
       const trimmedOtp = otp.trim();
  
       const verifyRes = await axios.post(
-        "http://localhost:5000/verify-otp",
+        "http://localhost:4000/verify-otp",
         { email: trimmedEmail, otp: trimmedOtp },
         { headers: { "Content-Type": "application/json" } },
       );
  
       if (verifyRes.data.success) {
         const registerRes = await axios.post(
-          "http://localhost:5000/register",
+          "http://localhost:4000/register",
           { firstName, lastName, email: trimmedEmail, mobile, password },
           { headers: { "Content-Type": "application/json" } },
         );
@@ -180,7 +180,7 @@ function Register({ setUser }) {
       const user = result.user;
       const firebaseToken = await user.getIdToken();
  
-      const res = await axios.post("http://localhost:5000/google-login", {
+      const res = await axios.post("http://localhost:4000/google-login", {
         token: firebaseToken,
       });
  

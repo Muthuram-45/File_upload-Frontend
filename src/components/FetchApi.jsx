@@ -24,7 +24,7 @@ function ApiFetcher() {
   });
 
   const navigate = useNavigate();
-  const API_BASE_URL = "http://localhost:5000";
+  const API_BASE_URL = "http://localhost:4000";
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
@@ -89,6 +89,9 @@ function ApiFetcher() {
       if (err.response?.status === 401) {
         setShowToken(true);
         showPopup("🔐 Private API detected. Enter API token.", "error");
+      } else if (err.response?.data?.subscriptionExpired) {
+        showPopup("💳 Subscription Expired. Please activate a plan.", "error");
+        setTimeout(() => navigate("/subscription"), 2500);
       } else {
         showPopup("❌ Failed to fetch API", "error");
       }
@@ -135,6 +138,9 @@ function ApiFetcher() {
         showPopup("❌ File name already exists", "error");
       } else if (err.response?.status === 401) {
         showPopup("🔐 Invalid API token", "error");
+      } else if (err.response?.data?.subscriptionExpired) {
+        showPopup("💳 Subscription Expired. Please activate a plan.", "error");
+        setTimeout(() => navigate("/subscription"), 2500);
       } else {
         showPopup("❌ Save failed", "error");
       }

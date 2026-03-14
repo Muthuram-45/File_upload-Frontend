@@ -75,7 +75,7 @@ function SettingsPage() {
     setLoginType(type);
  
     if (activeUser?.email) {
-      fetch(`http://localhost:5000/user/${activeUser.email}`)
+      fetch(`http://localhost:4000/user/${activeUser.email}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success && data.user) {

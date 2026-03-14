@@ -31,7 +31,7 @@ function ProcessedView() {
       try {
         const requests = folder.tables.map((tableName) =>
           axios
-            .get(`http://localhost:5000/processed-table/${tableName}`, {
+            .get(`http://localhost:4000/processed-table/${tableName}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
