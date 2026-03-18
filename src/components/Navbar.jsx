@@ -4,7 +4,7 @@ import { FiSettings, FiLogOut } from "react-icons/fi";
 import logo from "../assets/logo.png";
 import axios from "axios";
 import InviteEmployee from "./InviteEmployee";
-import { FaUsers, FaSearch, FaCreditCard } from "react-icons/fa";
+import { FaUsers, FaSearch, FaCreditCard, FaLifeRing } from "react-icons/fa";
 import "./Navbar.css";
  
 const API_BASE = "http://localhost:4000";
@@ -367,6 +367,16 @@ function Navbar({ user, setUser }) {
                       }}
                     >
                       <FaCreditCard /> Subscription
+                    </button>
+
+                    <button
+                      className="settings-btn"
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        navigate("/support");
+                      }}
+                    >
+                      <FaLifeRing /> Support
                     </button>
 
                     <button

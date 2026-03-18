@@ -299,24 +299,31 @@
     justify-content: center;
 }
 
-.plan-footer .learn-more {
+.learn-more-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     gap: 0.5rem;
-    background: #334155;
+    background: var(--plan-text);
     color: white;
     padding: 0.75rem;
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    border: none;
+    transition: all 0.2s ease;
 }
 
-.plan-footer .learn-more:hover {
-    background: #1e293b;
+.learn-more-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.learn-more-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .sub-loader {

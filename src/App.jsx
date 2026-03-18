@@ -29,6 +29,7 @@ import InviteRedirect from "./components/InviteRedirect";
 import "./app.css";
 import NLPResults from "./components/NLPResults";
 import Subscription from "./components/Subscription";
+import Support from "./components/Support";
 function App() {
   // 🔥 RESTORE USER IMMEDIATELY
   const [user, setUser] = useState(() => {
@@ -195,6 +196,14 @@ function App() {
   element={
     <ProtectedRoute>
       <NLPResults />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/support"
+  element={
+    <ProtectedRoute>
+      <Support />
     </ProtectedRoute>
   }
 />

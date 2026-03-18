@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Subscription.css';
 import { FaCheckCircle, FaLock, FaCalendarAlt, FaKey, FaArrowRight, FaRegIdCard, FaHistory, FaHourglassHalf, FaGem } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 const API_BASE = "http://localhost:4000";
 
@@ -13,12 +14,42 @@ const Subscription = () => {
     const [message, setMessage] = useState({ type: '', text: '' });
 
     const plans = [
-        { name: 'Trial', price: '0', days: '3 Days', color: '#fef9c3', border: '#fde68a', text: '#92400e', desc: 'Free evaluation period', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
+        { name: 'Trial', price: '0', days: '7 Days', color: '#fef9c3', border: '#fde68a', text: '#92400e', desc: 'Free evaluation period', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
         { name: '1 Month', price: '29', days: '30 Days', color: '#ede9fe', border: '#c4b5fd', text: '#5b21b6', desc: 'Short-term access', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
-        { name: '3 Months', price: '79', days: '90 Days', color: '#dbeafe', border: '#93c5fd', text: '#1e40af', desc: 'Quarterly subscription', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
-        { name: '6 Months', price: '149', days: '180 Days', color: '#d1fae5', border: '#6ee7b7', text: '#065f46', desc: 'Semi-annual discount', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
         { name: '1 Year', price: '249', days: '365 Days', color: '#fce7f3', border: '#f9a8d4', text: '#9d174d', desc: 'Ultimate value plan', features: ['Best Value (Save 40%)', 'All Features Unlocked', 'Dedicated Manager', 'Early Beta Access'] }
     ];
+
+    const handleGetKey = async (plan) => {
+        try {
+            setActionLoading(true);
+            setMessage({ type: '', text: '' });
+            const token = localStorage.getItem('token');
+            const res = await axios.post(`${API_BASE}/api/subscription-request`, 
+                { plan: plan.name },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: res.data.message || 'Request sent to admin successfully!',
+                confirmButtonColor: '#2563eb',
+                timer: 3000,
+                timerProgressBar: true
+            });
+
+        } catch (err) {
+            console.error('Subscription request failed', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: err.response?.data?.error || 'Failed to send request',
+                confirmButtonColor: '#2563eb'
+            });
+        } finally {
+            setActionLoading(false);
+        }
+    };
 
     const fetchStatus = async () => {
         try {
@@ -154,7 +185,9 @@ const Subscription = () => {
                                 ))}
                             </ul>
                             <div className="plan-footer">
-                                <span className="learn-more">Get Key <FaArrowRight /></span>
+                                <button className="learn-more-btn" onClick={() => handleGetKey(plan)} disabled={actionLoading}>
+                                    {actionLoading ? 'Processing...' : 'Get Key'} <FaArrowRight />
+                                </button>
                             </div>
                         </div>
                     ))}
