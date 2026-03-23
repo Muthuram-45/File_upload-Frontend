@@ -228,9 +228,9 @@ const Support = () => {
                             {selectedTicket.admin_response && (
                                 <div className="detail-section response-section">
                                     <label>LATEST STATUS UPDATE</label>
-                                    <div className="response-box">
-                                        {selectedTicket.admin_response}
-                                    </div>
+                                    <p className="response-box">
+                                        {selectedTicket.admin_response.trim()}
+                                    </p>
                                 </div>
                             )}
 
