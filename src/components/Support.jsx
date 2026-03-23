@@ -127,7 +127,6 @@ const Support = () => {
                                 <select name="category" value={formData.category} onChange={handleInputChange}>
                                     <option>General Inquiry</option>
                                     <option>Technical Issue</option>
-                                    <option>Billing</option>
                                     <option>Feature Request</option>
                                 </select>
                             </div>
