@@ -5,6 +5,8 @@ import logo from "../assets/logo.png";
 import axios from "axios";
 import InviteEmployee from "./InviteEmployee";
 import { FaUsers, FaSearch, FaCreditCard, FaLifeRing } from "react-icons/fa";
+import { FaRegStarHalfStroke } from "react-icons/fa6";
+// import { IoStar } from "react-icons/io5";
 import "./Navbar.css";
  
 const API_BASE = "http://localhost:4000";
@@ -275,13 +277,25 @@ function Navbar({ user, setUser }) {
           {user && localStorage.getItem("token") && (
             <>
               {/* STATUS BADGE IN NAVBAR */}
-              <div className="navbar-status-badge" style={{ backgroundColor: user.isSubscriptionActive ? '#22c55e' : '#ef4444' }}>
-                  {user.isSubscriptionActive ? 'ACTIVE' : 'EXPIRED'}
+              <div 
+                className="navbar-status-badge" 
+                onClick={() => navigate("/subscription")}
+                style={{ 
+                  backgroundColor: user.subscription_plan?.toLowerCase().includes('trial') ? '#94a3b8' : (user.isSubscriptionActive ? '#22c55e' : '#ef4444') 
+                }}
+              >
+                  {user.subscription_plan?.toLowerCase() === 'trial' ? 'Trial' : (
+                    user.isSubscriptionActive ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        {user.subscription_plan?.toLowerCase().includes('month') && <FaRegStarHalfStroke style={{ color: '#FFD700', fontSize: '1.1rem' }} />}
+                        {user.subscription_plan?.toLowerCase().includes('year') && <FaRegStarHalfStroke style={{ color: '#ec4899', fontSize: '1.2rem' }} />}
+                        ACTIVE
+                      </div>
+                    ) : 'EXPIRED'
+                  )}
               </div>
-
-              <div className="navbar-search-wrapper compact">
-                <div className="navbar-search rectangular">
-                  <FaSearch className="search-icon inside" />
+              <div className="navbar-search">
+                <FaSearch className="search-icon" />
   
                   <input
                   type="text"
@@ -298,7 +312,6 @@ function Navbar({ user, setUser }) {
  
                 {nlpLoading && <span className="search-loader"></span>}
               </div>
-            </div>
             </>
           )}
  

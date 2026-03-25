@@ -18,8 +18,17 @@ const API_BASE = "http://localhost:4000";
 function Dashboard() {
   const navigate = useNavigate();
  
-  const [user, setUser] = useState(null);
-  const [stats, setStats] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user"));
+    } catch {
+      return null;
+    }
+  });
+  const [stats, setStats] = useState({
+    me: { uploadedFiles: 0, uploadedApi: 0, processedFiles: 0 },
+    company: null
+  });
   const [showInvite, setShowInvite] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
  
@@ -101,15 +110,9 @@ function Dashboard() {
       .catch(() => setPendingEmployees([]));
   }, [user]);
  
-  // ======================================================
-  // 4️⃣ LOADING STATE
-  // ======================================================
-  if (!user || !stats) {
-    return (
-      <div className="dashboard-loading">
-        <h2>Loading...</h2>
-      </div>
-    );
+  // 4️⃣ REDIRECT IF NO USER
+  if (!user) {
+    return null;
   }
  
   const isManager = user.role === "manager";

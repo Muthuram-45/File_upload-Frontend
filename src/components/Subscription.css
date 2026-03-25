@@ -1,354 +1,636 @@
+/* Subscription.css - Minimalist & Premium */
+:root {
+  --sub-bg: #fdfdfd;
+  --sub-accent: #2563eb;
+  --sub-accent-soft: rgba(37, 99, 235, 0.05);
+  --sub-text-dark: #0f172a;
+  --sub-text-muted: #64748b;
+  --sub-border: #e2e8f0;
+  --sub-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --sub-shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  --sub-silver: #94a3b8;
+  --sub-silver-soft: rgba(148, 163, 184, 0.15);
+  --sub-gold: #FFD700;
+  --sub-gold-soft: rgba(255, 215, 0, 0.08);
+  --sub-diamond: #ec4899;
+  --sub-diamond-soft: rgba(236, 72, 153, 0.1);
+}
+
 .subscription-container {
-    padding: 1rem;
-    min-height: calc(100vh - 80px); /* Adjust based on your header */
-    background: #f8fafc; /* Light gray background */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    color: #1e293b; /* Dark text for light theme */
-    font-family: 'Inter', sans-serif;
+  padding: 16px 24px;
+  height: calc(100vh - 80px);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--sub-bg);
+  display: flex;
+  justify-content: center;
+  font-family: 'Inter', -apple-system, sans-serif;
+  box-sizing: border-box;
+}
+
+.subscription-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.subscription-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.subscription-container::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.3);
+  border-radius: 10px;
+}
+
+.subscription-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.5);
 }
 
 .subscription-glass {
-    /* Removing the dark glass effect, using a cleaner aesthetic */
-    padding: 1rem;
-    width: 100%;
+  width: 100%;
+  max-width: 1100px;
 }
 
 .sub-header {
-    text-align: center;
-    margin-bottom: 1rem;
+  text-align: center;
+  margin-bottom: 24px;
 }
 
 .sub-header h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-bottom: 0.25rem;
-    color: #0f172a;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--sub-text-dark);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
 }
 
 .sub-header p {
-    color: #64748b;
-    font-size: 1rem;
+  font-size: 1.125rem;
+  color: var(--sub-text-muted);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-/* Status Banner */
+/* Status Banner - Simplified */
 .current-status-banner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 2rem;
-    gap: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--sub-border);
+  border-radius: 12px;
+  padding: 16px 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--sub-shadow-sm);
 }
 
 .status-info {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    flex-wrap: wrap;
-}
-
-.status-badge {
-    padding: 0.5rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    color: white;
-    text-shadow: none;
-    box-shadow: none;
+  display: flex;
+  gap: 48px;
 }
 
 .plan-detail {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .plan-detail .label {
-    color: #64748b;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.25rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  color: var(--sub-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .plan-detail .value {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--sub-text-dark);
 }
 
-/* Activation Group */
+/* Activation Key Section - Pill Style */
 .activation-inline {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    /* Removed flex: 1 to prevent stretching in this design */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .activation-input-group {
-    display: flex;
-    position: relative;
-    border-radius: 8px;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    overflow: hidden;
-    transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--sub-border);
+  border-radius: 12px;
+  padding: 4px 4px 4px 16px;
+  /* Sleeker vertical padding */
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 340px;
+  gap: 12px;
+  /* More breathing room for the icon */
 }
 
 .activation-input-group:focus-within {
-    border-color: #cbd5e1;
-    background: #ffffff;
-    box-shadow: 0 0 0 2px rgba(226, 232, 240, 0.5);
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+  /* Sophisticated soft glow */
 }
 
 .key-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
+  color: #94a3b8;
+  font-size: 16px;
+  /* Slightly larger, clearer icon */
+  flex-shrink: 0;
 }
 
 .activation-input-group input {
-    width: 250px;
-    padding: 0.85rem 1rem 0.85rem 2.5rem;
-    background: transparent;
-    border: none;
-    color: #0f172a;
-    font-size: 1rem;
-    outline: none;
-    font-weight: 500;
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9375rem;
+  /* More balanced font size */
+  font-weight: 500;
+  outline: none !important;
+  color: var(--sub-text-dark);
+  box-shadow: none !important;
 }
+
+/* Reference: [Subscription.css:118-128](file:///d:/cloud360/File_upload-Frontend/src/components/Subscription.css#L118-128)
 
 .activation-input-group input::placeholder {
-    color: #94a3b8;
-    font-weight: 500;
-}
+  color: #94a3b8;
+  font-weight: 400;
+} */
 
 .activation-input-group button {
-    background: #0f172a;
-    color: white;
-    border: none;
-    padding: 0 1.5rem;
-    margin: 0.3rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  /* Slightly smaller, sharper text */
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .activation-input-group button:hover {
-    background: #1e293b;
+  background: var(--sub-accent);
+  transform: scale(1.02);
 }
 
 .activation-input-group button:disabled {
-    background: #94a3b8;
-    cursor: not-allowed;
+  background: #94a3b8;
+  cursor: not-allowed;
 }
 
 .message-banner-inline {
-    font-size: 0.85rem;
-    padding: 0.5rem;
-    border-radius: 6px;
-    text-align: center;
-    font-weight: 500;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
 }
 
-.message-banner-inline.success {
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #bbf7d0;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.message-banner-inline.error {
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
-}
-
-/* Plans Grid */
+/* Pricing Grid */
 .plans-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
 .plan-card {
-    background: var(--plan-color);
-    border: 1px solid var(--plan-border);
-    border-radius: 12px;
-    padding: 1.5rem 1rem;
-    position: relative;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
+  background: #ffffff;
+  border: 1px solid var(--sub-border);
+  border-radius: 20px;
+  padding: 24px 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .plan-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 12px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: var(--sub-accent);
+  transform: translateY(-4px);
+  box-shadow: var(--sub-shadow-md);
 }
 
 .plan-card.current {
-    box-shadow: 0 0 0 2px var(--plan-text);
+  border: 2px solid var(--sub-gold);
+  background: var(--sub-gold-soft);
+  box-shadow: 0 20px 40px -12px rgba(212, 175, 55, 0.15);
+}
+
+.plan-card.plan-trial {
+  border: 2px solid var(--sub-silver);
+  background: var(--sub-silver-soft);
+  box-shadow: 0 20px 40px -12px rgba(148, 163, 184, 0.15);
+}
+
+.plan-card.plan-trial:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px -12px rgba(148, 163, 184, 0.25);
+}
+
+.plan-card.plan-trial h3 {
+  color: #475569;
+}
+
+.plan-card.plan-trial .plan-days {
+  color: var(--sub-silver);
+}
+
+.plan-card.plan-trial .plan-features li svg {
+  color: var(--sub-silver);
+}
+
+.plan-card.plan-trial .learn-more-btn {
+  background: var(--sub-silver);
+  color: #ffffff;
+  border-color: var(--sub-silver);
+}
+
+.plan-card.plan-trial .learn-more-btn:hover {
+  background: #64748b;
+  border-color: #64748b;
+}
+
+.plan-card.plan-1-month {
+  border: 2px solid var(--sub-gold);
+  background: var(--sub-gold-soft);
+  box-shadow: 0 20px 40px -12px rgba(212, 175, 55, 0.15);
+}
+
+.plan-card.plan-1-month:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px -12px rgba(212, 175, 55, 0.25);
+}
+
+.plan-card.plan-1-month h3 {
+  color: var(--sub-gold);
+}
+
+.plan-card.plan-1-month .plan-days {
+  color: var(--sub-gold);
+}
+
+.plan-card.plan-1-month .plan-features li svg {
+  color: var(--sub-gold);
+}
+
+.plan-card.plan-1-month .learn-more-btn {
+  background: var(--sub-gold);
+  color: #ffffff;
+  border-color: var(--sub-gold);
+}
+
+.plan-card.plan-1-month .learn-more-btn:hover {
+  background: #c5a02c;
+  border-color: #c5a02c;
+}
+
+.plan-card.plan-1-year {
+  border: 2px solid var(--sub-diamond);
+  background: var(--sub-diamond-soft);
+  box-shadow: 0 20px 40px -12px rgba(66, 153, 225, 0.15);
+}
+
+.plan-card.plan-1-year:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px -12px rgba(66, 153, 225, 0.25);
+}
+
+.plan-card.plan-1-year h3 {
+  color: var(--sub-diamond);
+}
+
+.plan-card.plan-1-year .plan-days {
+  color: var(--sub-diamond);
+}
+
+.plan-card.plan-1-year .plan-features li svg {
+  color: var(--sub-diamond);
+}
+
+.plan-card.plan-1-year .learn-more-btn {
+  background: var(--sub-diamond);
+  color: #ffffff;
+  border-color: var(--sub-diamond);
+}
+
+.plan-card.plan-1-year .learn-more-btn:hover {
+  background: #ec4899;
+  border-color: #ec4899;
 }
 
 .current-badge {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--plan-text);
-    color: white;
-    padding: 3px 10px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  background: var(--sub-gold);
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .plan-card h3 {
-    font-size: 1.3rem;
-    font-weight: 800;
-    margin-bottom: 0.75rem;
-    color: #0f172a;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--sub-text-dark);
+  margin-bottom: 8px;
 }
 
 .plan-price {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 0.25rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
 }
 
-.currency {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #0f172a;
+.plan-price .currency {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--sub-text-dark);
+  margin-right: 2px;
 }
 
-.amount {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #0f172a;
+.plan-price .amount {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--sub-text-dark);
+  letter-spacing: -0.02em;
 }
 
-.period {
-    color: #64748b;
-    font-size: 0.8rem;
-    margin-left: 0.25rem;
-    font-weight: 600;
+.plan-price .period {
+  font-size: 0.875rem;
+  color: var(--sub-text-muted);
+  margin-left: 6px;
 }
 
 .plan-days {
-    display: inline-block;
-    padding: 0;
-    background: transparent;
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--plan-text);
-    margin-bottom: 0.75rem;
-    letter-spacing: 0.5px;
+  color: var(--sub-accent);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.plan-header-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.plan-header-top h3 {
+  margin-bottom: 0 !important;
 }
 
 .plan-desc {
-    color: #64748b;
-    font-size: 0.85rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    line-height: 1.4;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: fit-content;
+  border: 1px solid transparent;
+}
+
+/* Plan Specific Highlights */
+.plan-card.plan-trial .plan-desc {
+  background: var(--sub-silver-soft);
+  color: var(--sub-silver);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.plan-card.plan-1-month .plan-desc {
+  background: var(--sub-gold-soft);
+  color: var(--sub-gold);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.plan-card.plan-1-year .plan-desc {
+  background: var(--sub-diamond-soft);
+  color: var(--sub-diamond);
+  border-color: rgba(236, 72, 153, 0.3);
 }
 
 .plan-features {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  flex: 1;
 }
 
 .plan-features li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    color: #334155;
-    font-size: 0.8rem;
-    font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  color: var(--sub-text-dark);
+  margin-bottom: 12px;
+  font-weight: 500;
 }
 
 .plan-features li svg {
-    color: var(--plan-text);
-    font-size: 0.9rem;
+  color: var(--sub-accent);
+  font-size: 14px;
 }
 
-.plan-footer {
-    margin-top: 1.5rem;
-    border-top: none;
-    display: flex;
-    justify-content: center;
+.plan-card.current .plan-features li svg {
+  color: var(--sub-gold);
+}
+
+/* Force Trial to be silver even if current */
+.plan-card.plan-trial.current .plan-features li svg {
+  color: var(--sub-silver);
 }
 
 .learn-more-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    gap: 0.5rem;
-    background: var(--plan-text);
-    color: white;
-    padding: 0.75rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: var(--sub-text-dark);
+  border: 1px solid var(--sub-border);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.plan-card.current .learn-more-btn {
+  background: var(--sub-gold);
+  color: #ffffff;
+  border-color: var(--sub-gold);
+}
+
+.plan-card.current .learn-more-btn:hover {
+  background: #c5a02c;
+  /* Deeper gold on hover */
+  border-color: #c5a02c;
+  transform: translateY(-2px);
+}
+
+/* Force Trial button to be silver even if current */
+.plan-card.plan-trial.current .learn-more-btn {
+  background: var(--sub-silver);
+  color: #ffffff;
+  border-color: var(--sub-silver);
+}
+
+.plan-card.plan-trial.current .learn-more-btn:hover {
+  background: #64748b;
+  border-color: #64748b;
+  transform: translateY(-2px);
+}
+
+/* Force Trial current badge to be silver */
+.plan-card.plan-trial .current-badge {
+  background: var(--sub-silver);
 }
 
 .learn-more-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+  background: var(--sub-accent);
+  color: #ffffff;
+  border-color: var(--sub-accent);
 }
 
 .learn-more-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.sub-loader {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: #0f172a;
-    font-size: 1.5rem;
-    font-weight: 600;
-    background: #f8fafc;
+@media (max-width: 1024px) {
+  .plans-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .current-status-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .activation-inline {
+    width: 100%;
+  }
+
+  .activation-input-group {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
-    .current-status-banner {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .activation-inline {
-        max-width: 100%;
-        width: 100%;
-    }
+  .subscription-container {
+    padding: 24px 16px;
+    height: auto;
+    min-height: calc(100vh - 80px);
+    overflow-y: visible;
+  }
 
-    .activation-input-group input {
-        width: 100%;
-    }
+  .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .sub-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .sub-header p {
+    font-size: 1rem;
+  }
+
+  .status-info {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .plan-card {
+    padding: 32px 24px;
+  }
+
+  .plan-price .amount {
+    font-size: 2.75rem;
+  }
+
+  .current-status-banner {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sub-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .plan-price .amount {
+    font-size: 2.5rem;
+  }
+
+  .plan-card {
+    padding: 24px 16px;
+  }
+
+  .activation-input-group {
+    flex-direction: column;
+    padding: 8px;
+    background: transparent;
+    border: none;
+  }
+
+  .activation-input-group input {
+    width: 100%;
+    background: #f8fafc !important;
+    border: 1px solid var(--sub-border) !important;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .activation-input-group button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .key-icon {
+    display: none;
+  }
+
+  .current-badge {
+    top: 24px;
+    right: 24px;
+  }
 }

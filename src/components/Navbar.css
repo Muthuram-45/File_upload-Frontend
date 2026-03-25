@@ -20,6 +20,10 @@
 }
 
 /* ===== Logo + Title ===== */
+.app-heading {
+  cursor: pointer;
+}
+
 .brand-container {
   display: flex;
   align-items: center;
@@ -32,68 +36,60 @@
   object-fit: contain;
 }
 
-/* ===== 🔍 Search Bar ===== */
-.navbar-search.rectangular {
-  position: relative;
+/* ===== 🔍 Modern Pill Search Bar ===== */
+.navbar-search {
   display: flex;
   align-items: center;
-  height: 45px;
-  width: 260px;
-  padding-left: 42px;
-  padding-right: 16px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  gap: 12px;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px; /* Modern pill shape */
+  padding: 10px 20px;
+  width: 320px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.search-icon.inside {
-  position: absolute;
-  left: 5px;
-  font-size: 15px;
-  color: var(--text-secondary);
-  pointer-events: none;
-}
-
-.navbar-search.rectangular input {
-  width: 86%;
-  position: absolute;
-  top: -2px;
-}
-
-.navbar-search.rectangular input::placeholder {
-  color: var(--text-secondary);
-}
-
-
-.navbar-search.rectangular:focus-within {
-  background: var(--bg-secondary);
+.navbar-search:focus-within {
+  background: #ffffff;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08); /* Sophisticated soft ring */
 }
-.navbar-search.rectangular input:focus-within{
-  border: none;outline: none;
-} 
+
+.search-icon {
+  color: #94a3b8;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.navbar-search input {
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none !important;
+  padding: 0;
+  margin: 0;
+  box-shadow: none !important;
+  font-weight: 500;
+}
+
+.navbar-search input::placeholder {
+  color: #94a3b8;
+}
 
 .search-loader {
-  position: absolute;
-  right: 14px;
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--border-color);
+  width: 14px;
+  height: 14px;
+  border: 2px solid #e2e8f0;
   border-top: 2px solid #3b82f6;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 /* ===============================
@@ -113,6 +109,13 @@
   text-transform: uppercase;
   margin-right: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navbar-status-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* ===============================

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaTicketAlt, FaInfoCircle, FaRegClock, FaCheckCircle, FaExclamationTriangle, FaPaperPlane } from "react-icons/fa";
@@ -16,6 +17,7 @@ const Support = () => {
         priority: "Medium",
         message: ""
     });
+    const navigate = useNavigate();
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -98,7 +100,11 @@ const Support = () => {
     };
 
     return (
+        
         <div className="support-container">
+            <button className="backk-btn" onClick={() => navigate("/d-oxwilh9dy1")}>
+                Back
+            </button>
             <div className="support-header">
                 <h1><FaTicketAlt /> Support Center</h1>
                 <p>Submit your queries and we'll get back to you via email</p>
@@ -166,7 +172,7 @@ const Support = () => {
                             <strong>Email:</strong> <span>cloud360@gmail.com</span>
                         </div>
                         <div className="info-item">
-                            <strong>Phone:</strong> <span>+91 90800-30487</span>
+                            <strong>Phone:</strong> <span>+91 98765-43210</span>
                         </div>
                         <div className="info-item">
                             <strong>Hours:</strong> <span>MON-SAT, 9-6 IST</span>
@@ -228,7 +234,7 @@ const Support = () => {
                             {selectedTicket.admin_response && (
                                 <div className="detail-section response-section">
                                     <label>LATEST STATUS UPDATE</label>
-                                    <p className="response-box">
+                                    <p className="response-box-support">
                                         {selectedTicket.admin_response.trim()}
                                     </p>
                                 </div>

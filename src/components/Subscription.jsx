@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Subscription.css';
 import { FaCheckCircle, FaLock, FaCalendarAlt, FaKey, FaArrowRight, FaRegIdCard, FaHistory, FaHourglassHalf, FaGem } from 'react-icons/fa';
@@ -11,18 +12,30 @@ const Subscription = () => {
     const [activationKey, setActivationKey] = useState('');
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
-    const [message, setMessage] = useState({ type: '', text: '' });
+    const [requestingPlan, setRequestingPlan] = useState(null);
+    const navigate = useNavigate();
 
     const plans = [
-        { name: 'Trial', price: '0', days: '7 Days', color: '#fef9c3', border: '#fde68a', text: '#92400e', desc: 'Free evaluation period', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
-        { name: '1 Month', price: '29', days: '30 Days', color: '#ede9fe', border: '#c4b5fd', text: '#5b21b6', desc: 'Short-term access', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
-        { name: '1 Year', price: '249', days: '365 Days', color: '#fce7f3', border: '#f9a8d4', text: '#9d174d', desc: 'Ultimate value plan', features: ['Best Value (Save 40%)', 'All Features Unlocked', 'Dedicated Manager', 'Early Beta Access'] }
+        { name: 'Trial', price: '0', days: '7 Days', color: '#fef9c3', border: '#fde68a', text: '#92400e', desc: 'Silver', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
+        { name: '1 Month', price: '29', days: '30 Days', color: '#ede9fe', border: '#c4b5fd', text: '#5b21b6', desc: 'Gold', features: ['NLP Queries', 'File Upload', 'API Fetch', 'Chat Bot', 'Daily Reports'] },
+        { name: '1 Year', price: '249', days: '365 Days', color: '#fce7f3', border: '#f9a8d4', text: '#9d174d', desc: 'Platinum', features: ['Best Value (Save 40%)', 'All Features Unlocked', 'Dedicated Manager', 'Early Beta Access'] }
     ];
 
     const handleGetKey = async (plan) => {
+        // 🔒 PERMISSION CHECK: Company employees cannot request keys
+        if (status?.role === 'employee' && status?.company_name) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Permission Denied',
+                text: "You do not have permission to access this. Please contact your manager.",
+                confirmButtonColor: '#2563eb'
+            });
+            return;
+        }
+
         try {
             setActionLoading(true);
-            setMessage({ type: '', text: '' });
+            setRequestingPlan(plan.name);
             const token = localStorage.getItem('token');
             const res = await axios.post(`${API_BASE}/api/subscription-request`, 
                 { plan: plan.name },
@@ -48,12 +61,13 @@ const Subscription = () => {
             });
         } finally {
             setActionLoading(false);
+            setRequestingPlan(null);
         }
     };
 
-    const fetchStatus = async () => {
+    const fetchStatus = async (silent = false) => {
         try {
-            setLoading(true);
+            if (!silent) setLoading(true);
             const token = localStorage.getItem('token');
             const res = await axios.get(`${API_BASE}/api/subscription-status`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -62,33 +76,69 @@ const Subscription = () => {
         } catch (err) {
             console.error('Fetch status failed', err);
         } finally {
-            setLoading(false);
+            if (!silent) setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchStatus();
+        
+        // Poll for updates every 10 seconds to catch background syncs/activations
+        const interval = setInterval(() => {
+            fetchStatus(true);
+        }, 10000);
+        
+        return () => clearInterval(interval);
     }, []);
 
     const handleActivate = async () => {
+        // 🔒 PERMISSION CHECK: Company employees cannot activate keys
+        if (status?.role === 'employee' && status?.company_name) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Permission Denied',
+                text: "You do not have permission to access this. Please contact your manager.",
+                confirmButtonColor: '#2563eb'
+            });
+            return;
+        }
+
         if (!activationKey.trim()) {
-            setMessage({ type: 'error', text: 'Please enter an activation key.' });
+            Swal.fire({
+                icon: 'warning',
+                title: 'Invalid Key',
+                text: 'Please enter an activation key.',
+                confirmButtonColor: '#2563eb'
+            });
             return;
         }
 
         try {
             setActionLoading(true);
-            setMessage({ type: '', text: '' });
             const token = localStorage.getItem('token');
             const res = await axios.post(`${API_BASE}/api/activate-subscription`, 
                 { key: activationKey },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setMessage({ type: 'success', text: res.data.message });
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Activated!',
+                text: res.data.message || 'Subscription activated successfully!',
+                confirmButtonColor: '#2563eb',
+                timer: 3000,
+                timerProgressBar: true
+            });
+
             setActivationKey('');
             fetchStatus();
         } catch (err) {
-            setMessage({ type: 'error', text: err.response?.data?.error || 'Activation failed' });
+            Swal.fire({
+                icon: 'error',
+                title: 'Activation Failed',
+                text: err.response?.data?.error || 'Failed to activate subscription',
+                confirmButtonColor: '#2563eb'
+            });
         } finally {
             setActionLoading(false);
         }
@@ -109,12 +159,14 @@ const Subscription = () => {
         return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
     };
 
-    if (loading) return <div className="sub-loader">Loading subscription data...</div>;
 
     const daysLeft = status?.isActive ? getDaysRemaining(status?.expiry) : 0;
 
     return (
         <div className="subscription-container">
+            <button className="backk-btn" onClick={() => navigate("/d-oxwilh9dy1")}>
+                Back
+            </button>
             <div className="subscription-glass">
                 <header className="sub-header">
                     <h1>Subscription Management</h1>
@@ -151,42 +203,38 @@ const Subscription = () => {
                                 {actionLoading ? '...' : 'Activate'}
                             </button>
                         </div>
-                        {message.text && (
-                            <div className={`message-banner-inline ${message.type}`}>
-                                {message.text}
-                            </div>
-                        )}
                     </div>
                 </div>
 
-                <div className="plans-grid">
+              <div className="plans-grid">
                     {plans.map((plan) => (
-                        <div 
-                            key={plan.name} 
-                            className={`plan-card ${status?.plan === plan.name ? 'current' : ''}`}
-                            style={{ 
-                                '--plan-color': plan.color,
-                                '--plan-border': plan.border,
-                                '--plan-text': plan.text
-                            }}
+                        <div
+                            key={plan.name}
+                            className={`plan-card plan-${plan.name.toLowerCase().replace(/ /g, '-')} ${status?.plan === plan.name ? 'current' : ''}`}
                         >
                             {status?.plan === plan.name && <div className="current-badge">Your Plan</div>}
-                            <h3>{plan.name}</h3>
+                            <div className="plan-header-top">
+                                <h3>{plan.name}</h3>
+                                <span className="plan-desc">{plan.desc}</span>
+                            </div>
                             <div className="plan-price">
                                 <span className="currency">$</span>
                                 <span className="amount">{plan.price}</span>
                                 {plan.price !== '0' && <span className="period">/term</span>}
                             </div>
                             <div className="plan-days">{plan.days}</div>
-                            <p className="plan-desc">{plan.desc}</p>
                             <ul className="plan-features">
                                 {plan.features.map(f => (
                                     <li key={f}><FaCheckCircle /> {f}</li>
                                 ))}
                             </ul>
                             <div className="plan-footer">
-                                <button className="learn-more-btn" onClick={() => handleGetKey(plan)} disabled={actionLoading}>
-                                    {actionLoading ? 'Processing...' : 'Get Key'} <FaArrowRight />
+                                <button
+                                    className="learn-more-btn"
+                                    onClick={() => handleGetKey(plan)}
+                                    disabled={!!requestingPlan}
+                                >
+                                    {requestingPlan === plan.name ? 'Processing...' : 'Get Key'} <FaArrowRight />
                                 </button>
                             </div>
                         </div>

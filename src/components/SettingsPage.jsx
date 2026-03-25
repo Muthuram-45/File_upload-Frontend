@@ -24,8 +24,16 @@ function SettingsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [activeSection, setActiveSection] = useState(searchParams.get("section") || "profile");
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || 
+             JSON.parse(localStorage.getItem("googleUserInfo")) || 
+             JSON.parse(localStorage.getItem("company"));
+    } catch {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(false);
   const [loginType, setLoginType] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
  
@@ -192,13 +200,15 @@ function SettingsPage() {
 
               <div className="info-row">
                 <span className="info-label">Mobile</span>
-                <span className="info-value">{user?.mobile || "—"}</span>
+                <span className="info-value">{user?.mobile || user?.contact || "—"}</span>
               </div>
 
-              <div className="info-row">
-                <span className="info-label">Company</span>
-                <span className="info-value">{companyName || "—"}</span>
-              </div>
+              {user?.role !== 'personal' && (
+                <div className="info-row">
+                  <span className="info-label">Company</span>
+                  <span className="info-value">{companyName || "—"}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -208,14 +218,7 @@ function SettingsPage() {
  
  
   const renderSection = () => {
-    if (loading) {
-      return (
-        <div className="settings-content loading-container">
-          <div className="loader"></div>
-          <p>Loading user data...</p>
-        </div>
-      );
-    }
+
  
     switch (activeSection) {
       case "profile":

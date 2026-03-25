@@ -149,7 +149,7 @@ function CompanyRegister() {
       });
  
       if (res.data.success) {
-        await axios.post(`${API_BASE}/company-register`, {
+        const registerRes = await axios.post(`${API_BASE}/company-register`, {
           firstName,
           lastName,
           company_name: companyName,
