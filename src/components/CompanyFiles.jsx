@@ -93,11 +93,11 @@ function CompanyFiles() {
   /* ===============================
      HELPERS
   ================================ */
-  const isProcessed = (fileName) =>
-    processedFolders.some((p) => p.folderName === fileName);
+  const isProcessed = (id) =>
+    processedFolders.some((p) => p.folderName === id);
 
-  const getProcessedFolder = (fileName) =>
-    processedFolders.find((p) => p.folderName === fileName);
+  const getProcessedFolder = (id) =>
+    processedFolders.find((p) => p.folderName === id);
 
   /* ===============================
      NAVIGATION
@@ -189,8 +189,9 @@ function CompanyFiles() {
 
             <tbody>
               {uploadedFiles.map((file, idx) => {
-                const processed = isProcessed(file.name);
-                const folderData = getProcessedFolder(file.name);
+                const fileId = file.identifier || file.name;
+                const processed = isProcessed(fileId);
+                const folderData = getProcessedFolder(fileId);
 
                 return (
                   <tr key={file.id}>
@@ -223,8 +224,9 @@ function CompanyFiles() {
         {/* ================= MOBILE ================= */}
         <div className="mobile-only">
           {uploadedFiles.map((file) => {
-            const processed = isProcessed(file.name);
-            const folderData = getProcessedFolder(file.name);
+            const fileId = file.identifier || file.name;
+            const processed = isProcessed(fileId);
+            const folderData = getProcessedFolder(fileId);
 
             return (
               <div className="file-card" key={file.id}>
