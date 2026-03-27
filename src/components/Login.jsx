@@ -184,13 +184,6 @@ function Login({ setUser }) {
               </button>
             </form>
  
-            <button
-              className="company-login-btn"
-              onClick={() => navigate("/cl-zv9ng4q6b8")}
-            >
-              Login as Company
-            </button>
- 
             <p className="footer-text">
               New user?{" "}
               <span
@@ -198,6 +191,15 @@ function Login({ setUser }) {
                 className="register-link"
               >
                 Register here
+              </span>
+            </p>
+               <p className="footer-text">
+              Company User?{" "}
+              <span
+                onClick={() => navigate("/cl-zv9ng4q6b8")}
+                className="register-link"
+              >
+                Login here
               </span>
             </p>
           </div>

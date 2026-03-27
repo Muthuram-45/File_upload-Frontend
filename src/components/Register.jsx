@@ -331,7 +331,9 @@ function Register({ setUser }) {
                 <p>{message}</p>
               </div>
             )}
- 
+            
+            {!otpSent && (
+              <>
             <div className="divider">OR</div>
  
             <button className="google-btn" onClick={handleGoogleSignIn}>
@@ -348,6 +350,21 @@ function Register({ setUser }) {
             >
               Register as Company
             </button>
+            <p className="already-account">
+                  Already have an account?{" "}
+                  <span
+                    onClick={() => navigate("/l-gy5n8r4v2t")}
+                    style={{
+                      color: "#007bff",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Login here
+                  </span>
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
