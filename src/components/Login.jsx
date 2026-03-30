@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./CompanyLogin.css";
+import { BASE_API_URL } from "../apiConfig";
 import Footer from "./Footer";
 import { FaChartLine,FaBrain,FaCloud,FaChartBar,FaMicrochip} from "react-icons/fa";
 // import {img} from '../assets/white_blue.png'
@@ -74,7 +75,7 @@ function Login({ setUser }) {
     try {
       setLoading(true);
  
-      const res = await axios.post("http://localhost:4000/login", {
+      const res = await axios.post(`${BASE_API_URL}/login`, {
         email: cleanEmail,
         password: cleanPassword,
       });

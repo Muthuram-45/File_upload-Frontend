@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./DailyReport.css";
+import { BASE_API_URL } from "../apiConfig";
 
 function DailyReport({ user }) {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ function DailyReport({ user }) {
     const fetchSavedTime = async () => {
       if (!user?.email) return;
       try {
-        const res = await fetch(`http://localhost:4000/api/report-time/${encodeURIComponent(user.email)}`);
+        const res = await fetch(`${BASE_API_URL}/api/report-time/${encodeURIComponent(user.email)}`);
         const data = await res.json();
         if (data.success) {
           if (data.hour !== null && data.hour !== undefined) {
@@ -79,7 +80,7 @@ function DailyReport({ user }) {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/report-time", {
+      const res = await fetch(`${BASE_API_URL}/api/report-time`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

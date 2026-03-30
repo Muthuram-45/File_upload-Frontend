@@ -3,6 +3,7 @@ import axios from "axios";
 import "./FetchApi.css";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
+import { BASE_API_URL } from "../apiConfig";
 
 function ApiFetcher() {
   const [apiUrl, setApiUrl] = useState("");
@@ -24,7 +25,7 @@ function ApiFetcher() {
   });
 
   const navigate = useNavigate();
-  const API_BASE_URL = "http://localhost:4000";
+  const API_BASE_URL = BASE_API_URL;
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");

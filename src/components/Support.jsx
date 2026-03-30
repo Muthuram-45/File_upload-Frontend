@@ -5,7 +5,8 @@ import Swal from "sweetalert2";
 import { FaTicketAlt, FaInfoCircle, FaRegClock, FaCheckCircle, FaExclamationTriangle, FaPaperPlane } from "react-icons/fa";
 import "./Support.css";
 
-const API_BASE = "http://localhost:4000";
+import { BASE_API_URL } from "../apiConfig";
+const API_BASE = BASE_API_URL;
 
 const Support = () => {
     const [tickets, setTickets] = useState([]);

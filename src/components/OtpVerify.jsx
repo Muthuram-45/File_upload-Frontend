@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './OtpVerify.css';
+import { BASE_API_URL } from '../apiConfig';
 import { useNavigate } from 'react-router-dom';
 
 function OtpVerify() {
@@ -13,7 +14,7 @@ function OtpVerify() {
     if (!email) return alert('Session expired. Please register again.');
 
     try {
-      const res = await axios.post('http://localhost:4000/verify-otp', { email, otp });
+      const res = await axios.post(`${BASE_API_URL}/verify-otp`, { email, otp });
       alert(res.data.message);
       localStorage.removeItem('email');
       navigate('/login');

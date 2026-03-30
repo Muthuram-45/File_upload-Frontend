@@ -13,7 +13,9 @@ import {
   FaMicrochip,
 } from "react-icons/fa";
  
-const API_BASE = "http://localhost:4000";
+import { BASE_API_URL } from "../apiConfig";
+ 
+const API_BASE = BASE_API_URL;
  
 function CompanyRegister() {
   const navigate = useNavigate();

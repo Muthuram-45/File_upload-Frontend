@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "./InviteEmployeeModal.css";
+import { BASE_API_URL } from "../apiConfig";
 
 function InviteEmployeeModal({ onClose }) {
     const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ function InviteEmployeeModal({ onClose }) {
             const token = localStorage.getItem("token");
 
             await axios.post(
-                "http://localhost:4000/invite-employee",
+                `${BASE_API_URL}/invite-employee`,
                 { email, accessType },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

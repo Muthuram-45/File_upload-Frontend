@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./CompanyFiles.css";
+import { BASE_API_URL } from "../apiConfig";
 import Footer from "./Footer";
 
 import { FaEye } from "react-icons/fa";
@@ -73,7 +74,7 @@ function CompanyFiles() {
 
     const fetchFiles = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/files", {
+        const res = await axios.get(`${BASE_API_URL}/files`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

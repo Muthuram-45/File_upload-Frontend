@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ChangeMobile.css';
+import { BASE_API_URL } from "../apiConfig";
 
 function ChangeMobile() {
   const [mobile, setMobile] = useState('');
@@ -22,7 +23,7 @@ function ChangeMobile() {
     }
 
     try {
-      const res = await fetch('http://localhost:4000/change-mobile', {
+      const res = await fetch(`${BASE_API_URL}/change-mobile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, mobile }),

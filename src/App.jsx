@@ -30,6 +30,7 @@ import "./app.css";
 import NLPResults from "./components/NLPResults";
 import Subscription from "./components/Subscription";
 import Support from "./components/Support";
+import { BASE_API_URL } from "./apiConfig";
 function App() {
   // 🔥 RESTORE USER IMMEDIATELY
   const [user, setUser] = useState(() => {
@@ -46,28 +47,34 @@ function App() {
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
-    if (savedUser && token) {
-      const userObj = JSON.parse(savedUser);
-      setUser(userObj);
 
-      // 🔥 Fetch latest subscription status from backend
-      fetch("http://localhost:4000/api/subscription-status", {
-        headers: { Authorization: `Bearer ${token}` },
+    const fetchStatus = () => {
+      const currentToken = localStorage.getItem("token");
+      if (!currentToken) return;
+
+      fetch(`${BASE_API_URL}/api/subscription-status`, {
+        headers: { Authorization: `Bearer ${currentToken}` },
       })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            const updatedUser = { 
-              ...userObj, 
-              subscription_plan: data.plan,
-              subscription_expiry: data.expiry,
-              isSubscriptionActive: data.isActive,
-              status: data.status
-            };
-            setUser(updatedUser);
-            localStorage.setItem("user", JSON.stringify(updatedUser));
+            setUser((prev) => {
+              const updatedUser = { 
+                ...prev, 
+                subscription_plan: data.plan,
+                subscription_expiry: data.expiry,
+                isSubscriptionActive: data.isActive,
+                status: data.status
+              };
+              
+              // Only update if something literally changed
+              if (JSON.stringify(updatedUser) !== JSON.stringify(prev)) {
+                localStorage.setItem("user", JSON.stringify(updatedUser));
+                return updatedUser;
+              }
+              return prev;
+            });
           } else if (data.accountInactive) {
-            // 🚫 Auto logout if account is deactivated or expired in admin
             localStorage.clear();
             setUser(null);
             window.location.href = "/l-gy5n8r4v2t?error=account_inactive";
@@ -75,6 +82,13 @@ function App() {
         })
         .catch((err) => console.error("Failed to refresh subscription:", err))
         .finally(() => setLoading(false));
+    };
+
+    if (savedUser && token) {
+      fetchStatus();
+      // 🚀 Central Polling every 15 seconds
+      const interval = setInterval(fetchStatus, 15000);
+      return () => clearInterval(interval);
     } else {
       setUser(null);
       setLoading(false);
@@ -181,7 +195,7 @@ function App() {
   path="/subscription"
   element={
     <ProtectedRoute>
-      <Subscription />
+      <Subscription setUser={setUser} />
     </ProtectedRoute>
   }
 />

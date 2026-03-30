@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ChangePassword.css';
+import { BASE_API_URL } from "../apiConfig";
 
 function ChangePassword() {
   const [oldPassword, setOldPassword] = useState('');
@@ -29,7 +30,7 @@ function ChangePassword() {
     }
 
     try {
-      const res = await fetch('http://localhost:4000/change-password', {
+      const res = await fetch(`${BASE_API_URL}/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, oldPassword, newPassword }),

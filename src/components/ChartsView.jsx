@@ -18,6 +18,7 @@ import {
 } from "recharts";
  
 import "./ProcessedView.css";
+import { BASE_API_URL } from "../apiConfig";
  
 function ChartsView() {
   const { state } = useLocation();
@@ -73,7 +74,7 @@ function ChartsView() {
       folder.tables[0];
  
     axios
-      .get(`http://localhost:4000/processed-table/${preferredTable}`, {
+      .get(`${BASE_API_URL}/processed-table/${preferredTable}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

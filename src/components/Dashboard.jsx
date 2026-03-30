@@ -13,7 +13,9 @@ import { CgProfile } from "react-icons/cg";
 import { BsPersonFillAdd } from "react-icons/bs";
  
  
-const API_BASE = "http://localhost:4000";
+import { BASE_API_URL } from "../apiConfig";
+ 
+const API_BASE = BASE_API_URL;
  
 function Dashboard() {
   const navigate = useNavigate();

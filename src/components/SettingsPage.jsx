@@ -19,6 +19,7 @@ import {
   FaFileAlt, // ✅ ADDED ICON
 } from "react-icons/fa";
 import "./SettingsPage.css";
+import { BASE_API_URL } from "../apiConfig";
  
 function SettingsPage() {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ function SettingsPage() {
     setLoginType(type);
  
     if (activeUser?.email) {
-      fetch(`http://localhost:4000/user/${activeUser.email}`)
+      fetch(`${BASE_API_URL}/user/${activeUser.email}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success && data.user) {

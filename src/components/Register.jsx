@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { auth, googleProvider, signInWithPopup } from "./firebase";
 import "./Register.css";
+import { BASE_API_URL } from "../apiConfig";
 import Swal from "sweetalert2";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
@@ -79,7 +80,7 @@ function Register({ setUser }) {
       setLoading(true);
  
       const res = await axios.post(
-        "http://localhost:4000/send-otp",
+        `${BASE_API_URL}/send-otp`,
         { email: trimmedEmail },
         { headers: { "Content-Type": "application/json" } },
       );
@@ -130,14 +131,14 @@ function Register({ setUser }) {
       const trimmedOtp = otp.trim();
  
       const verifyRes = await axios.post(
-        "http://localhost:4000/verify-otp",
+        `${BASE_API_URL}/verify-otp`,
         { email: trimmedEmail, otp: trimmedOtp },
         { headers: { "Content-Type": "application/json" } },
       );
  
       if (verifyRes.data.success) {
         const registerRes = await axios.post(
-          "http://localhost:4000/register",
+          `${BASE_API_URL}/register`,
           { firstName, lastName, email: trimmedEmail, mobile, password },
           { headers: { "Content-Type": "application/json" } },
         );
@@ -180,7 +181,7 @@ function Register({ setUser }) {
       const user = result.user;
       const firebaseToken = await user.getIdToken();
  
-      const res = await axios.post("http://localhost:4000/google-login", {
+      const res = await axios.post(`${BASE_API_URL}/google-login`, {
         token: firebaseToken,
       });
  

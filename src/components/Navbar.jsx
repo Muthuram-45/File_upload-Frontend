@@ -9,7 +9,8 @@ import { FaRegStarHalfStroke } from "react-icons/fa6";
 // import { IoStar } from "react-icons/io5";
 import "./Navbar.css";
  
-const API_BASE = "http://localhost:4000";
+import { BASE_API_URL } from "../apiConfig";
+const API_BASE = BASE_API_URL;
  
 /* =========================================================
    ✅ HOOK INSIDE SAME FILE
@@ -93,7 +94,7 @@ function useUserTimeAndLogin({ user, isFullUser }) {
  
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:4000/user/${user.email}`, {
+        const res = await axios.get(`${API_BASE}/user/${user.email}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
  
@@ -242,7 +243,7 @@ function Navbar({ user, setUser }) {
       setUser(JSON.parse(storedUser));
     }
   }, [user, setUser]);
- 
+
   // ===============================
   // LOGOUT
   // ===============================
@@ -438,7 +439,7 @@ function Navbar({ user, setUser }) {
  
             <ul>
               {availableTables.map((t) => (
-                <li key={t}>{t}</li>
+                <li key={t.id || t}>{t.display_name || t.id || t}</li>
               ))}
             </ul>
  

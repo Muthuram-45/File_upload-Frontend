@@ -5,6 +5,7 @@ import { IoMdClose, IoMdExpand } from "react-icons/io";
 import { RiRobot3Line } from "react-icons/ri";
 import { GrCircleQuestion } from "react-icons/gr";
 import "./Chatbot.css";
+import { BASE_API_URL } from "../apiConfig";
 import Swal from "sweetalert2";
 
 export default function Chatbot({ user }) {
@@ -43,7 +44,7 @@ export default function Chatbot({ user }) {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:4000/api/chat", {
+      const res = await fetch(`${BASE_API_URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

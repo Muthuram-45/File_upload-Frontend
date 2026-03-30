@@ -22,6 +22,7 @@ import {
 import { Bar, Pie, Line, Scatter, Doughnut } from "react-chartjs-2";
 import "./Dashboard.css";
 import "./NLPResults.css";
+import { BASE_API_URL } from "../apiConfig";
 
 function formatTableName(name) {
   return name
@@ -100,7 +101,7 @@ function NLPResults() {
         .map((ref) => ref?.getPdfBlock())
         .filter(Boolean);
 
-      const res = await fetch("http://localhost:4000/nlp/send-pdf", {
+      const res = await fetch(`${BASE_API_URL}/nlp/send-pdf`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,6 +155,7 @@ function NLPResults() {
             ref={(el) => (tableRefs.current[idx] = el)}
             table={table}
             rows={rows}
+            displayName={result.datasetDisplayNames?.[table.replace(/_fulltable$/i, "")]}
           />
         ))}
       </div>
@@ -175,7 +177,7 @@ function formatNumber(num) {
 }
 
 /* ================= TABLE + INSIGHTS COMPONENT ================= */
-const TableWithInsights = forwardRef(({ table, rows }, ref) => {
+const TableWithInsights = forwardRef(({ table, rows, displayName }, ref) => {
   const [chartMode, setChartMode] = useState("univariate"); // univariate, bivariate, custom
   const [xMetric, setXMetric] = useState("");
   const [yMetric, setYMetric] = useState("");
@@ -191,7 +193,7 @@ const TableWithInsights = forwardRef(({ table, rows }, ref) => {
       }
 
       return {
-        table: formatTableName(table),
+        table: displayName || formatTableName(table),
         insights,
         rows: normalizedRows,
         chartImage: chartRef.current.toBase64Image("image/png", 1),
@@ -208,7 +210,7 @@ const TableWithInsights = forwardRef(({ table, rows }, ref) => {
   if (!rows || rows.length === 0) {
     return (
       <div className="nlp-table-block">
-        <h3>{formatTableName(table)}</h3>
+        <h3>{displayName || formatTableName(table)}</h3>
         <p>No data found</p>
       </div>
     );
@@ -443,7 +445,7 @@ const TableWithInsights = forwardRef(({ table, rows }, ref) => {
 
   return (
     <div className="nlp-table-block">
-      <h3>{formatTableName(table)}</h3>
+      <h3>{displayName || formatTableName(table)}</h3>
 
       {/* TOP SECTION */}
       <div className="top-section">

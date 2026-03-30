@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Upload.css";
+import { BASE_API_URL } from "../apiConfig";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
@@ -126,7 +127,7 @@ function Upload() {
       setUploadProgress(0);
 
       const res = await axios.post(
-        "http://localhost:4000/upload",
+        `${BASE_API_URL}/upload`,
         formData,
         {
           headers: {

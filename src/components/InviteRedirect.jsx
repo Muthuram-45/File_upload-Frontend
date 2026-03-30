@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_API_URL } from "../apiConfig";
 
 function InviteRedirect() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function InviteRedirect() {
     }
 
     axios
-      .get(`http://localhost:4000/verify-invite?token=${token}`)
+      .get(`${BASE_API_URL}/verify-invite?token=${token}`)
       .then((res) => {
         // =====================
         // VIEW ACCESS

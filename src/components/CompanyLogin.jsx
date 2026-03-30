@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import "./CompanyLogin.css";
+import { BASE_API_URL } from "../apiConfig";
  
 import Footer from "./Footer";
 import { FaChartLine,FaBrain,FaCloud,FaChartBar,FaMicrochip} from "react-icons/fa";
@@ -42,7 +43,7 @@ function CompanyLogin({ setUser }) {
       setLoading(true);
  
       // ❌ DO NOT SEND company_name
-      const res = await axios.post("http://localhost:4000/company-login", {
+      const res = await axios.post(`${BASE_API_URL}/company-login`, {
         email: email.trim().toLowerCase(),
         password: password.trim(),
       });

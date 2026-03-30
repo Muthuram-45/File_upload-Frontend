@@ -5,9 +5,10 @@ import './Subscription.css';
 import { FaCheckCircle, FaLock, FaCalendarAlt, FaKey, FaArrowRight, FaRegIdCard, FaHistory, FaHourglassHalf, FaGem } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
-const API_BASE = "http://localhost:4000";
+import { BASE_API_URL } from "../apiConfig";
+const API_BASE = BASE_API_URL;
 
-const Subscription = () => {
+const Subscription = ({ setUser }) => {
     const [status, setStatus] = useState(null);
     const [activationKey, setActivationKey] = useState('');
     const [loading, setLoading] = useState(true);
@@ -73,6 +74,21 @@ const Subscription = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setStatus(res.data);
+            
+            // 🔥 Update global user state (App.jsx)
+            if (setUser) {
+                setUser(prev => {
+                    const updatedUser = {
+                        ...prev,
+                        subscription_plan: res.data.plan,
+                        subscription_expiry: res.data.expiry,
+                        isSubscriptionActive: res.data.isActive,
+                        status: res.data.status
+                    };
+                    localStorage.setItem("user", JSON.stringify(updatedUser)); // Keep storage in sync
+                    return updatedUser;
+                });
+            }
         } catch (err) {
             console.error('Fetch status failed', err);
         } finally {

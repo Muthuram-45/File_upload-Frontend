@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ProcessedView.css";
+import { BASE_API_URL } from "../apiConfig";
 
 function ProcessedView() {
   const { state } = useLocation();
@@ -31,7 +32,7 @@ function ProcessedView() {
       try {
         const requests = folder.tables.map((tableName) =>
           axios
-            .get(`http://localhost:4000/processed-table/${tableName}`, {
+            .get(`${BASE_API_URL}/processed-table/${tableName}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -119,7 +120,7 @@ function ProcessedView() {
   // =============================
   return (
     <div className="processed-container">
-      <h2>{folder?.folderName}</h2>
+      <h2>{folder?.display_name || folder?.folderName}</h2>
 
       <button className="back-btn" onClick={() => navigate(-1)}>
         Back

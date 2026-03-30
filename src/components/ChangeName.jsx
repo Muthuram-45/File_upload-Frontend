@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ChangeName.css';
+import { BASE_API_URL } from "../apiConfig";
  
 function ChangeName() {
   const [email, setEmail] = useState('');
@@ -41,7 +42,7 @@ function ChangeName() {
     e.preventDefault();
  
     try {
-      const res = await fetch('http://localhost:4000/change-name', {
+      const res = await fetch(`${BASE_API_URL}/change-name`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, firstName, lastName }),
