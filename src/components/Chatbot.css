@@ -139,6 +139,34 @@
   background: #e2e8f0;
   border-radius: 10px;
 }
+
+/* Base Responsive */
+@media (max-width: 600px) {
+  .chatbot-container {
+    width: calc(100vw - 32px);
+    height: 70vh;
+    right: 16px;
+    bottom: 80px;
+  }
+
+  .chat-open-btn {
+    bottom: 20px;
+    right: 16px;
+  }
+}
+
+/* Tiny Mobile */
+@media (max-width: 480px) {
+  .chatbot-container {
+    width: calc(100vw - 24px);
+    right: 12px;
+    height: 65vh;
+  }
+
+  .chat-open-btn {
+    right: 12px;
+  }
+}
  
 /* Messages */
 .message-wrapper {
@@ -235,14 +263,5 @@
   transform: none;
 }
  
-/* Mobile */
-@media (max-width: 480px) {
-  .chatbot-container {
-    width: 94vw;
-    height: 72vh;
-    bottom: 0px;
-    right: 0;
-    border-radius: 20px;
-  }
-}
+/* Mobile - Handled in combined media queries above */
  

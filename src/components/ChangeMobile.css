@@ -4,12 +4,11 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: auto;              /* ✅ remove full height */
-  padding: 0px 0;               /* ✅ adds some top-bottom spacing */
-  background: transparent;       /* ✅ inherits from SettingsPage */
+  min-height: auto;
+  padding: 40px 20px;
+  background: transparent;
   font-family: 'Poppins', sans-serif;
   width: 100%;
-  margin-top: -30px;
 }
  
 /* Form Box */
@@ -18,10 +17,11 @@
   padding: 40px 45px;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  width: 360px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
   transition: all 0.3s ease;
-   margin-top: 130px;
+  margin: 0 auto;
 }
  
 .change-mobile-form:hover {
@@ -33,8 +33,8 @@
   color: #1976d2;
   font-size: 24px;
   margin-bottom: 25px;
-  font-family: 'segoe ui';
- font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
 }
  
 /* Input Fields */
@@ -88,10 +88,15 @@
 }
  
 /* 📱 Mobile Responsive */
+@media (max-width: 768px) {
+  .change-mobile-form {
+    padding: 30px 25px;
+  }
+}
+
 @media (max-width: 480px) {
   .change-mobile-form {
-    width: 90%;
-    padding: 30px 25px;
+    padding: 24px 20px;
   }
  
   .change-mobile-form h2 {
@@ -102,6 +107,3 @@
     font-size: 15px;
   }
 }
- 
- 
- 

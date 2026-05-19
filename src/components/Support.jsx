@@ -24,19 +24,39 @@ const Support = () => {
 
     useEffect(() => {
         fetchTickets();
-    }, []);
 
-    const fetchTickets = async () => {
+        // 🚀 Auto-refresh every 5 seconds (snappier support updates)
+        const interval = setInterval(() => {
+            fetchTickets(true); // silent refresh
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [selectedTicket?.id]); // Re-run if selection changes to ensure sync
+
+    const fetchTickets = async (silent = false) => {
         try {
+            if (!silent) setLoading(true);
             const token = localStorage.getItem("token");
-            const res = await axios.get(`${API_BASE}/api/client-tickets`, {
+
+            // 🕒 Cache-busting: Add unique timestamp to URL
+            const res = await axios.get(`${API_BASE}/api/client-tickets?t=${Date.now()}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setTickets(res.data);
+            
+            const freshTickets = res.data;
+            setTickets(freshTickets);
+
+            // 🔄 If a ticket is currently open in modal, update its data live
+            if (selectedTicket) {
+                const updated = freshTickets.find(t => t.id === selectedTicket.id);
+                if (updated && JSON.stringify(updated) !== JSON.stringify(selectedTicket)) {
+                    setSelectedTicket(updated);
+                }
+            }
         } catch (err) {
             console.error("Failed to fetch tickets", err);
         } finally {
-            setLoading(false);
+            if (!silent) setLoading(false);
         }
     };
 

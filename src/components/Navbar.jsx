@@ -22,9 +22,9 @@ function useUserTimeAndLogin({ user, isFullUser }) {
   const [currentTime, setCurrentTime] = useState("");
   const [lastLoginTime, setLastLoginTime] = useState("");
  
-  const [userTimeZone, setUserTimeZone] = useState(
-    Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
-  );
+ const [userTimeZone, setUserTimeZone] = useState(
+  user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
+);
  
   const getTimeZoneAbbr = (tz) => {
     try {
@@ -51,8 +51,7 @@ function useUserTimeAndLogin({ user, isFullUser }) {
   useEffect(() => {
     const detectTimeZone = async () => {
       try {
-        let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
- 
+      let tz = user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
         if (tz === "Asia/Calcutta") tz = "Asia/Kolkata";
  
         if (tz) {
@@ -94,7 +93,7 @@ function useUserTimeAndLogin({ user, isFullUser }) {
  
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${API_BASE}/user/${user.email}`, {
+        const res = await axios.get(`${API_BASE}/user/${user.email}?t=${Date.now()}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
  
@@ -110,12 +109,14 @@ function useUserTimeAndLogin({ user, isFullUser }) {
           setLastLoginTime("-");
         }
       } catch (err) {
-        console.log(err);
+        console.log("Last login fetch failed", err);
         setLastLoginTime("-");
       }
     };
  
     fetchLastLogin();
+    const interval = setInterval(fetchLastLogin, 30000); // 🕒 Refresh last login every 30s
+    return () => clearInterval(interval);
   }, [user?.email, isFullUser, userTimeZone]);
  
   return { currentTime, lastLoginTime, timeZoneAbbr, userTimeZone };
@@ -248,6 +249,7 @@ function Navbar({ user, setUser }) {
   // LOGOUT
   // ===============================
   const handleLogout = () => {
+    setDropdownOpen(false);
     localStorage.clear();
     sessionStorage.clear();
     setUser(null);
@@ -258,6 +260,7 @@ function Navbar({ user, setUser }) {
   // SETTINGS CLICK BLOCK
   // ===============================
   const handleSettingsClick = () => {
+    setDropdownOpen(false);
     if (isPendingLogin) {
       showPopup("🔐 Please login to access profile & settings.");
       return;
@@ -298,7 +301,7 @@ function Navbar({ user, setUser }) {
               <div className="navbar-search">
                 <FaSearch className="search-icon" />
   
-                  <input
+                <input
                   type="text"
                   placeholder="Ask anything about your data"
                   value={nlpQuestion}

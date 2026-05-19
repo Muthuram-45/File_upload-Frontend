@@ -70,7 +70,9 @@ const Subscription = ({ setUser }) => {
         try {
             if (!silent) setLoading(true);
             const token = localStorage.getItem('token');
-            const res = await axios.get(`${API_BASE}/api/subscription-status`, {
+            
+            // 🕒 Cache-busting: Add unique timestamp to URL
+            const res = await axios.get(`${API_BASE}/api/subscription-status?t=${Date.now()}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setStatus(res.data);
@@ -78,6 +80,7 @@ const Subscription = ({ setUser }) => {
             // 🔥 Update global user state (App.jsx)
             if (setUser) {
                 setUser(prev => {
+                    if (!prev) return prev;
                     const updatedUser = {
                         ...prev,
                         subscription_plan: res.data.plan,
@@ -147,7 +150,8 @@ const Subscription = ({ setUser }) => {
             });
 
             setActivationKey('');
-            fetchStatus();
+            await fetchStatus();
+            window.dispatchEvent(new Event('subscriptionUpdate')); // 🚀 Immediate Navbar Refresh
         } catch (err) {
             Swal.fire({
                 icon: 'error',

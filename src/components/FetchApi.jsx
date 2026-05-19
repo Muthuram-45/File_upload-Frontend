@@ -19,10 +19,9 @@ function ApiFetcher() {
   const [saveLoading, setSaveLoading] = useState(false);
 
   const [popup, setPopup] = useState({
-    show: false,
-    message: "",
     type: "success",
   });
+  const [showTypeModal, setShowTypeModal] = useState(false);
 
   const navigate = useNavigate();
   const API_BASE_URL = BASE_API_URL;
@@ -104,7 +103,7 @@ function ApiFetcher() {
   // ===============================
   // STEP 2️⃣ SAVE API
   // ===============================
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!fileName.trim()) {
       return showPopup("⚠️ Enter File Name", "error");
     }
@@ -113,8 +112,13 @@ function ApiFetcher() {
       return showPopup("⚠️ Fetch API before saving", "error");
     }
 
+    setShowTypeModal(true);
+  };
+
+  const confirmSave = async (apiType, interval) => {
     try {
       setSaveLoading(true);
+      setShowTypeModal(false);
 
       await axios.post(
         `${API_BASE_URL}/save-api-data`,
@@ -122,6 +126,8 @@ function ApiFetcher() {
           api_url: apiUrl,
           file_name: fileName,
           response: responseObj, // ✅ OBJECT ONLY
+          api_type: apiType,
+          api_interval: interval, // NEW
         },
         {
           headers: {
@@ -216,6 +222,41 @@ function ApiFetcher() {
         {popup.show && (
           <div className={`popup ${popup.type}`}>{popup.message}</div>
         )}
+
+        {/* 🔹 API TYPE SELECTION MODAL */}
+        {showTypeModal && (
+          <div className="type-modal-overlay">
+            <div className="type-modal">
+              <h3>Select Processing Frequency</h3>
+              <p>How often should we fetch and process data from this API?</p>
+
+              <div className="interval-section" style={{ marginTop: '20px', textAlign: 'left' }}>
+                <h4 style={{ marginBottom: '10px' }}>📦 Batch Processing</h4>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                  <button className="type-option-btn batch" onClick={() => confirmSave("Batch", "1d")} style={{ padding: '10px' }}>Every 1 Day</button>
+                  <button className="type-option-btn batch" onClick={() => confirmSave("Batch", "7d")} style={{ padding: '10px' }}>Every 7 Days</button>
+                  <button className="type-option-btn batch" onClick={() => confirmSave("Batch", "15d")} style={{ padding: '10px' }}>Every 15 Days</button>
+                  <button className="type-option-btn batch" onClick={() => confirmSave("Batch", "30d")} style={{ padding: '10px' }}>Every 30 Days</button>
+                </div>
+
+                <h4 style={{ marginBottom: '10px' }}>⚡ Stream Processing</h4>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <button className="type-option-btn stream" onClick={() => confirmSave("Stream", "5m")} style={{ padding: '10px' }}>Every 5 Min</button>
+                  <button className="type-option-btn stream" onClick={() => confirmSave("Stream", "10m")} style={{ padding: '10px' }}>Every 10 Min</button>
+                  <button className="type-option-btn stream" onClick={() => confirmSave("Stream", "30m")} style={{ padding: '10px' }}>Every 30 Min</button>
+                </div>
+              </div>
+
+              <button
+                className="cancel-modal-btn"
+                onClick={() => setShowTypeModal(false)}
+                style={{ marginTop: '20px' }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <Footer />
@@ -224,4 +265,3 @@ function ApiFetcher() {
 }
 
 export default ApiFetcher;
- 

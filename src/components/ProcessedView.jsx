@@ -32,7 +32,7 @@ function ProcessedView() {
       try {
         const requests = folder.tables.map((tableName) =>
           axios
-            .get(`${BASE_API_URL}/processed-table/${tableName}`, {
+            .get(`${BASE_API_URL}/processed-table/${tableName}?t=${Date.now()}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -54,6 +54,8 @@ function ProcessedView() {
     };
 
     fetchTables();
+    const interval = setInterval(fetchTables, 10000); // 🚀 Auto-refresh every 10s
+    return () => clearInterval(interval);
   }, [folder, token]);
 
   // =============================
@@ -78,7 +80,7 @@ function ProcessedView() {
   // =============================
   const renderTable = (table) => {
     if (!table) {
-      return <p className="empty-msg">No table selected</p>;
+      return <p className="empty-msg">loading...</p>;
     }
 
     if (table.status === "WAITING") {
@@ -118,9 +120,12 @@ function ProcessedView() {
   // =============================
   // 🧩 UI
   // =============================
+  const displayName = folder?.display_name || folder?.folderName || "";
+  const capitalizedName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+
   return (
     <div className="processed-container">
-      <h2>{folder?.display_name || folder?.folderName}</h2>
+      <h2>{capitalizedName}</h2>
 
       <button className="back-btn" onClick={() => navigate(-1)}>
         Back

@@ -44,27 +44,28 @@
 .hamburger {
   display: none;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   cursor: pointer;
   position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1001;
+  top: 95px; /* Position below top navbar */
+  left: 15px;
+  z-index: 1100;
   background: var(--white);
-  padding: 12px;
-  border-radius: 8px;
+  padding: 8px;
+  border-radius: 6px;
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
 }
  
 .hamburger:hover {
   box-shadow: var(--shadow-lg);
-  /* transform: translateY(-2px); */
+  transform: scale(1.05);
 }
  
 .hamburger .bar {
-  width: 25px;
-  height: 3px;
+  width: 18px; /* Smaller width */
+  height: 2.5px; /* Thinner bars */
   background-color: var(--primary-blue);
   border-radius: 3px;
   transition: all 0.3s ease;
@@ -84,7 +85,7 @@
   bottom: 0;
   overflow-y: auto;
   transition: transform 0.3s ease;
-  z-index: 1000;
+  z-index: 1050;
   border-right: 1px solid var(--gray-200);
   margin-top: 80px;
 }
@@ -502,157 +503,119 @@
 }
  
 /* ==================== RESPONSIVE DESIGN ==================== */
+
+/* --- Tablet View (max-width: 1024px) --- */
 @media (max-width: 1024px) {
+  .settings-sidebar {
+    width: 240px;
+    margin-top: 80px; /* Stay below navbar */
+  }
+
+  .settings-main {
+    margin-left: 240px;
+    padding: 32px;
+  }
+
   .profile-info-grid {
     grid-template-columns: 1fr;
   }
 }
- 
+
+/* --- Mobile View (max-width: 768px) --- */
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
   }
- 
+
   .settings-sidebar {
     transform: translateX(-100%);
+    width: 280px;
+    margin-top: 69px; /* Below Top Navbar */
+    height: calc(100vh - 69px); /* Adjust height */
+    box-shadow: var(--shadow-xl);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
- 
+
   .settings-sidebar.open {
     transform: translateX(0);
   }
- 
+
   .settings-main {
     margin-left: 0;
-    padding: 80px 20px 20px;
+    width: 100%;
+    padding: 140px 20px 40px; /* Offset for hamburger and top area */
   }
- 
+
   .profile-avatar-section {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 0 20px 24px;
+    padding: 0 20px 30px;
   }
- 
+
+  .avatar-initials {
+    font-size: 36px;
+  }
+
+  .profile-name {
+    font-size: 24px;
+  }
+
+  .info-card-header {
+    padding: 20px 24px;
+  }
+
+  .info-card-body {
+    padding: 8px 24px 24px;
+  }
+
   .info-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 6px;
+    padding: 16px 0;
   }
-}
- 
- 
- 
- 
-/* =========================
-   HAMBURGER (only mobile)
-========================= */
-.hamburger {
-  display: none;
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 1200;
-  cursor: pointer;
-}
- 
-.hamburger .bar {
-  width: 24px;
-  height: 3px;
-  background: #333;
-  margin: 5px 0;
-  border-radius: 2px;
-}
- 
-/* =========================
-   MOBILE VIEW
-========================= */
-@media (max-width: 768px) {
-  .settings-page {
-    flex-direction: column;
-  }
- 
-  /* show hamburger */
-  .hamburger {
-    display: block;
-  }
- 
-  /* sidebar slide */
-  .settings-sidebar {
-    position: fixed;
-    top: 0;
-    left: -260px;
-    width: 260px;
-    height: 100vh;
-    background: #fff;
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
-    transition: left 0.3s ease;
-    z-index: 1100;
-  }
- 
-  .settings-sidebar.open {
-    left: 0;
-  }
- 
-  /* main content full width */
-  .settings-main {
+
+  .info-label {
     width: 100%;
-    padding: 70px 16px 20px;
+    font-size: 12px;
   }
- 
-  /* profile cards stack */
-  .profile-info-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
- 
-  /* avatar center */
-  .profile-avatar-section {
-    flex-direction: column;
-    text-align: center;
-  }
- 
-  .profile-header-info {
-    margin-top: 10px;
-  }
- 
-  /* sidebar buttons */
-  .nav-button span {
-    font-size: 14px;
+
+  .info-value {
+    font-size: 15px;
   }
 }
- 
-/* =========================
-   TABLET VIEW
-========================= */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .settings-sidebar {
-    width: 220px;
-  }
- 
-  .settings-main {
-    padding: 24px;
-  }
- 
-  .profile-info-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
- 
-/* =========================
-   SMALL MOBILE
-========================= */
+
+/* --- Small Mobile (max-width: 480px) --- */
 @media (max-width: 480px) {
-  .profile-name {
-    font-size: 18px;
+  .settings-main {
+    padding: 90px 16px 30px;
   }
- 
-  .info-card {
-    padding: 14px;
+
+  .settings-content {
+    padding: 32px 20px;
   }
- 
+
+  .profile-header-card {
+    border-radius: 16px;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .avatar-initials {
+    font-size: 32px;
+  }
+
   .back-button span {
     display: none;
   }
+
+  .back-button {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border-radius: 50%;
+  }
 }
- 
+
  

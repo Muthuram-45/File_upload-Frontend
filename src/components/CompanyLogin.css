@@ -9,10 +9,14 @@
 .login-container {
   position: relative;
   display: flex;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
   font-family: 'Poppins', sans-serif;
   overflow-x: hidden;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  gap: 80px;
 }
  
 /* BLUR BACKGROUND */
@@ -47,17 +51,16 @@
 /* 🔹 Login Box */
 .login-box {
   background: #ffffff;
-  border-radius: 11px;
-  padding: 23px 50px;
-  width: 400px;
-  max-width: 95%;
-  /* box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); */
-  box-shadow: 0 8px 25px white(147, 197, 253, 0.35);
- 
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
   animation: slideIn 0.7s ease;
   transition: all 0.3s ease-in-out;
-  margin-left: 657px;
+  display: flex;
+  flex-direction: column;
 }
  
 /* 🔹 Titles */
@@ -189,61 +192,82 @@
   }
 }
  
-/* 🔹 Responsive */
+/* =========================
+   📱 RESPONSIVE MEDIA QUERIES
+========================= */
+
+@media (max-width: 1100px) {
+  .login-container {
+    padding: 30px;
+    gap: 30px;
+  }
+
+  .hero-text h1 {
+    font-size: 36px;
+  }
+}
+
 @media (max-width: 992px) {
   .login-container {
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding: 20px 10px;
+    padding: 40px 20px;
+    min-height: 100vh;
+    gap: 20px;
   }
- 
-  .login-image-section {
+
+  .hero-text {
     display: none;
   }
- 
+
+  .icon-group {
+    justify-content: center;
+    margin-top: 15px;
+  }
+
   .login-form-section {
     width: 100%;
+    padding: 0;
   }
- 
+
   .login-box {
-    width: 50%;
-    padding: 30px 20px;
+    margin: 0 auto;
+    padding: 30px 24px;
+    max-width: 400px;
   }
- 
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 20px 15px;
+    gap: 20px;
+  }
+
+  .hero-text h1 {
+    font-size: 28px;
+  }
+
+  .hero-text p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .icon-group {
+    display: none; /* Hide icons on very small mobile for more room */
+  }
+
   .login-title {
     font-size: 22px;
   }
- 
-  .login-subtitle {
-    font-size: 13px;
-  }
- 
-  .login-input {
-    font-size: 14px;
-    padding: 10px;
-  }
- 
-  .login-btn,
-  .company-login-btn {
-    font-size: 14px;
-    padding: 10px;
-  }
- 
-  .footer-text,
-  .footer-text2 {
-    font-size: 13px;
-  }
-}
- 
-/* Small mobile screens */
-@media (max-width: 480px) {
-  .login-container {
-    height: 90vh;
-    margin-bottom: -20px;
-  }
- 
+
   .login-box {
+    padding: 24px 20px;
+  }
+
+  .input-tooltip {
+    font-size: 11px;
+    top: -30px;
+    white-space: normal;
     width: 100%;
   }
 }
@@ -267,29 +291,67 @@
   z-index: 20;
 }
 .hero-text {
-  position: absolute;
-  top: 36%;
-  left: 19%;
-  max-width: 520px;
- 
+  flex: 1;
+  max-width: 600px;
   color: #ffffff;
   font-family: 'Poppins', 'Segoe UI', sans-serif;
+  z-index: 2;
+  text-align: left;
 }
  
 .hero-text h1 {
-  font-size: 42px;
-  font-weight: 700;
-  margin-bottom: 14px;
- 
-  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  font-size: 52px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
- 
+
 .hero-text p {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #e0f2fe;
- 
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  font-size: 18px;
+  line-height: 1.5;
+  color: #f8fafc;
+  opacity: 0.95;
+  max-width: 480px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================
+   ✨ ICON GROUP LAYOUT
+========================= */
+
+.icon-group {
+  display: flex;
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.hero-icon {
+  font-size: 36px;
+  color: #38bdf8;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
+}
+
+.icon-card span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.icon-card:hover {
+  transform: translateY(-5px);
+  filter: brightness(1.2);
 }
 /* .hero-text {
   padding: 22px 26px;
@@ -339,4 +401,3 @@
     margin: 0 auto;
   }
 }
- 

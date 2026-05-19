@@ -4,15 +4,18 @@ import "./Dashboard.css";
 import Footer from "./Footer";
 import Chatbot from "./Chatbot";
 import InviteEmployee from "./InviteEmployee";
+
+import apiIcon from "../assets/icons/api-plug.svg";
+import uploadIcon from "../assets/icons/upload-cloud.svg";
+import dbIcon from "../assets/icons/database-stack.svg";
  
 // Icons
-import { FaUsers, FaCogs, FaBolt, FaFileAlt } from "react-icons/fa";
+import { FaUsers, FaCogs, FaBolt, FaFileAlt, FaCheck, FaTimes } from "react-icons/fa";
 import { IoHome, IoCloudDone } from "react-icons/io5";
 import { SiFiles } from "react-icons/si";
 import { CgProfile } from "react-icons/cg";
 import { BsPersonFillAdd } from "react-icons/bs";
- 
- 
+import { FiMenu, FiX } from "react-icons/fi";
 import { BASE_API_URL } from "../apiConfig";
  
 const API_BASE = BASE_API_URL;
@@ -69,29 +72,38 @@ function Dashboard() {
       return;
     }
  
-    fetch(`${API_BASE}/dashboard-counts`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(async (res) => {
-        if (res.status === 401 || res.status === 403) {
-          throw new Error("unauthorized");
-        }
-        return res.json();
+    const fetchDashboardStats = () => {
+      fetch(`${API_BASE}/dashboard-counts`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .then((data) => {
-        setStats({
-          me: data?.me ?? {
-            uploadedFiles: 0,
-            uploadedApi: 0,
-            processedFiles: 0,
-          },
-          company: data?.company ?? null,
+        .then(async (res) => {
+          if (res.status === 401 || res.status === 403) {
+            throw new Error("unauthorized");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setStats({
+            me: data?.me ?? {
+              uploadedFiles: 0,
+              uploadedApi: 0,
+              processedFiles: 0,
+            },
+            company: data?.company ?? null,
+          });
+        })
+        .catch((err) => {
+          if (err.message === "unauthorized") {
+            localStorage.clear();
+            navigate("/l-gy5n8r4v2t", { replace: true });
+          }
+          console.error("Dashboard stats error:", err);
         });
-      })
-      .catch(() => {
-        localStorage.clear();
-        navigate("/l-gy5n8r4v2t", { replace: true });
-      });
+    };
+ 
+    fetchDashboardStats();
+    const interval = setInterval(fetchDashboardStats, 10000); // 🚀 Auto-refresh every 10s
+    return () => clearInterval(interval);
   }, [navigate]);
  
   // ======================================================
@@ -100,16 +112,22 @@ function Dashboard() {
   useEffect(() => {
     if (!user || user.role !== "manager") return;
  
-    fetch(`${API_BASE}/manager/pending-employees`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPendingEmployees(data.employees || []);
+    const fetchPendingEmployees = () => {
+      fetch(`${API_BASE}/manager/pending-employees`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       })
-      .catch(() => setPendingEmployees([]));
+        .then((res) => res.json())
+        .then((data) => {
+          setPendingEmployees(data.employees || []);
+        })
+        .catch(() => setPendingEmployees([]));
+    };
+ 
+    fetchPendingEmployees();
+    const interval = setInterval(fetchPendingEmployees, 10000); // 🚀 Auto-refresh every 10s
+    return () => clearInterval(interval);
   }, [user]);
  
   // 4️⃣ REDIRECT IF NO USER
@@ -158,15 +176,28 @@ function Dashboard() {
         {/* MOBILE MENU */}
         <button
           className="mobile-menu-btn"
+          aria-label="Toggle Sidebar"
           onClick={() => setIsSidebarOpen(true)}
         >
-          ☰
+          <FiMenu />
         </button>
  
         {/* SIDEBAR */}
+        <div 
+          className={`sidebar-backdrop ${isSidebarOpen ? "visible" : ""}`} 
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
         <aside className={`dashboard-sidebar ${isSidebarOpen ? "open" : ""}`}>
-          <div className="sidebar-backdrop" onClick={() => setIsSidebarOpen(false)}></div>
           <nav className="sidebar-nav">
+            <div className="sidebar-header-mobile">
+              <span className="sidebar-title">Menu</span>
+              <button 
+                className="sidebar-close-btn" 
+                onClick={() => setIsSidebarOpen(false)}
+              >
+                <FiX />
+              </button>
+            </div>
  
             <div className="nav-group">
               <button
@@ -174,6 +205,7 @@ function Dashboard() {
                 onClick={() => {
                   setActiveView("home");
                   navigate("/d-oxwilh9dy1");
+                  setIsSidebarOpen(false);
                 }}
               >
                 <span className="nav-icon"><IoHome /></span>
@@ -182,7 +214,10 @@ function Dashboard() {
  
               <button
                 className="nav-item"
-                onClick={() => navigate("/cf-2g7h9k3l5m")}
+                onClick={() => {
+                  navigate("/cf-2g7h9k3l5m");
+                  setIsSidebarOpen(false);
+                }}
               >
                 <span className="nav-icon"><SiFiles /></span>
                 <span className="nav-label">All Files</span>
@@ -234,7 +269,10 @@ function Dashboard() {
  
               <button
                 className="nav-item"
-                onClick={() => navigate("/settings")}
+                onClick={() => {
+                  navigate("/settings");
+                  setIsSidebarOpen(false);
+                }}
               >
                 <span className="nav-icon"><CgProfile /></span>
                 <span className="nav-label">Profile</span>
@@ -242,7 +280,10 @@ function Dashboard() {
  
               <button
                 className="nav-item"
-                onClick={() => navigate("/settings?section=dailyReport")}
+                onClick={() => {
+                  navigate("/settings?section=dailyReport");
+                  setIsSidebarOpen(false);
+                }}
               >
                 <span className="nav-icon"><FaFileAlt /></span>
                 <span className="nav-label">Daily Report</span>
@@ -251,10 +292,13 @@ function Dashboard() {
               {isManager && (
                 <>
                   {/* 🔥 PENDING APPROVALS MENU */}
-                  <button
+                   <button
                     className={`nav-item ${activeView === "approvals" ? "active" : ""
                       }`}
-                    onClick={() => setActiveView("approvals")}
+                    onClick={() => {
+                      setActiveView("approvals");
+                      setIsSidebarOpen(false);
+                    }}
                   >
                     <span className="nav-icon"><FaUsers /></span>
                     <span className="nav-label">Approvals</span>
@@ -267,7 +311,10 @@ function Dashboard() {
  
                   <button
                     className="nav-item"
-                    onClick={() => setShowInvite(true)}
+                    onClick={() => {
+                      setShowInvite(true);
+                      setIsSidebarOpen(false);
+                    }}
                   >
                     <span className="nav-icon"><BsPersonFillAdd /></span>
                     <span className="nav-label">Invite User</span>
@@ -310,11 +357,7 @@ function Dashboard() {
                 {/* CARD 1: UPLOAD DATA */}
                 <div className="dash-card">
                   <div className="card-image-bg blue-bg">
-                    <img
-                      src="src/assets/icons/upload-cloud.svg"
-                      className="card-3d-icon"
-                      alt="Upload Data"
-                    />
+                   <img src={uploadIcon} className="card-3d-icon" alt="Upload Data" />
  
                   </div>
                   <h3 className="card-heading">Upload Data</h3>
@@ -330,11 +373,7 @@ function Dashboard() {
                 {/* CARD 2: BROWSE DATASETS */}
                 <div className="dash-card">
                   <div className="card-image-bg green-bg">
-                    <img
-                      src="src/assets/icons/database-stack.svg"
-                      className="card-3d-icon"
-                      alt="Browse Datasets"
-                    />
+                   <img src={dbIcon} className="card-3d-icon" alt="Browse Datasets" />
  
                   </div>
                   <h3 className="card-heading">Browse Datasets</h3>
@@ -350,11 +389,7 @@ function Dashboard() {
                 {/* CARD 3: CONNECT API */}
                 <div className="dash-card">
                   <div className="card-image-bg purple-bg">
-                    <img
-                      src="src/assets/icons/api-plug.svg"
-                      className="card-3d-icon"
-                      alt="Connect API"
-                    />
+                   <img src={apiIcon} className="card-3d-icon" alt="Connect API" />
  
                   </div>
                   <h3 className="card-heading">Connect API</h3>
@@ -406,15 +441,17 @@ function Dashboard() {
                         <button
                           className="approve-btn"
                           onClick={() => approveEmployee(emp.id)}
+                          title="Approve"
                         >
-                          Approve
+                          <FaCheck />
                         </button>
  
                         <button
                           className="reject-btn"
                           onClick={() => rejectEmployee(emp.id)}
+                          title="Reject"
                         >
-                          Reject
+                          <FaTimes />
                         </button>
                       </div>
                     </div>
@@ -440,5 +477,3 @@ function Dashboard() {
 }
  
 export default Dashboard;
- 
- 

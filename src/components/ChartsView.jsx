@@ -365,9 +365,12 @@ function ChartsView() {
     return charts;
   };
  
+  const displayName = folder?.display_name || folder?.folderName || "";
+  const capitalizedName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+
   return (
     <div className="processed-container">
-      <h2>{folder?.folderName} - Charts</h2>
+      <h2>{capitalizedName} - Charts</h2>
  
       <button className="back-btn" onClick={() => navigate(-1)}>
         Back

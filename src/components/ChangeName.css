@@ -2,10 +2,10 @@
 .change-name-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  /* min-height: 100vh; */
-  background: white;
-  font-family: 'Poppins', sans-serif;
+  align-items: flex-start;
+  padding: 40px 20px;
+  background: transparent;
+  width: 100%;
 }
  
 /* 🧾 Form Box */
@@ -14,11 +14,11 @@
   padding: 40px 45px;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  width: 360px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
   transition: all 0.3s ease;
-  margin-left: 369px;
-  margin-top: 86px;
+  margin: 0 auto;
 }
  
 .change-name-form:hover {
@@ -30,8 +30,8 @@
   color: #1976d2;
   font-size: 24px;
   margin-bottom: 25px;
- font-family: 'segoe ui';
- font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
 }
  
 /* ✏️ Input Fields */
@@ -90,10 +90,15 @@
 }
  
 /* 📱 Mobile Responsive */
+@media (max-width: 768px) {
+  .change-name-form {
+    padding: 30px 25px;
+  }
+}
+
 @media (max-width: 480px) {
   .change-name-form {
-    width: 90%;
-    padding: 30px 25px;
+    padding: 24px 20px;
   }
  
   .change-name-form h2 {
@@ -104,5 +109,3 @@
     font-size: 15px;
   }
 }
- 
- 

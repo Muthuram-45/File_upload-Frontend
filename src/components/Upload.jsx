@@ -84,6 +84,18 @@ function Upload() {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
+    // ✅ VALIDATE FILE FORMATS (ONLY CSV, EXCEL)
+    const allowedExtensions = [".csv", ".xlsx", ".xls"];
+    const fileExtension = selectedFile.name.slice(selectedFile.name.lastIndexOf(".")).toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+      showPopup(
+        "Please upload valid dataset to process like csv, excel files. Your uploaded files are not meaningful so we can't process the file. Thank you.",
+        "error"
+      );
+      e.target.value = "";
+      return;
+    }
+
     const alreadyAdded = files.some(
       (f) => f.name === selectedFile.name && f.size === selectedFile.size
     );

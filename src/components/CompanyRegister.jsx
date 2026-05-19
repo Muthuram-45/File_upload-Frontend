@@ -39,9 +39,10 @@ function CompanyRegister() {
   // ======================================================
   const validateCompanyEmail = (company, email) => {
     if (!company || !email || !email.includes("@")) return false;
- 
-    const domain = email.split("@")[1].toLowerCase();
- 
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const domain = normalizedEmail.split("@")[1];
+
     // block personal email providers
     const blockedDomains = [
       "gmail.com",
@@ -50,13 +51,13 @@ function CompanyRegister() {
       "hotmail.com",
     ];
     if (blockedDomains.includes(domain)) return false;
- 
+
     const normalizedCompany = company
       .toLowerCase()
       .replace(/\s+/g, "")
       .replace(/[^a-z0-9]/g, "");
- 
-    return domain === `${normalizedCompany}.com`;
+
+    return domain.includes(normalizedCompany);
   };
  
   // ======================================================
@@ -90,12 +91,7 @@ function CompanyRegister() {
  
     const valid = validateCompanyEmail(companyName, email);
     if (!valid) {
-      const companyDomain = companyName
-        .toLowerCase()
-        .replace(/\s+/g, "")
-        .replace(/[^a-z0-9]/g, "");
- 
-      setEmailError(`Use company email like name@${companyDomain}.com`);
+      setEmailError(`Please use a valid corporate email associated with your company domain`);
       return;
     }
  
@@ -305,6 +301,7 @@ function CompanyRegister() {
                   <p style={{ color: "gray", marginTop: "10px" }}>{message}</p>
                 )}
  
+      
                 <p className="already-account">
                   Already have an account?{" "}
                   <span

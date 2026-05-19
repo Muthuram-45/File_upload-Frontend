@@ -201,7 +201,7 @@ function SettingsPage() {
 
               <div className="info-row">
                 <span className="info-label">Mobile</span>
-                <span className="info-value">{user?.mobile || user?.contact || "—"}</span>
+                <span className="info-value">{user?.mobile || user?.contact || user?.phone || user?.contact_number || "—"}</span>
               </div>
 
               {user?.role !== 'personal' && (
@@ -217,9 +217,7 @@ function SettingsPage() {
     );
   };
  
- 
   const renderSection = () => {
-
  
     switch (activeSection) {
       case "profile":
@@ -268,7 +266,10 @@ function SettingsPage() {
             <button
               className={`nav-button ${activeSection === "profile" ? "active" : ""
                 }`}
-              onClick={() => setActiveSection("profile")}
+              onClick={() => {
+                setActiveSection("profile");
+                setSidebarOpen(false);
+              }}
             >
               <FaUserCircle className="icon" />
               <span>Profile Overview</span>
@@ -277,7 +278,10 @@ function SettingsPage() {
             <button
               className={`nav-button ${activeSection === "name" ? "active" : ""
                 }`}
-              onClick={() => setActiveSection("name")}
+              onClick={() => {
+                setActiveSection("name");
+                setSidebarOpen(false);
+              }}
             >
               <FaUserEdit className="icon" />
               <span>Change Name</span>
@@ -286,7 +290,10 @@ function SettingsPage() {
             <button
               className={`nav-button ${activeSection === "mobile" ? "active" : ""
                 }`}
-              onClick={() => setActiveSection("mobile")}
+              onClick={() => {
+                setActiveSection("mobile");
+                setSidebarOpen(false);
+              }}
             >
               <FaPhoneAlt className="icon" />
               <span>Change Mobile</span>
@@ -295,7 +302,10 @@ function SettingsPage() {
             <button
               className={`nav-button ${activeSection === "password" ? "active" : ""
                 }`}
-              onClick={() => setActiveSection("password")}
+              onClick={() => {
+                setActiveSection("password");
+                setSidebarOpen(false);
+              }}
             >
               <FaLock className="icon" />
               <span>Change Password</span>
@@ -305,7 +315,10 @@ function SettingsPage() {
             <button
               className={`nav-button ${activeSection === "dailyReport" ? "active" : ""
                 }`}
-              onClick={() => setActiveSection("dailyReport")}
+              onClick={() => {
+                setActiveSection("dailyReport");
+                setSidebarOpen(false);
+              }}
             >
               <FaFileAlt className="icon" />
               <span>Daily Report</span>

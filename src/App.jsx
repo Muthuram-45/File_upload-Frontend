@@ -26,7 +26,7 @@ import Navbar from "./components/Navbar";
 import SettingsPage from "./components/SettingsPage";
 import ChartsView from "./components/ChartsView";
 import InviteRedirect from "./components/InviteRedirect";
-import "./app.css";
+import "./App.css";
 import NLPResults from "./components/NLPResults";
 import Subscription from "./components/Subscription";
 import Support from "./components/Support";
@@ -52,27 +52,27 @@ function App() {
       const currentToken = localStorage.getItem("token");
       if (!currentToken) return;
 
-      fetch(`${BASE_API_URL}/api/subscription-status`, {
+      // 🕒 Cache-busting: Add unique timestamp to URL
+      fetch(`${BASE_API_URL}/api/subscription-status?t=${Date.now()}`, {
         headers: { Authorization: `Bearer ${currentToken}` },
       })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
             setUser((prev) => {
-              const updatedUser = { 
-                ...prev, 
+              if (!prev) return prev;
+
+              const updatedUser = {
+                ...prev,
                 subscription_plan: data.plan,
                 subscription_expiry: data.expiry,
                 isSubscriptionActive: data.isActive,
                 status: data.status
               };
-              
-              // Only update if something literally changed
-              if (JSON.stringify(updatedUser) !== JSON.stringify(prev)) {
-                localStorage.setItem("user", JSON.stringify(updatedUser));
-                return updatedUser;
-              }
-              return prev;
+
+              // Simplified sync: Always update state and localStorage to be safe
+              localStorage.setItem("user", JSON.stringify(updatedUser));
+              return updatedUser;
             });
           } else if (data.accountInactive) {
             localStorage.clear();
@@ -86,9 +86,17 @@ function App() {
 
     if (savedUser && token) {
       fetchStatus();
-      // 🚀 Central Polling every 15 seconds
+
+      // 🚀 Global listener for manual refreshes (from other components)
+      const handleGlobalUpdate = () => fetchStatus();
+      window.addEventListener('subscriptionUpdate', handleGlobalUpdate);
+
       const interval = setInterval(fetchStatus, 15000);
-      return () => clearInterval(interval);
+
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('subscriptionUpdate', handleGlobalUpdate);
+      };
     } else {
       setUser(null);
       setLoading(false);
@@ -97,24 +105,24 @@ function App() {
 
 
 
- 
- 
+
+
   return (
-<Router>
-<NavbarWrapper user={user} setUser={setUser} />
-<div className="App" >
-<Routes>
-<Route
+    <Router>
+      <NavbarWrapper user={user} setUser={setUser} />
+      <div className="App" >
+        <Routes>
+          <Route
             path="/"
             element={
-<Navigate
+              <Navigate
                 to={user ? "/d-oxwilh9dy1" : "/l-gy5n8r4v2t"}
                 replace
               />
             }
           />
           {/* PUBLIC ROUTES */}
-<Route
+          <Route
             path="/l-gy5n8r4v2t"
             element={
               <PublicRoute user={user}>
@@ -130,95 +138,103 @@ function App() {
               </PublicRoute>
             }
           />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute user={user}>
+                <ForgotPassword />
+              </PublicRoute>
+            }
+          />
 
-<Route
+          <Route
             path="/cl-zv9ng4q6b8"
             element={<CompanyLogin setUser={setUser} />}
           />
-<Route
+          <Route
             path="/cr-h2k8j5d1f5"
             element={<CompanyRegister />}
           />
           {/* PROTECTED ROUTES */}
-<Route
+          <Route
             path="/d-oxwilh9dy1"
             element={
-<ProtectedRoute>
-<Dashboard />
-</ProtectedRoute>
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
             }
           />
-<Route
+          <Route
             path="/cf-2g7h9k3l5m"
             element={
-<ProtectedRoute>
-<CompanyFiles />
-</ProtectedRoute>
+              <ProtectedRoute>
+                <CompanyFiles />
+              </ProtectedRoute>
             }
           />
-<Route
+          <Route
             path="/p-h7t4k9m3zq"
             element={
-<ProtectedRoute>
-<ProcessedView />
-</ProtectedRoute>
+              <ProtectedRoute>
+                <ProcessedView />
+              </ProtectedRoute>
             }
           />
-<Route
+          <Route
             path="/u-p2q8k4r9jw"
             element={
-<ProtectedRoute>
-<Upload />
-</ProtectedRoute>
+              <ProtectedRoute>
+                <Upload />
+              </ProtectedRoute>
             }
           />
-<Route
+          <Route
             path="/f-vxt2x3s7a1"
             element={
-<ProtectedRoute>
-<ApiFetcher />
-</ProtectedRoute>
+              <ProtectedRoute>
+                <ApiFetcher />
+              </ProtectedRoute>
             }
           />
-<Route
+          <Route
             path="/settings"
             element={
-<ProtectedRoute>
-<SettingsPage />
-</ProtectedRoute>
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
             }
           />
           {/* OTHER */}
-<Route path="/invite-redirect" element={<InviteRedirect />} />
-<Route path="/charts-view" element={<ChartsView />} />
-<Route
-  path="/subscription"
-  element={
-    <ProtectedRoute>
-      <Subscription setUser={setUser} />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/nlp-results"
-  element={
-    <ProtectedRoute>
-      <NLPResults />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/support"
-  element={
-    <ProtectedRoute>
-      <Support />
-    </ProtectedRoute>
-  }
-/>
-<Route path="*" element={<Navigate to="/" replace />} />
-</Routes>
-</div>
-</Router>
+          <Route path="/invite-redirect" element={<InviteRedirect />} />
+          <Route path="/charts-view" element={<ChartsView />} />
+          <Route
+            path="/subscription"
+            element={
+              <ProtectedRoute>
+                <Subscription setUser={setUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/nlp-results"
+            element={
+              <ProtectedRoute>
+                <NLPResults />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/support"
+            element={
+              <ProtectedRoute>
+                <Support />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 export default App;
@@ -249,14 +265,14 @@ function NavbarWrapper({ user, setUser }) {
   useEffect(() => {
     if (user && user.status === 'EXPIRED') {
       const allowedPaths = [
-        "/subscription", 
-        "/l-gy5n8r4v2t", 
+        "/subscription",
+        "/l-gy5n8r4v2t",
         "/cl-zv9ng4q6b8",
         "/d-oxwilh9dy1", // Dashboard
         "/settings",     // Settings & Profile
         "/invite-redirect"
       ];
-      
+
       if (!allowedPaths.includes(location.pathname)) {
         Swal.fire({
           title: "Subscription Expired",
@@ -282,6 +298,7 @@ function NavbarWrapper({ user, setUser }) {
     "/r-ya7w1p9s35",
     "/cl-zv9ng4q6b8",
     "/cr-h2k8j5d1f5",
+    "/forgot-password",
   ];
 
   if (hideNavbarRoutes.includes(location.pathname)) {

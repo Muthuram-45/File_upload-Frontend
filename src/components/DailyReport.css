@@ -1,6 +1,7 @@
 /* ── Header ── */
 .dr-header {
     margin-bottom: 28px;
+    text-align: center;
 }
 
 .dr-header h2 {
@@ -11,18 +12,18 @@
 }
 
 .dr-header p {
-    margin: 8px 0 0;
+    margin: 8px auto 0;
     font-size: 14px;
     color: #6b7280;
     line-height: 1.5;
-    width: 510px;
+    max-width: 510px;
 }
 
 .report-content {
     max-width: 650px;
     margin: 0 auto;
     background: var(--white);
-    padding: 48px;
+    padding: 40px 24px;
     border-radius: 20px;
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--gray-200);
@@ -32,6 +33,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 /* ── Current time badge ── */
@@ -44,6 +46,8 @@
     border-radius: 12px;
     padding: 12px 20px;
     margin-bottom: 18px;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .dr-time-badge .dr-badge-icon {
@@ -59,7 +63,7 @@
 }
 
 .dr-time-badge .dr-badge-value {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: #1d4ed8;
     letter-spacing: 0.5px;
@@ -72,14 +76,17 @@
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-    width: 400px;
+    width: 100%;
+    max-width: 440px;
+    box-sizing: border-box;
 }
 
 .dr-card-title {
-    margin: 0 0 1px;
+    margin: 0 0 12px;
     font-weight: 600;
     font-size: 15px;
     color: #111827;
+    text-align: left;
 }
 
 .dr-label {
@@ -101,14 +108,10 @@
     text-align: left;
 }
 
-.dr-input-wrap {
-    margin-top: 0;
-}
-
 .dr-time-input {
     width: 100%;
     padding: 10px 14px;
-    font-size: 16px;
+    font-size: 15px;
     border: 1.5px solid #d1d5db;
     border-radius: 10px;
     outline: none;
@@ -117,7 +120,6 @@
     box-sizing: border-box;
     cursor: pointer;
     transition: all 0.2s ease;
-    appearance: none;
 }
 
 .dr-time-input:hover {
@@ -125,7 +127,6 @@
     background: #ffffff;
 }
 
-/* Focus effect */
 .dr-time-input:focus {
     border-color: #3b82f6;
     background: #ffffff;
@@ -134,9 +135,9 @@
 
 /* ── Save button ── */
 .dr-save-btn {
-    margin-top: 16px;
+    margin-top: 20px;
     width: 100%;
-    padding: 11px;
+    padding: 12px;
     font-size: 15px;
     font-weight: 600;
     color: #fff;
@@ -182,4 +183,24 @@
     margin-top: 20px;
     font-size: 12px;
     color: #9ca3af;
+}
+
+/* 📱 Responsive Queries */
+@media (max-width: 600px) {
+    .dr-input-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .report-content {
+        padding: 30px 16px;
+    }
+    
+    .dr-header h2 {
+        font-size: 20px;
+    }
+    
+    .dr-badge-value {
+        font-size: 16px;
+    }
 }

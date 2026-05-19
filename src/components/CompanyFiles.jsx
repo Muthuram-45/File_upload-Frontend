@@ -12,16 +12,54 @@ import { MdOutlineDownloadDone, MdCancel } from "react-icons/md";
 import { AiOutlineClockCircle } from "react-icons/ai";
 
 /* ===============================
-   TIME FORMATTER
+   TIME FORMATTER — IST (Asia/Kolkata)
+   Output: DD-MM-YYYY  HH:MM AM/PM
 ================================ */
 const formatTime = (dateString) => {
   if (!dateString) return "-";
-  const date = new Date(dateString);
-  return date.toLocaleTimeString([], {
+
+  let date;
+  if (typeof dateString === "string") {
+    // MySQL datetime strings (e.g. "2026-04-29 12:00:00") have no timezone info.
+    // Treat them as UTC by appending " UTC" before parsing.
+    date = new Date(
+      dateString.includes("T") || dateString.includes("Z")
+        ? dateString
+        : dateString + " UTC"
+    );
+  } else {
+    date = new Date(dateString);
+  }
+
+  if (isNaN(date.getTime())) return "-";
+
+  // Format in Asia/Kolkata (IST, UTC+5:30)
+  const istOptions = {
+    timeZone: "Asia/Kolkata",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  });
+    hour12: true,
+  };
+
+  // toLocaleString returns e.g. "29/04/2026, 05:30 PM" — re-arrange to DD-MM-YYYY HH:MM AM/PM
+  const parts = new Intl.DateTimeFormat("en-GB", istOptions).formatToParts(date);
+  const get = (type) => parts.find((p) => p.type === type)?.value ?? "";
+
+  const day = get("day");
+  const month = get("month");
+  const year = get("year");
+  const hour = get("hour");
+  const min = get("minute");
+
+  // Intl with hour12 appends dayPeriod — fetch it
+  const ampm = get("dayPeriod").toUpperCase() || (date.getUTCHours() < 12 ? "AM" : "PM");
+
+  return `${day}-${month}-${year}  ${hour}:${min} ${ampm}`;
 };
+
 
 function CompanyFiles() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -118,10 +156,10 @@ function CompanyFiles() {
     if (file.source === "API Data") {
       return (
         <div className="schedule-cell schedule-api">
-          <span className="last" style={{fontSize:"14px", fontWeight:"500"}}>
+          <span className="last" style={{ fontSize: "14px", fontWeight: "500" }}>
             Last Process : {formatTime(file.last_processed_at)}
           </span>
-          <span className="next" style={{fontSize:"14px", fontWeight:"500"}}>
+          <span className="next" style={{ fontSize: "14px", fontWeight: "500" }}>
             Next Process : {formatTime(file.next_process_at)}
           </span>
         </div>
@@ -132,12 +170,12 @@ function CompanyFiles() {
       <div className="schedule-cell schedule-uploaded">
 
         {file.status === "NEW" && (
-          <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Process at<br />00:00</span>
+          <span className="process" style={{ fontSize: "14px", fontWeight: "500" }}>Process at<br />00:00</span>
         )}
 
         {file.status === "PROCESSING" && (
           <>
-            <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Process at</span>
+            <span className="process" style={{ fontSize: "14px", fontWeight: "500" }}>Process at</span>
             <span className="completed">
               {formatTime(file.processed_at)}
             </span>
@@ -146,14 +184,14 @@ function CompanyFiles() {
 
         {file.status === "DONE" && (
           <>
-            <span className="process" style={{fontSize:"14px", fontWeight:"500"}}>Completed at</span>
-            <span className="completed" style={{fontSize:"14px", fontWeight:"500"}}>
+            <span className="process" style={{ fontSize: "14px", fontWeight: "500" }}>Completed at</span>
+            <span className="completed" style={{ fontSize: "14px", fontWeight: "500" }}>
               {formatTime(file.completed_at)}
             </span>
           </>
         )}
 
-        {file.status === "CANCEL" && <span style={{fontSize:"14px", fontWeight:"500"}}>Duplicate</span>}
+        {file.status === "CANCEL" && <span style={{ fontSize: "14px", fontWeight: "500" }}>Duplicate</span>}
       </div>
     );
   };

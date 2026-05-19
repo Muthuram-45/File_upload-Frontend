@@ -4,16 +4,16 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import "./CompanyLogin.css";
 import { BASE_API_URL } from "../apiConfig";
- 
+
 import Footer from "./Footer";
-import { FaChartLine,FaBrain,FaCloud,FaChartBar,FaMicrochip} from "react-icons/fa";
- 
+import { FaChartLine, FaBrain, FaCloud, FaChartBar, FaMicrochip } from "react-icons/fa";
+
 function CompanyLogin({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState(""); // ✅ KEEP
   const [loading, setLoading] = useState(false);
- 
+
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -29,7 +29,7 @@ function CompanyLogin({ setUser }) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
- 
+
   // =========================
   // HANDLE COMPANY LOGIN
   // =========================
@@ -38,27 +38,29 @@ function CompanyLogin({ setUser }) {
       Swal.fire("Error", "Please fill all fields", "error");
       return;
     }
- 
+
     try {
       setLoading(true);
- 
-      // ❌ DO NOT SEND company_name
+
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       const res = await axios.post(`${BASE_API_URL}/company-login`, {
         email: email.trim().toLowerCase(),
         password: password.trim(),
+        timezone, // ✅ ADD THIS
       });
- 
+
       if (!res.data.success) {
         Swal.fire("Error", res.data.error || "Login failed", "error");
         return;
       }
- 
+
       // =========================
       // ✅ COMPANY NAME VALIDATION
       // =========================
-      const backendCompany = res.data.user.company_name?.toLowerCase().trim();
-      const inputCompany = companyName.toLowerCase().trim();
- 
+      const backendCompany = res.data.user.company_name?.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
+      const inputCompany = companyName.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
+
       if (backendCompany !== inputCompany) {
         Swal.fire(
           "Access Denied",
@@ -67,7 +69,7 @@ function CompanyLogin({ setUser }) {
         );
         return;
       }
- 
+
       // =========================
       // ✅ TRUST BACKEND ROLE
       // =========================
@@ -86,12 +88,12 @@ function CompanyLogin({ setUser }) {
         status: res.data.user.status || 'ACTIVE',
         isSubscriptionActive: res.data.user.isSubscriptionActive,
       };
- 
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(userData));
- 
+
       setUser(userData);
- 
+
       Swal.fire({
         title: "Login Successful",
         text: `Welcome ${userData.company_name}`,
@@ -99,7 +101,7 @@ function CompanyLogin({ setUser }) {
         timer: 1500,
         showConfirmButton: false,
       });
- 
+
       navigate("/d-oxwilh9dy1", { replace: true });
     } catch (err) {
       console.error("Company Login Error:", err);
@@ -112,7 +114,7 @@ function CompanyLogin({ setUser }) {
       setLoading(false);
     }
   };
- 
+
   return (
     <>
       <div className="login-container" x>
@@ -121,7 +123,7 @@ function CompanyLogin({ setUser }) {
           <div className="hero-title">
             <h1>Cloud360</h1>
           </div>
- 
+
           <p>
             Smart data analysis and real-time processing
             <br />
@@ -133,12 +135,12 @@ function CompanyLogin({ setUser }) {
               <FaChartLine className="hero-icon" />
               <span>Analytics</span>
             </div>
- 
+
             <div className="icon-card">
               <FaBrain className="hero-icon" />
               <span>AI Engine</span>
             </div>
- 
+
             <div className="icon-card">
               <FaChartBar className="hero-icon" />
               <span>Insights</span>
@@ -149,7 +151,7 @@ function CompanyLogin({ setUser }) {
           <div className="login-box">
             <h2 className="login-title">Company Login</h2>
             <p className="login-subtitle">Access your company dashboard</p>
- 
+
             {/* ✅ COMPANY NAME INPUT */}
             <input
               type="text"
@@ -158,23 +160,38 @@ function CompanyLogin({ setUser }) {
               onChange={(e) => setCompanyName(e.target.value)}
               className="login-input"
             />
- 
+
             <input
               type="email"
               placeholder="Company Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
+              autoComplete="username"
             />
- 
+
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
+              autoComplete="current-password"
             />
- 
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
+              <label style={{ display: "flex", alignItems: "center", fontSize: "14px", color: "#555", cursor: "pointer" }}>
+                <input type="checkbox" style={{ margin: 0, marginRight: "8px", width: "auto" }} />
+                Remember me
+              </label>
+              <span 
+                onClick={() => navigate("/forgot-password")} 
+                style={{ color: "#007bff", cursor: "pointer", fontSize: "14px", fontWeight: "500" }}
+              >
+                Forgot Password?
+              </span>
+            </div>
+
             <button
               onClick={handleLogin}
               className="login-btn"
@@ -182,7 +199,7 @@ function CompanyLogin({ setUser }) {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
- 
+
             <p className="footer-text">
               New company?{" "}
               <span
@@ -192,9 +209,9 @@ function CompanyLogin({ setUser }) {
                 Register here
               </span>
             </p>
- 
+
             <p className="footer-text">
-              Normal User?{" "}
+              Individual User?{" "}
               <span
                 onClick={() => navigate("/l-gy5n8r4v2t")}
                 className="register-link"
@@ -205,11 +222,11 @@ function CompanyLogin({ setUser }) {
           </div>
         </div>
       </div>
- 
+
       {/* <Footer /> */}
     </>
   );
 }
- 
+
 export default CompanyLogin;
- 
+

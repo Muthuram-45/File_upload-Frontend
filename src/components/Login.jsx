@@ -5,9 +5,9 @@ import Swal from "sweetalert2";
 import "./CompanyLogin.css";
 import { BASE_API_URL } from "../apiConfig";
 import Footer from "./Footer";
-import { FaChartLine,FaBrain,FaCloud,FaChartBar,FaMicrochip} from "react-icons/fa";
+import { FaChartLine, FaBrain, FaCloud, FaChartBar, FaMicrochip } from "react-icons/fa";
 // import {img} from '../assets/white_blue.png'
- 
+
 // ✅ ONLY ALLOWED PERSONAL EMAIL DOMAINS
 const ALLOWED_DOMAINS = [
   "gmail.com",
@@ -15,13 +15,13 @@ const ALLOWED_DOMAINS = [
   "outlook.com",
   "hotmail.com",
 ];
- 
+
 function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
- 
+
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -37,33 +37,33 @@ function Login({ setUser }) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
- 
+
   // 🔐 STRICT EMAIL CHECK
   const isAllowedEmail = (rawEmail) => {
     if (!rawEmail) return false;
- 
+
     const email = rawEmail.trim().toLowerCase();
     if (!email.includes("@")) return false;
- 
+
     const domain = email.split("@")[1];
     return ALLOWED_DOMAINS.includes(domain);
   };
- 
+
   // =========================
   // HANDLE LOGIN
   // =========================
   const handleLogin = async (e) => {
     e.preventDefault();
     setEmailError("");
- 
+
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
- 
+
     if (!cleanEmail || !cleanPassword) {
       Swal.fire("Error", "Please enter email and password", "error");
       return;
     }
- 
+
     // ❌ HARD BLOCK company.com, name@company.com, etc.
     if (!isAllowedEmail(cleanEmail)) {
       setEmailError(
@@ -71,19 +71,22 @@ function Login({ setUser }) {
       );
       return; // ⛔ STOP HERE — NO API CALL
     }
- 
+
     try {
       setLoading(true);
- 
+
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       const res = await axios.post(`${BASE_API_URL}/login`, {
         email: cleanEmail,
         password: cleanPassword,
+        timezone, // ✅ ADD THIS LINE
       });
- 
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setUser(res.data.user);
- 
+
       Swal.fire({
         title: "Login Successful",
         text: `Welcome ${res.data.user.firstName || ""}`,
@@ -91,12 +94,12 @@ function Login({ setUser }) {
         timer: 1200,
         showConfirmButton: false,
       });
- 
+
       navigate("/d-oxwilh9dy1", { replace: true });
     } catch (err) {
       if (err.response) {
         const msg = err.response.data?.error;
- 
+
         if (msg === "Account pending manager approval") {
           Swal.fire(
             "⏳ Pending Approval",
@@ -115,45 +118,45 @@ function Login({ setUser }) {
       setLoading(false);
     }
   };
- 
+
   return (
     <>
       <div className="login-container">
-     <div className="hero-text">
-               <div className="hero-title">
-                 <h1>Cloud360</h1>
-               </div>
-     
-               <p>
-                 Smart data analysis and real-time processing
-                 <br />
-                 built to drive faster, better decisions.
-               </p>
-               <br />
-               <div className="icon-group">
-                 <div className="icon-card">
-                   <FaChartLine className="hero-icon" />
-                   <span>Analytics</span>
-                 </div>
-     
-                 <div className="icon-card">
-                   <FaBrain className="hero-icon" />
-                   <span>AI Engine</span>
-                 </div>
-     
-                 <div className="icon-card">
-                   <FaChartBar className="hero-icon" />
-                   <span>Insights</span>
-                 </div>
-               </div>
-             </div>
-       
- 
+        <div className="hero-text">
+          <div className="hero-title">
+            <h1>Cloud360</h1>
+          </div>
+
+          <p>
+            Smart data analysis and real-time processing
+            <br />
+            built to drive faster, better decisions.
+          </p>
+          <br />
+          <div className="icon-group">
+            <div className="icon-card">
+              <FaChartLine className="hero-icon" />
+              <span>Analytics</span>
+            </div>
+
+            <div className="icon-card">
+              <FaBrain className="hero-icon" />
+              <span>AI Engine</span>
+            </div>
+
+            <div className="icon-card">
+              <FaChartBar className="hero-icon" />
+              <span>Insights</span>
+            </div>
+          </div>
+        </div>
+
+
         <div className="login-form-section">
           <div className="login-box">
             <h2 className="login-title">Welcome Back</h2>
             <p className="login-subtitle">Login to continue</p>
- 
+
             <form onSubmit={handleLogin}>
               <div className="email-field">
                 <input
@@ -165,28 +168,43 @@ function Login({ setUser }) {
                     setEmail(e.target.value);
                     setEmailError("");
                   }}
+                  autoComplete="username"
                 />
- 
+
                 {emailError && (
                   <div className="input-tooltip">⚠️ {emailError}</div>
                 )}
               </div>
- 
+
               <input
                 type="password"
                 placeholder="Enter your password"
                 className="login-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
               />
- 
+
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
+                <label style={{ display: "flex", alignItems: "center", fontSize: "14px", color: "#555", cursor: "pointer" }}>
+                  <input type="checkbox" style={{ margin: 0, marginRight: "8px", width: "auto" }} />
+                  Remember me
+                </label>
+                <span 
+                  onClick={() => navigate("/forgot-password")} 
+                  style={{ color: "#007bff", cursor: "pointer", fontSize: "14px", fontWeight: "500" }}
+                >
+                  Forgot Password?
+                </span>
+              </div>
+
               <button className="login-btn" type="submit" disabled={loading}>
                 {loading ? "Logging in..." : "Login"}
               </button>
             </form>
- 
+
             <p className="footer-text">
-              New user?{" "}
+              Individual user?{" "}
               <span
                 onClick={() => navigate("/r-ya7w1p9s35")}
                 className="register-link"
@@ -194,22 +212,22 @@ function Login({ setUser }) {
                 Register here
               </span>
             </p>
-               <p className="footer-text">
+            <p className="footer-text">
               Company User?{" "}
               <span
-                onClick={() => navigate("/cl-zv9ng4q6b8")}
+                onClick={() => navigate("/cr-h2k8j5d1f5")}
                 className="register-link"
               >
-                Login here
+                Register here
               </span>
             </p>
           </div>
         </div>
       </div>
- 
+
       {/* <Footer /> */}
     </>
   );
 }
- 
+
 export default Login;

@@ -345,12 +345,7 @@ function Register({ setUser }) {
               Sign Up with Google
             </button>
             <br />
-            <button
-              className="company-register-btn"
-              onClick={() => navigate("/cr-h2k8j5d1f5")}
-            >
-              Register as Company
-            </button>
+            
             <p className="already-account">
                   Already have an account?{" "}
                   <span
